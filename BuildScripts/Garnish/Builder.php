@@ -8,6 +8,11 @@ class Builder
 	protected $_sourceDir;
 	protected $_buildScriptDir;
 	protected $_buildDir;
+	protected $_uncompressedFileName;
+	protected $_compressedFileName;
+	protected $_uncompressedFile;
+	protected $_compressedFile;
+	protected $_repoPath;
 	protected $_startTime;
 	protected $_isWindows;
 
@@ -22,6 +27,15 @@ class Builder
 		$this->_startTime = BuildUtils::getBenchmarkTime();
 		$this->_isWindows = BuildUtils::isWindows();
 		date_default_timezone_set('UTC');
+
+		$this->_repoPath = getenv('GITREPO_PATH');
+
+		if (!$this->_repoPath)
+		{
+			throw new Exception('Could not find the GITREPO_PATH environment variable.');
+		}
+
+		$this->_repoPath = rtrim(str_replace('\\', '/', $this->_repoPath), '/').'/';
 	}
 
 	/**
@@ -34,6 +48,12 @@ class Builder
 		$this->_sourceDir      = str_replace('\\', '/', realpath($projectRoot.'Source').'/');
 		$this->_buildScriptDir = str_replace('\\', '/', realpath($projectRoot.'BuildScripts').'/');
 		$this->_buildDir       = str_replace('\\', '/', realpath($projectRoot.'Build').'/');
+
+		$this->_uncompressedFileName = 'garnish-'.$this->_version.'.js';
+		$this->_compressedFileName = 'garnish-'.$this->_version.'.min.js';
+
+		$this->_uncompressedFile = $this->_buildDir.'garnish-'.$this->_uncompressedFileName;
+		$this->_compressedFile = $this->_buildDir.'garnish-'.$this->_compressedFileName;
 	}
 
 	/**
@@ -44,6 +64,7 @@ class Builder
 		$this->prepBuildDir();
 
 		$this->yuiCompressify();
+		$this->copyGarnishFiles();
 
 		$totalTime = BuildUtils::getBenchmarkTime() - $this->_startTime;
 		echo PHP_EOL.'Execution Time: '.$totalTime.' seconds.'.PHP_EOL;
@@ -72,7 +93,7 @@ class Builder
 		$jsFiles = glob($this->_sourceDir."*.js");
 
 		// Compress and merge into garnish.js
-		echo ('Compressing and merging JS files into '.$compressedJsMergeFile.PHP_EOL);
+		echo ('Compressing and merging JS files into '.$this->_compressedFile.PHP_EOL);
 
 		$header = <<<HEADER
 /*!
@@ -85,13 +106,10 @@ class Builder
 (function($){
 HEADER;
 
-		$uncompressedJsMergeFile = $this->_buildDir.'garnish-'.$this->_version.'.js';
-		$compressedJsMergeFile = $this->_buildDir.'garnish-'.$this->_version.'.min.js';
-
 		$uncompressedContents = $header."\n\n\n";
 
-		file_put_contents($uncompressedJsMergeFile, $uncompressedContents);
-		file_put_contents($compressedJsMergeFile, $uncompressedContents);
+		file_put_contents($this->_uncompressedFile, $uncompressedContents);
+		file_put_contents($this->_compressedFile, $uncompressedContents);
 
 		$counter = 0;
 
@@ -105,7 +123,7 @@ HEADER;
 		{
 			$fileName = pathinfo($jsFile, PATHINFO_FILENAME);
 
-			$command = "java -jar {$this->_buildScriptDir}lib/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar --charset utf-8 --type js {$jsFile} >> {$compressedJsMergeFile}";
+			$command = "java -jar {$this->_buildScriptDir}lib/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar --charset utf-8 --type js {$jsFile} >> {$this->_compressedFile}";
 
 			echo ('Executing: '.$command.PHP_EOL);
 
@@ -127,31 +145,43 @@ HEADER;
 		// Add the footer
 		$footer = "})(jQuery);\n";
 
-		$compressedContents = file_get_contents($compressedJsMergeFile) . $footer;
+		$compressedContents = file_get_contents($this->_compressedFile) . $footer;
 		$uncompressedContents .= $footer;
 
-		file_put_contents($compressedJsMergeFile, $compressedContents);
-		file_put_contents($uncompressedJsMergeFile, $uncompressedContents);
+		file_put_contents($this->_compressedFile, $compressedContents);
+		file_put_contents($this->_uncompressedFile, $uncompressedContents);
 
 		echo ('Finished compressing and merging JS files into '.$this->_buildScriptDir.PHP_EOL.PHP_EOL);
 	}
 
 	/**
-	 * @param $file
+	 *
 	 */
-	protected function processFile($file)
+	protected function copyGarnishFiles()
 	{
-		echo ('Processing '.$file.'... ');
+		echo ('Copying Garnish files into other repos...'.PHP_EOL.PHP_EOL);
 
-		$contents = $newContents = file_get_contents($file);
+		$targetPaths = array(
+			$this->_repoPath.'assets/Source/themes/third_party/assets/lib/',
+			$this->_repoPath.'Blocks/Source/Core/blocks/app/resources/lib/',
+		);
 
-		// Normalize newlines
-		$newContents = str_replace("\r\n", "\n", $newContents);
-		$newContents = str_replace("\r", "\n", $newContents);
+		$garnishFileNames = array($this->_uncompressedFileName, $this->_compressedFileName);
 
-		$this->_saveContents($newContents, $contents, $file);
+		foreach ($targetPaths as $targetPath)
+		{
+			foreach ($garnishFileNames as $garnishFileName)
+			{
+				$sourceFile = $this->_buildDir . $garnishFileName;
+				$targetFile = $targetPath . $garnishFileName;
 
-		echo (PHP_EOL);
+				echo ('Copying file from '.$sourceFile.' to '.$targetFile.PHP_EOL);
+				copy($sourceFile, $targetFile);
+				echo ('Finished copying file from '.$sourceFile.' to '.$targetFile.PHP_EOL);
+			}
+		}
+
+		echo (PHP_EOL.'Finished copying Garnish files into other repos.'.PHP_EOL.PHP_EOL);
 	}
 
 	/**
