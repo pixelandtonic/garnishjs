@@ -14,6 +14,7 @@ Garnish.Select = Garnish.Base.extend({
 	mouseUpTimeoutDuration: null,
 	callbackTimeout: null,
 
+	$focusable: null,
 	$first: null,
 	first: null,
 	$last: null,
@@ -25,7 +26,6 @@ Garnish.Select = Garnish.Base.extend({
 	init: function(container, items, settings)
 	{
 		this.$container = $(container);
-		this.$container.attr('tabindex', 0);
 
 		// Param mapping
 		if (!settings && Garnish.isObject(items))
@@ -64,13 +64,6 @@ Garnish.Select = Garnish.Base.extend({
 				this.deselectAll(true);
 			}
 		});
-
-		// --------------------------------------------------------------------
-
-		Garnish.preventOutlineOnMouseFocus(this.$container);
-
-		this.addListener(this.$container, 'keydown', 'onKeyDown');
-
 	},
 
 	// --------------------------------------------------------------------
@@ -106,8 +99,28 @@ Garnish.Select = Garnish.Base.extend({
 		this.$first = this.$last = $item;
 		this.first = this.last = this.getItemIndex($item);
 
+		this.setFocusableItem($item);
+		$item.focus();
+
 		this.totalSelected++;
 
+		this.setCallbackTimeout();
+	},
+
+	selectAll: function()
+	{
+		if (!this.settings.multi || !this.$items.length)
+		{
+			return;
+		}
+
+		this.first = 0;
+		this.last = this.$items.length-1;
+		this.$first = $(this.$items[this.first]);
+		this.$last = $(this.$items[this.last]);
+
+		this.$items.addClass(selectedClass);
+		this.totalSelected = this.$items.length;
 		this.setCallbackTimeout();
 	},
 
@@ -125,6 +138,9 @@ Garnish.Select = Garnish.Base.extend({
 
 		this.$last = $item;
 		this.last = this.getItemIndex($item);
+
+		this.setFocusableItem($item);
+		$item.focus();
 
 		// prepare params for $.slice()
 		if (this.first < this.last)
@@ -270,12 +286,6 @@ Garnish.Select = Garnish.Base.extend({
 	 */
 	onKeyDown: function(ev)
 	{
-		// ignore if meta key is down
-		if (ev.metaKey) return;
-
-		// ignore if this pane doesn't have focus
-		if (ev.target != this.$container[0]) return;
-
 		// ignore if there are no items
 		if (! this.$items.length) return;
 
@@ -283,19 +293,33 @@ Garnish.Select = Garnish.Base.extend({
 
 		switch (ev.keyCode)
 		{
-			case Garnish.DOWN_KEY:
+			case Garnish.LEFT_KEY:
 			{
-				ev.preventDefault();
+				event.preventDefault();
 
-				if (this.first === null)
+				if (metaKey)
 				{
-					// select the first item
-					var $item = $(this.$items[0]);
+					var $item = this.getFurthestItemToTheLeft(anchor);
 				}
-				else if (this.$items.length >= anchor + 2)
+				else
 				{
-					// select the item after the last selected item
-					var $item = $(this.$items[anchor+1]);
+					var $item = this.getItemToTheLeft(anchor);
+				}
+
+				break;
+			}
+
+			case Garnish.RIGHT_KEY:
+			{
+				event.preventDefault();
+
+				if (metaKey)
+				{
+					var $item = this.getFurthestItemToTheRight(anchor);
+				}
+				else
+				{
+					var $item = this.getItemToTheRight(anchor);
 				}
 
 				break;
@@ -303,25 +327,81 @@ Garnish.Select = Garnish.Base.extend({
 
 			case Garnish.UP_KEY:
 			{
-				ev.preventDefault();
+				event.preventDefault();
 
 				if (this.first === null)
 				{
-					// select the last item
-					var $item = $(this.$items[this.$items.length-1]);
+					var $item = this.getLastItem();
 				}
-				else if (anchor > 0)
+				else
 				{
-					var $item = $(this.$items[anchor-1]);
+					if (metaKey)
+					{
+						var $item = this.getFurthestItemAbove(anchor);
+					}
+					else
+					{
+						var $item = this.getItemAbove(anchor);
+					}
+
+					if (!$item)
+					{
+						$item = this.getFirstItem();
+					}
 				}
 
 				break;
 			}
 
-			case Garnish.ESC_KEY:
+			case Garnish.DOWN_KEY:
 			{
-				this.deselectAll(true);
+				event.preventDefault();
+
+				if (this.first === null)
+				{
+					var $item = this.getFirstItem();
+				}
+				else
+				{
+					if (metaKey)
+					{
+						var $item = this.getFurthestItemBelow(anchor);
+					}
+					else
+					{
+						var $item = this.getItemBelow(anchor);
+					}
+
+					if (!$item)
+					{
+						$item = this.getLastItem();
+					}
+				}
+
 				break;
+			}
+
+			case Garnish.SPACE_KEY:
+			{
+				ev.preventDefault();
+
+				if (this.isSelected(this.$focusable))
+				{
+					this.deselectItem(this.$focusable);
+				}
+				else
+				{
+					this.selectItem(this.$focusable);
+				}
+
+				return;
+			}
+
+			case Garnish.A_KEY:
+			{
+				event.preventDefault();
+				this.selectAll();
+				return;
 			}
 
 			default:
@@ -336,12 +416,6 @@ Garnish.Select = Garnish.Base.extend({
 		}
 
 		// -------------------------------------------
-		//  Scroll to the item
-		// -------------------------------------------
-
-		Garnish.scrollContainerToElement(this.$container, $item);
-
-		// -------------------------------------------
 		//  Select the item
 		// -------------------------------------------
 
@@ -354,6 +428,197 @@ Garnish.Select = Garnish.Base.extend({
 			this.deselectAll();
 			this.selectItem($item);
 		}
+	},
+
+	getFirstItem: function()
+	{
+		if (this.$items.length)
+		{
+			return $(this.$items[0]);
+		}
+	},
+
+	getLastItem: function()
+	{
+		if (this.$items.length)
+		{
+			return $(this.$items[this.$items.length-1]);
+		}
+	},
+
+	_isPreviousItem: function(index)
+	{
+		return (index > 0);
+	},
+
+	_isNextItem: function(index)
+	{
+		return (index < this.$items.length-1);
+	},
+
+	getPreviousItem: function(index)
+	{
+		if (this.isPreviousItem(index))
+		{
+			return $(this.$items[index-1]);
+		}
+	},
+
+	getNextItem: function(index)
+	{
+		if (this.isNextItem(index))
+		{
+			return $(this.$items[index+1]);
+		}
+	},
+
+	getItemToTheLeft: function(index)
+	{
+		if (this.isPreviousItem(index))
+		{
+			if (this.settings.horizontal)
+			{
+				return this.getPreviousItem(index);
+			}
+			if (!this.settings.vertical)
+			{
+				return this.getClosestItem(index, 'x', '<');
+			}
+		}
+	},
+
+	getItemToTheRight: function(index)
+	{
+		if (this.isNextItem(index))
+		{
+			if (this.settings.horizontal)
+			{
+				return this.getNextItem(index);
+			}
+			else if (!this.settings.vertical)
+			{
+				return this.getClosestItem(index, 'x', '>');
+			}
+		}
+	},
+
+	getItemAbove: function(index)
+	{
+		if (this.isPreviousItem(index))
+		{
+			if (this.settings.vertical)
+			{
+				return this.getPreviousItem(index);
+			}
+			else if (!this.settings.horizontal)
+			{
+				return this.getClosestItem(index, 'y', '<');
+			}
+		}
+	},
+
+	getItemBelow: function(index)
+	{
+		if (this.isNextItem(index))
+		{
+			if (this.settings.vertical)
+			{
+				return this.getNextItem(index);
+			}
+			else if (!this.settings.horizontal)
+			{
+				return this.getClosestItem(index, 'y', '>');
+			}
+		}
+	},
+
+	getClosestItem: function(index, axis, dir)
+	{
+		var axisProps = Garnish.Select.closestItemAxisProps[axis],
+			dirProps = Garnish.Select.closestItemDirectionProps[dir];
+
+		var $thisItem = $(this.$items[index]),
+			thisOffset = $thisItem.offset(),
+			thisMidpoint = thisOffset[axisProps.midpointOffset] + Math.round($thisItem[axisProps.midpointSizeFunc]()/2),
+			otherRowPos = null,
+			smallestMidpointDiff = null,
+			$closestItem = null;
+
+		for (var i = index + dirProps.step; (typeof this.$items[i] != 'undefined'); i += dirProps.step)
+		{
+			var $otherItem = $(this.$items[i]),
+				otherOffset = $otherItem.offset();
+
+			// Are we on the next row yet?
+			if (dirProps.isNextRow(otherOffset[axisProps.rowOffset], thisOffset[axisProps.rowOffset]))
+			{
+				// Is this the first time we've seen this row?
+				if (otherRowPos === null)
+				{
+					otherRowPos = otherOffset[axisProps.rowOffset];
+				}
+				// Have we gone too far?
+				else if (otherOffset[axisProps.rowOffset] != otherRowPos)
+				{
+					break;
+				}
+
+				var otherMidpoint = otherOffset[axisProps.midpointOffset] + Math.round($otherItem[axisProps.midpointSizeFunc]()/2),
+					midpointDiff = Math.abs(thisMidpoint - otherMidpoint);
+
+				// Are we getting warmer?
+				if (smallestMidpointDiff === null || midpointDiff < smallestMidpointDiff)
+				{
+					smallestMidpointDiff = midpointDiff;
+					$closestItem = $otherItem;
+				}
+				// Getting colder?
+				else
+				{
+					break;
+				}
+			}
+			// Getting colder?
+			else if (dirProps.isWrongDirection(otherOffset[axisProps.rowOffset], thisOffset[axisProps.rowOffset]))
+			{
+				break;
+			}
+		}
+
+		return $closestItem;
+	},
+
+	getFurthestItemToTheLeft: function(index)
+	{
+		return this.getFurthestItem(index, 'ToTheLeft');
+	},
+
+	getFurthestItemToTheRight: function(index)
+	{
+		return this.getFurthestItem(index, 'ToTheRight');
+	},
+
+	getFurthestItemAbove: function(index)
+	{
+		return this.getFurthestItem(index, 'Above');
+	},
+
+	getFurthestItemBelow: function(index)
+	{
+		return this.getFurthestItem(index, 'Below');
+	},
+
+	getFurthestItem: function(index, dir)
+	{
+		var $item, $testItem;
+
+		while ($testItem = this['getItem'+dir](index))
+		{
+			$item = $testItem;
+			index = this.getItemIndex($item);
+		}
+
+		return $item;
 	},
 
 	// --------------------------------------------------------------------
@@ -414,6 +679,7 @@ Garnish.Select = Garnish.Base.extend({
 
 			this.addListener($handle, 'mousedown', 'onMouseDown');
 			this.addListener($handle, 'mouseup', 'onMouseUp');
+			this.addListener($handle, 'keydown', 'onKeyDown');
 			this.addListener($handle, 'click', function(ev)
 			{
 				this.ignoreClick = true;
@@ -480,6 +746,11 @@ Garnish.Select = Garnish.Base.extend({
 		{
 			this.first = this.getItemIndex(this.$first);
 			this.last = this.getItemIndex(this.$last);
+			this.setFocusableItem(this.$first);
+		}
+		else if (this.$items.length)
+		{
+			this.setFocusableItem($(this.$items[0]));
 		}
 	},
 
@@ -491,6 +762,24 @@ Garnish.Select = Garnish.Base.extend({
 	 	this.$items = $().add(this.$items);
 	 	this.updateIndexes();
 	 },
+
+	/**
+	 * Sets the focusable item.
+	 *
+	 * We only want to have one focusable item per selection list, so that the user
+	 * doesn't have to tab through a million items.
+	 *
+	 * @param object $item
+	 */
+	setFocusableItem: function($item)
+	{
+		if (this.$focusable)
+		{
+			this.$focusable.removeAttr('tabindex');
+		}
+
+		this.$focusable = $item.attr('tabindex', '0');
+	},
 
 	// --------------------------------------------------------------------
 
@@ -534,8 +823,36 @@ Garnish.Select = Garnish.Base.extend({
 {
 	defaults: {
 		multi: false,
+		vertical: false,
+		horizontal: false,
 		waitForDblClick: false,
 		handle: null,
 		onSelectionChange: $.noop
+	},
+
+	closestItemAxisProps: {
+		x: {
+			midpointOffset:   'top',
+			midpointSizeFunc: 'outerHeight',
+			rowOffset:        'left'
+		},
+		y: {
+			midpointOffset:   'left',
+			midpointSizeFunc: 'outerWidth',
+			rowOffset:        'top'
+		}
+	},
+
+	closestItemDirectionProps: {
+		'<': {
+			step: -1,
+			isNextRow: function(a, b) { return (a < b); },
+			isWrongDirection: function(a, b) { return (a > b); }
+		},
+		'>': {
+			step: 1,
+			isNextRow: function(a, b) { return (a > b); },
+			isWrongDirection: function(a, b) { return (a < b); }
+		}
 	}
 });
