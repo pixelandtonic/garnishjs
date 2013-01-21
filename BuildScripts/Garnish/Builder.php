@@ -93,13 +93,12 @@ class Builder
 		echo "Merging all of the JS files into {$this->_uncompressedFile}...".PHP_EOL;
 
 		// Assemble a list of all the JS files
-		$jsFiles = glob($this->_sourceDir."*.js");
-
-		// Put garnish.js at the top of the list
-		$garnishJsFile = $this->_sourceDir.'garnish.js';
-		$garnishJsKey = array_search($garnishJsFile, $jsFiles);
-		unset($jsFiles[$garnishJsKey]);
-		array_unshift($jsFiles, $garnishJsFile);
+		$jsFiles = array(
+			$this->_sourceDir.'Base.js',
+			$this->_sourceDir.'garnish.js',
+		);
+		$jsClassFiles = glob($this->_sourceDir.'classes/*.js');
+		$jsFiles = array_merge($jsFiles, $jsClassFiles);
 
 		// Assempble the build file contents
 		$contents = <<<HEADER
