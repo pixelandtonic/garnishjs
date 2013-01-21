@@ -1,5 +1,7 @@
 /**
- * DragSort
+ * Drag-to-sort class
+ *
+ * Builds on the Drag class by allowing you to sort the elements amongst themselves.
  */
 Garnish.DragSort = Garnish.Drag.extend({
 
@@ -107,23 +109,23 @@ Garnish.DragSort = Garnish.Drag.extend({
 	 */
 	getClosestItemIndex: function()
 	{
-		var closestItemIndex = -1,
-			closestItemMouseDiff;
+		Garnish.DragSort.getClosestItemIndex._closestItemIndex = -1;
+		Garnish.DragSort.getClosestItemIndex._closestItemMouseDiff = null;
 
-		for (var i = 0; i < this.$items.length; i++)
+		for (Garnish.DragSort.getClosestItemIndex._i = 0; Garnish.DragSort.getClosestItemIndex._i < this.$items.length; Garnish.DragSort.getClosestItemIndex._i++)
 		{
-			var $item = $(this.$items[i]),
-				midpoint = $item.data('midpoint'),
-				mouseDiff = Garnish.getDist(midpoint.left, midpoint.top, this.mouseX, this.mouseY);
+			Garnish.DragSort.getClosestItemIndex._$item = $(this.$items[Garnish.DragSort.getClosestItemIndex._i]);
+			Garnish.DragSort.getClosestItemIndex._midpoint = Garnish.DragSort.getClosestItemIndex._$item.data('midpoint');
+			Garnish.DragSort.getClosestItemIndex._mouseDiff = Garnish.getDist(Garnish.DragSort.getClosestItemIndex._midpoint.left, Garnish.DragSort.getClosestItemIndex._midpoint.top, this.mouseX, this.mouseY);
 
-			if (closestItemIndex == -1 || mouseDiff < closestItemMouseDiff)
+			if (Garnish.DragSort.getClosestItemIndex._closestItemIndex == -1 || Garnish.DragSort.getClosestItemIndex._mouseDiff < Garnish.DragSort.getClosestItemIndex._closestItemMouseDiff)
 			{
-				closestItemIndex = i;
-				closestItemMouseDiff = mouseDiff;
+				Garnish.DragSort.getClosestItemIndex._closestItemIndex = Garnish.DragSort.getClosestItemIndex._i;
+				Garnish.DragSort.getClosestItemIndex._closestItemMouseDiff = Garnish.DragSort.getClosestItemIndex._mouseDiff;
 			}
 		}
 
-		return closestItemIndex;
+		return Garnish.DragSort.getClosestItemIndex._closestItemIndex;
 	},
 
 	/**

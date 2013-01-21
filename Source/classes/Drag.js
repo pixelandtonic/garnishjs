@@ -1,6 +1,8 @@
 /**
- * Drag
- * Used as a base class for DragDrop and DragSort
+ * Drag class
+ *
+ * Builds on the BaseDrag class by "picking up" the selceted element(s),
+ * without worrying about what to do when an element is being dragged.
  */
 Garnish.Drag = Garnish.BaseDrag.extend({
 
@@ -166,9 +168,9 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		if (this.mouseX !== this.lastMouseX || this.mouseY !== this.lastMouseY)
 		{
 			// get the new target helper positions
-			for (var i = 0; i < this.helpers.length; i++)
+			for (Garnish.Drag.updateHelperPos._i = 0; Garnish.Drag.updateHelperPos._i < this.helpers.length; Garnish.Drag.updateHelperPos._i++)
 			{
-				this.helperTargets[i] = this.getHelperTarget(i);
+				this.helperTargets[Garnish.Drag.updateHelperPos._i] = this.getHelperTarget(Garnish.Drag.updateHelperPos._i);
 			}
 
 			this.lastMouseX = this.mouseX;
@@ -176,16 +178,16 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		}
 
 		// gravitate helpers toward their target positions
-		for (var j = 0; j < this.helpers.length; j++)
+		for (Garnish.Drag.updateHelperPos._j = 0; Garnish.Drag.updateHelperPos._j < this.helpers.length; Garnish.Drag.updateHelperPos._j++)
 		{
-			var lag = Garnish.Drag.helperLagBase + (this.helperLagIncrement * j);
+			Garnish.Drag.updateHelperPos._lag = Garnish.Drag.helperLagBase + (this.helperLagIncrement * Garnish.Drag.updateHelperPos._j);
 
-			this.helperPositions[j] = {
-				left: this.helperPositions[j].left + ((this.helperTargets[j].left - this.helperPositions[j].left) / lag),
-				top:  this.helperPositions[j].top  + ((this.helperTargets[j].top  - this.helperPositions[j].top) / lag)
+			this.helperPositions[Garnish.Drag.updateHelperPos._j] = {
+				left: this.helperPositions[Garnish.Drag.updateHelperPos._j].left + ((this.helperTargets[Garnish.Drag.updateHelperPos._j].left - this.helperPositions[Garnish.Drag.updateHelperPos._j].left) / Garnish.Drag.updateHelperPos._lag),
+				top:  this.helperPositions[Garnish.Drag.updateHelperPos._j].top  + ((this.helperTargets[Garnish.Drag.updateHelperPos._j].top  - this.helperPositions[Garnish.Drag.updateHelperPos._j].top) / Garnish.Drag.updateHelperPos._lag)
 			};
 
-			this.helpers[j].css(this.helperPositions[j]);
+			this.helpers[Garnish.Drag.updateHelperPos._j].css(this.helperPositions[Garnish.Drag.updateHelperPos._j]);
 		}
 	},
 

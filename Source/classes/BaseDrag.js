@@ -1,5 +1,8 @@
 /**
- * Drag Core
+ * Base drag class
+ *
+ * Does all the grunt work for manipulating elements via click-and-drag,
+ * while leaving the actual element manipulation up to a subclass.
  */
 Garnish.BaseDrag = Garnish.Base.extend({
 
@@ -97,10 +100,9 @@ Garnish.BaseDrag = Garnish.Base.extend({
 
 		if (!this.dragging)
 		{
-			// has the mouse moved far enough to initiate dragging yet?
-			var mouseDist = Garnish.getDist(this.mousedownX, this.mousedownY, this.mouseX, this.mouseY);
-
-			if (mouseDist >= Garnish.BaseDrag.minMouseDist)
+			// Has the mouse moved far enough to initiate dragging yet?
+			Garnish.BaseDrag.onMouseMove._mouseDist = Garnish.getDist(this.mousedownX, this.mousedownY, this.mouseX, this.mouseY);
+			if (Garnish.BaseDrag.onMouseMove._mouseDist >= Garnish.BaseDrag.minMouseDist)
 			{
 				this.startDragging();
 			}
