@@ -254,8 +254,6 @@ Garnish.Select = Garnish.Base.extend({
 			this.deselectAll();
 			this.selectItem($item);
 		}
-
-		this.$container.focus();
 	},
 
 	/**
