@@ -231,7 +231,10 @@ Garnish.Select = Garnish.Base.extend({
 	onMouseDown: function(ev)
 	{
 		// ignore right clicks
-		if (ev.button == 2) return;
+		if (ev.button != Garnish.PRIMARY_CLICK)
+		{
+			return;
+		}
 
 		this.mousedownX = ev.pageX;
 		this.mousedownY = ev.pageY;
@@ -261,7 +264,10 @@ Garnish.Select = Garnish.Base.extend({
 	onMouseUp: function(ev)
 	{
 		// ignore right clicks
-		if (ev.button == 2) return;
+		if (ev.button != Garnish.PRIMARY_CLICK)
+		{
+			return;
+		}
 
 		var $item = $($.data(ev.currentTarget, 'select-item'));
 

@@ -35,7 +35,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 	onMouseDown: function(ev)
 	{
-		if (ev.button != 0 || ev.metaKey)
+		if (ev.button != Garnish.PRIMARY_CLICK || ev.metaKey)
 		{
 			return;
 		}
