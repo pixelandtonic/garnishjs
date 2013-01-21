@@ -480,7 +480,7 @@ Garnish.Select = Garnish.Base.extend({
 			}
 			if (!this.settings.vertical)
 			{
-				return this.getClosestItem(index, 'x', '<');
+				return this.getClosestItem(index, Garnish.X_AXIS, '<');
 			}
 		}
 	},
@@ -495,7 +495,7 @@ Garnish.Select = Garnish.Base.extend({
 			}
 			else if (!this.settings.vertical)
 			{
-				return this.getClosestItem(index, 'x', '>');
+				return this.getClosestItem(index, Garnish.X_AXIS, '>');
 			}
 		}
 	},
@@ -510,7 +510,7 @@ Garnish.Select = Garnish.Base.extend({
 			}
 			else if (!this.settings.horizontal)
 			{
-				return this.getClosestItem(index, 'y', '<');
+				return this.getClosestItem(index, Garnish.Y_AXIS, '<');
 			}
 		}
 	},
@@ -525,7 +525,7 @@ Garnish.Select = Garnish.Base.extend({
 			}
 			else if (!this.settings.horizontal)
 			{
-				return this.getClosestItem(index, 'y', '>');
+				return this.getClosestItem(index, Garnish.Y_AXIS, '>');
 			}
 		}
 	},

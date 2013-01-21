@@ -86,8 +86,8 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	{
 		ev.preventDefault();
 
-		if (this.settings.axis != 'y') this.mouseX = ev.pageX;
-		if (this.settings.axis != 'x') this.mouseY = ev.pageY;
+		if (this.settings.axis != Garnish.Y_AXIS) this.mouseX = ev.pageX;
+		if (this.settings.axis != Garnish.X_AXIS) this.mouseY = ev.pageY;
 
 		this.mouseDistX = this.mouseX - this.mousedownX;
 		this.mouseDistY = this.mouseY - this.mousedownY;

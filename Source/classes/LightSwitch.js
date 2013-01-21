@@ -38,7 +38,7 @@ Garnish.LightSwitch = Garnish.Base.extend({
 		this.addListener(this.$outerContainer, 'keydown', '_onKeyDown');
 
 		this.dragger = new Garnish.BaseDrag(this.$outerContainer, {
-			axis: 'x',
+			axis: Garnish.X_AXIS,
 			ignoreButtons: false,
 			onDragStart: $.proxy(this, '_onDragStart'),
 			onDrag:      $.proxy(this, '_onDrag'),
@@ -49,7 +49,7 @@ Garnish.LightSwitch = Garnish.Base.extend({
 	turnOn: function()
 	{
 		this.$innerContainer.stop().animate({marginLeft: 0}, 'fast');
-		this.$input.val('y');
+		this.$input.val(Garnish.Y_AXIS);
 		this.on = true;
 		this.settings.onChange();
 

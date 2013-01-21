@@ -31,6 +31,10 @@ Garnish = {
 	A_KEY:      65,
 	CMD_KEY:    91,
 
+	// Axis constants
+	X_AXIS: 'x',
+	Y_AXIS: 'y',
+
 	// Node types
 	TEXT_NODE: 3,
 
