@@ -90,12 +90,19 @@ class Builder
 	 */
 	protected function yuiCompressify()
 	{
+		echo "Merging all of the JS files into {$this->_uncompressedFile}...".PHP_EOL;
+
+		// Assemble a list of all the JS files
 		$jsFiles = glob($this->_sourceDir."*.js");
 
-		// Compress and merge into garnish.js
-		echo ('Compressing and merging JS files into '.$this->_compressedFile.PHP_EOL);
+		// Put garnish.js at the top of the list
+		$garnishJsFile = $this->_sourceDir.'garnish.js';
+		$garnishJsKey = array_search($garnishJsFile, $jsFiles);
+		unset($jsFiles[$garnishJsKey]);
+		array_unshift($jsFiles, $garnishJsFile);
 
-		$header = <<<HEADER
+		// Assempble the build file contents
+		$contents = <<<HEADER
 /*!
  * Garnish UI toolkit
  *
@@ -104,54 +111,41 @@ class Builder
  * @version   {$this->_version}
  */
 (function($){
+
+
 HEADER;
 
-		$uncompressedContents = $header."\n\n\n";
-
-		file_put_contents($this->_uncompressedFile, $uncompressedContents);
-		file_put_contents($this->_compressedFile, $uncompressedContents);
-
-		$counter = 0;
-
-		// Make sure garnish.js is at the top of the list.
-		$sourceGarnishJsPath = $this->_sourceDir.'garnish.js';
-		$key = array_search($sourceGarnishJsPath, $jsFiles);
-		unset($jsFiles[$key]);
-		array_unshift($jsFiles, $sourceGarnishJsPath);
-
+		// Add each of the JS file contents
 		foreach ($jsFiles as $jsFile)
 		{
-			$fileName = pathinfo($jsFile, PATHINFO_FILENAME);
-
-			$command = "java -jar {$this->_buildScriptDir}lib/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar --charset utf-8 --type js {$jsFile} >> {$this->_compressedFile}";
-
-			echo ('Executing: '.$command.PHP_EOL);
-
-			exec($command.' 2>&1', $output, $status);
-			echo 'Status: '.$status.PHP_EOL;
-			$output = implode(PHP_EOL, $output);
-			echo 'Results: '.$output.PHP_EOL.PHP_EOL;
-
-			if ($status !== 0)
-			{
-				throw new Exception('Could not YuiCompressify a file: '.$jsFile);
-			}
-
-			$uncompressedContents .= file_get_contents($jsFile)."\n\n";
-
-			$counter++;
+			$contents .= file_get_contents($jsFile)."\n\n";
 		}
 
 		// Add the footer
-		$footer = "})(jQuery);\n";
+		$contents .= "})(jQuery);\n";
 
-		$compressedContents = file_get_contents($this->_compressedFile) . $footer;
-		$uncompressedContents .= $footer;
+		// Save out the uncompressed file
+		file_put_contents($this->_uncompressedFile, $contents);
 
-		file_put_contents($this->_compressedFile, $compressedContents);
-		file_put_contents($this->_uncompressedFile, $uncompressedContents);
+		echo "Finished merging all of the JS files into {$this->_uncompressedFile}".PHP_EOL.PHP_EOL;
 
-		echo ('Finished compressing and merging JS files into '.$this->_buildScriptDir.PHP_EOL.PHP_EOL);
+		// Compress it
+		echo "Compressing {$this->_uncompressedFile} into {$this->_compressedFile}...".PHP_EOL;
+
+		$yuiCompressorFile = $this->_buildScriptDir . 'lib/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar';
+		$command = "java -jar {$yuiCompressorFile} --charset utf-8 --type js {$this->_uncompressedFile} > {$this->_compressedFile}";
+		echo "Executing: {$command}".PHP_EOL;
+		exec("{$command} 2>&1", $output, $status);
+		echo "Status: {$status}".PHP_EOL;
+		$output = implode(PHP_EOL, $output);
+		echo "Results: {$output}".PHP_EOL;
+
+		if ($status !== 0)
+		{
+			throw new Exception('Could not YuiCompressify a file: '.$jsFile);
+		}
+
+		echo "Finished compressing {$this->_uncompressedFile} into {$this->_compressedFile}".PHP_EOL.PHP_EOL;
 	}
 
 	/**
