@@ -52,8 +52,8 @@ class Builder
 		$this->_uncompressedFileName = 'garnish-'.$this->_version.'.js';
 		$this->_compressedFileName = 'garnish-'.$this->_version.'.min.js';
 
-		$this->_uncompressedFile = $this->_buildDir.'garnish-'.$this->_uncompressedFileName;
-		$this->_compressedFile = $this->_buildDir.'garnish-'.$this->_compressedFileName;
+		$this->_uncompressedFile = $this->_buildDir.$this->_uncompressedFileName;
+		$this->_compressedFile = $this->_buildDir.$this->_compressedFileName;
 	}
 
 	/**
