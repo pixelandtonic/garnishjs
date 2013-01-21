@@ -14,7 +14,7 @@ Garnish.HUD = Garnish.Base.extend({
 
 		this.showing = false;
 
-		this.$hud = $('<div class="hud" />').appendTo(document.body).hide();
+		this.$hud = $('<div class="hud" />').appendTo(Garnish.$bod).hide();
 		this.$tip = $('<div class="tip" />').appendTo(this.$hud);
 
 		this.$contents.appendTo(this.$hud);
@@ -43,11 +43,11 @@ Garnish.HUD = Garnish.Base.extend({
 		//  Get all relevant dimensions, lengths, etc
 		// -------------------------------------------
 
-		this.windowWidth = $(window).width();
-		this.windowHeight = $(window).height();
+		this.windowWidth = Garnish.$win.width();
+		this.windowHeight = Garnish.$win.height();
 
-		this.windowScrollLeft = $(window).scrollLeft();
-		this.windowScrollTop = $(window).scrollTop();
+		this.windowScrollLeft = Garnish.$win.scrollLeft();
+		this.windowScrollTop = Garnish.$win.scrollTop();
 
 		// get the trigger element's dimensions
 		this.triggerWidth = this.$trigger.width() + parseInt(this.$trigger.css('paddingLeft')) + parseInt(this.$trigger.css('borderLeftWidth')) + parseInt(this.$trigger.css('paddingRight')) + parseInt(this.$trigger.css('borderRightWidth'));

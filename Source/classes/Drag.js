@@ -125,7 +125,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 			else if (this.settings.helper)
 				$draggeeHelper = $(this.settings.helper).append($draggeeHelper);
 
-			$draggeeHelper.appendTo(document.body);
+			$draggeeHelper.appendTo(Garnish.$bod);
 
 			var helperPos = this.getHelperTarget(i);
 

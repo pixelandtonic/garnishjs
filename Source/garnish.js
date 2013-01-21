@@ -28,6 +28,7 @@ Garnish = {
 	UP_KEY:     38,
 	RIGHT_KEY:  39,
 	DOWN_KEY:   40,
+	A_KEY:      65,
 	CMD_KEY:    91,
 
 	// Node types

@@ -286,16 +286,15 @@ Garnish.Select = Garnish.Base.extend({
 	 */
 	onKeyDown: function(ev)
 	{
-		// ignore if there are no items
-		if (! this.$items.length) return;
+		var metaKey = (ev.metaKey || ev.ctrlKey),
+			anchor = ev.shiftKey ? this.last : this.first;
 
-		var anchor = ev.shiftKey ? this.last : this.first;
-
+		// Ok, what are we doing here?
 		switch (ev.keyCode)
 		{
 			case Garnish.LEFT_KEY:
 			{
-				event.preventDefault();
+				ev.preventDefault();
 
 				if (metaKey)
 				{
@@ -311,7 +310,7 @@ Garnish.Select = Garnish.Base.extend({
 
 			case Garnish.RIGHT_KEY:
 			{
-				event.preventDefault();
+				ev.preventDefault();
 
 				if (metaKey)
 				{
@@ -327,8 +326,9 @@ Garnish.Select = Garnish.Base.extend({
 
 			case Garnish.UP_KEY:
 			{
-				event.preventDefault();
+				ev.preventDefault();
 
+				// Select the last item if none are selected
 				if (this.first === null)
 				{
 					var $item = this.getLastItem();
@@ -355,8 +355,9 @@ Garnish.Select = Garnish.Base.extend({
 
 			case Garnish.DOWN_KEY:
 			{
-				event.preventDefault();
+				ev.preventDefault();
 
+				// Select the first item if none are selected
 				if (this.first === null)
 				{
 					var $item = this.getFirstItem();
@@ -383,50 +384,47 @@ Garnish.Select = Garnish.Base.extend({
 
 			case Garnish.SPACE_KEY:
 			{
-				ev.preventDefault();
-
-				if (this.isSelected(this.$focusable))
+				if (!metaKey)
 				{
-					this.deselectItem(this.$focusable);
-				}
-				else
-				{
-					this.selectItem(this.$focusable);
+					ev.preventDefault();
+
+					if (this.isSelected(this.$focusable))
+					{
+						this.deselectItem(this.$focusable);
+					}
+					else
+					{
+						this.selectItem(this.$focusable);
+					}
 				}
 
-				return;
+				break;
 			}
 
 			case Garnish.A_KEY:
 			{
-				event.preventDefault();
-				this.selectAll();
-				return;
-			}
+				if (metaKey)
+				{
+					ev.preventDefault();
+					this.selectAll();
+				}
 
-			default:
+				break;
+			}
+		}
+
+		// Is there an item queued up for selection?
+		if (typeof $item != 'undefined' && $item.length)
+		{
+			if (this.first !== null && ev.shiftKey)
 			{
-				return;
+				this.selectRange($item);
 			}
-		}
-
-		if (typeof $item == 'undefined' || !$item.length)
-		{
-			return;
-		}
-
-		// -------------------------------------------
-		//  Select the item
-		// -------------------------------------------
-
-		if (this.first !== null && ev.shiftKey)
-		{
-			this.selectRange($item);
-		}
-		else
-		{
-			this.deselectAll();
-			this.selectItem($item);
+			else
+			{
+				this.deselectAll();
+				this.selectItem($item);
+			}
 		}
 	},
 
@@ -446,7 +444,7 @@ Garnish.Select = Garnish.Base.extend({
 		}
 	},
 
-	_isPreviousItem: function(index)
+	isPreviousItem: function(index)
 	{
 		return (index > 0);
 	},
