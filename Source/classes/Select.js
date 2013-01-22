@@ -290,8 +290,21 @@ Garnish.Select = Garnish.Base.extend({
 	 */
 	onKeyDown: function(ev)
 	{
-		var metaKey = (ev.metaKey || ev.ctrlKey),
-			anchor = ev.shiftKey ? this.last : this.first;
+		var metaKey = (ev.metaKey || ev.ctrlKey);
+
+		if (this.settings.arrowsChangeSelection || !this.$focusable.length)
+		{
+			var anchor = ev.shiftKey ? this.last : this.first;
+		}
+		else
+		{
+			var anchor = $.inArray(this.$focusable[0], this.$items);
+
+			if (anchor == -1)
+			{
+				anchor = 0;
+			}
+		}
 
 		// Ok, what are we doing here?
 		switch (ev.keyCode)
@@ -433,17 +446,27 @@ Garnish.Select = Garnish.Base.extend({
 			}
 		}
 
-		// Is there an item queued up for selection?
+		// Is there an item queued up for focus/selection?
 		if ($item && $item.length)
 		{
-			if (this.first !== null && ev.shiftKey)
+			if (this.settings.arrowsChangeSelection)
 			{
-				this.selectRange($item);
+				// select it
+				if (this.first !== null && ev.shiftKey)
+				{
+					this.selectRange($item);
+				}
+				else
+				{
+					this.deselectAll();
+					this.selectItem($item);
+				}
 			}
 			else
 			{
-				this.deselectAll();
-				this.selectItem($item);
+				// just set the new item to be focussable
+				this.setFocusableItem($item);
+				$item.focus();
 			}
 		}
 	},
@@ -845,6 +868,7 @@ Garnish.Select = Garnish.Base.extend({
 		vertical: false,
 		horizontal: false,
 		waitForDblClick: false,
+		arrowsChangeSelection: true,
 		handle: null,
 		onSelectionChange: $.noop
 	},
