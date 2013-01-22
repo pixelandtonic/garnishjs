@@ -127,8 +127,8 @@ Garnish = {
 		Garnish.hitTest._offset = Garnish.hitTest._$elem.offset(),
 		Garnish.hitTest._x1 = Garnish.hitTest._offset.left,
 		Garnish.hitTest._y1 = Garnish.hitTest._offset.top,
-		Garnish.hitTest._x2 = Garnish.hitTest._x1 + Garnish.hitTest._$elem.width(),
-		Garnish.hitTest._y2 = Garnish.hitTest._y1 + Garnish.hitTest._$elem.height();
+		Garnish.hitTest._x2 = Garnish.hitTest._x1 + Garnish.hitTest._$elem.outerWidth(),
+		Garnish.hitTest._y2 = Garnish.hitTest._y1 + Garnish.hitTest._$elem.outerHeight();
 
 		return (x >= Garnish.hitTest._x1 && x < Garnish.hitTest._x2 && y >= Garnish.hitTest._y1 && y < Garnish.hitTest._y2);
 	},
