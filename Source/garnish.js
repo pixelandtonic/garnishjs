@@ -43,6 +43,63 @@ Garnish = {
 	TEXT_NODE: 3,
 
 	/**
+	 * Logs a message to the browser's console, if the browser has one.
+	 *
+	 * @param string msg
+	 */
+	log: function(msg)
+	{
+		if (typeof console != 'undefined' && typeof console.log == 'function')
+		{
+			console.log(msg);
+		}
+	},
+
+	/**
+	 * Returns whether a variable is an array.
+	 *
+	 * @param mixed val
+	 * @return bool
+	 */
+	isArray: function(val)
+	{
+		return (val instanceof Array);
+	},
+
+	/**
+	 * Returns whether a variable is a jQuery collection.
+	 *
+	 * @param mixed val
+	 * @return bool
+	 */
+	isJquery: function(val)
+	{
+		return (val instanceof jQuery);
+	},
+
+	/**
+	 * Returns whether a variable is a plain object (not an array, element, or jQuery collection).
+	 *
+	 * @param mixed val
+	 * @return bool
+	 */
+	isObject: function(val)
+	{
+		return (typeof val == 'object' && !Garnish.isArray(val) && !Garnish.isJquery(val) && typeof val.nodeType == 'undefined');
+	},
+
+	/**
+	 * Returns whether a variable is a string.
+	 *
+	 * @param mixed val
+	 * @return bool
+	 */
+	isString: function(val)
+	{
+		return (typeof val == 'string');
+	},
+
+	/**
 	 * Returns the distance between two coordinates.
 	 *
 	 * @param int x1 The first coordinate's X position.
@@ -66,14 +123,14 @@ Garnish = {
 	 */
 	hitTest: function(x, y, elem)
 	{
-		var $elem = $(elem),
-			offset = $elem.offset(),
-			x1 = offset.left,
-			y1 = offset.top,
-			x2 = x1 + $elem.width(),
-			y2 = y1 + $elem.height();
+		Garnish.hitTest._$elem = $(elem),
+		Garnish.hitTest._offset = Garnish.hitTest._$elem.offset(),
+		Garnish.hitTest._x1 = Garnish.hitTest._offset.left,
+		Garnish.hitTest._y1 = Garnish.hitTest._offset.top,
+		Garnish.hitTest._x2 = Garnish.hitTest._x1 + Garnish.hitTest._$elem.width(),
+		Garnish.hitTest._y2 = Garnish.hitTest._y1 + Garnish.hitTest._$elem.height();
 
-		return (x >= x1 && x < x2 && y >= y1 && y < y2);
+		return (x >= Garnish.hitTest._x1 && x < Garnish.hitTest._x2 && y >= Garnish.hitTest._y1 && y < Garnish.hitTest._y2);
 	},
 
 	/**
@@ -116,23 +173,23 @@ Garnish = {
 	 */
 	getBodyScrollTop: function()
 	{
-		var scrollTop = document.body.scrollTop;
+		Garnish.getBodyScrollTop._scrollTop = document.body.scrollTop;
 
-		if (scrollTop < 0)
+		if (Garnish.getBodyScrollTop._scrollTop < 0)
 		{
-			scrollTop = 0;
+			Garnish.getBodyScrollTop._scrollTop = 0;
 		}
 		else
 		{
-			var maxScrollTop = Garnish.$bod.outerHeight() - Garnish.$win.height();
+			Garnish.getBodyScrollTop._maxScrollTop = Garnish.$bod.outerHeight() - Garnish.$win.height();
 
-			if (scrollTop > maxScrollTop)
+			if (Garnish.getBodyScrollTop._scrollTop > Garnish.getBodyScrollTop._maxScrollTop)
 			{
-				scrollTop = maxScrollTop;
+				Garnish.getBodyScrollTop._scrollTop = Garnish.getBodyScrollTop._maxScrollTop;
 			}
 		}
 
-		return scrollTop;
+		return Garnish.getBodyScrollTop._scrollTop;
 	},
 
 	/**
@@ -197,9 +254,9 @@ Garnish = {
 			{
 				setTimeout(function()
 				{
-					var properties = {};
-					properties[prop] = startingPoint + (i % 2 ? -1 : 1) * (10-i);
-					$elem.animate(properties, Garnish.SHAKE_STEP_DURATION);
+					Garnish.shake._properties = {};
+					Garnish.shake._properties[prop] = startingPoint + (i % 2 ? -1 : 1) * (10-i);
+					$elem.animate(Garnish.shake._properties, Garnish.SHAKE_STEP_DURATION);
 				}, (Garnish.SHAKE_STEP_DURATION * i));
 			})(i);
 		}
@@ -296,7 +353,8 @@ Garnish.Base = Base.extend({
 
 				$elem.on('keydown'+activateNamespace, function(ev)
 				{
-					if (ev.target == $elem[0] && ev.keyCode == Garnish.SPACE_KEY)
+					var elemIndex = $.inArray(ev.target, $elem);
+					if (elemIndex != -1 && ev.keyCode == Garnish.SPACE_KEY)
 					{
 						ev.preventDefault();
 
@@ -307,10 +365,11 @@ Garnish.Base = Base.extend({
 							Garnish.$doc.on('keyup'+activateNamespace, function(ev)
 							{
 								$elem.removeClass('active');
-								if (ev.target == $elem[0] && ev.keyCode == Garnish.SPACE_KEY)
+								var elemIndex = $.inArray(ev.target, $elem);
+								if (elemIndex != -1 && ev.keyCode == Garnish.SPACE_KEY)
 								{
 									ev.preventDefault();
-									$elem.trigger('activate');
+									$($elem[elemIndex]).trigger('activate');
 								}
 								Garnish.$doc.off('keyup'+activateNamespace);
 							});

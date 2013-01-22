@@ -101,8 +101,8 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		if (!this.dragging)
 		{
 			// Has the mouse moved far enough to initiate dragging yet?
-			Garnish.BaseDrag.onMouseMove._mouseDist = Garnish.getDist(this.mousedownX, this.mousedownY, this.mouseX, this.mouseY);
-			if (Garnish.BaseDrag.onMouseMove._mouseDist >= Garnish.BaseDrag.minMouseDist)
+			this.onMouseMove._mouseDist = Garnish.getDist(this.mousedownX, this.mousedownY, this.mouseX, this.mouseY);
+			if (this.onMouseMove._mouseDist >= Garnish.BaseDrag.minMouseDist)
 			{
 				this.startDragging();
 			}
@@ -246,6 +246,25 @@ Garnish.BaseDrag = Garnish.Base.extend({
 				this.$items.splice(index, 1);
 			}
 		}
+	},
+
+	/**
+	 * Remove All Items
+	 */
+	removeAllItems: function()
+	{
+		for (var i = 0; i < this.$items.length; i++)
+		{
+			var item = this.$items[i],
+				$handle = $.data(item, 'drag-handle');
+
+			$handle.data('drag-item', null);
+			$.data(item, 'drag', null);
+			$.data(item, 'drag-handle', null);
+			this.removeAllListeners($handle);
+		}
+
+		this.$items = $();
 	}
 },
 {

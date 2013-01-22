@@ -6,20 +6,24 @@ Garnish.HUD = Garnish.Base.extend({
 	/**
 	 * Constructor
 	 */
-	init: function(trigger, contents, settings) {
+	init: function(trigger, contentsHtml, settings) {
 
 		this.$trigger = $(trigger);
-		this.$contents = $(contents);
-		this.settings = $.extend({}, Garnish.HUD.defaults, settings);
+		this.setSettings(settings, Garnish.HUD.defaults);
 
 		this.showing = false;
 
-		this.$hud = $('<div class="hud" />').appendTo(Garnish.$bod).hide();
-		this.$tip = $('<div class="tip" />').appendTo(this.$hud);
+		this.$hud = $('<div class="'+this.settings.hudClass+'" />').appendTo(Garnish.$bod);
+		this.$tip = $('<div class="'+this.settings.tipClass+'" />').appendTo(this.$hud);
+		this.$contents = $('<div class="'+this.settings.contentsClass+'" />').appendTo(this.$hud).html(contentsHtml);
 
-		this.$contents.appendTo(this.$hud);
+		this.show();
 
-		this.addListener(this.$trigger, 'click', 'show');
+		// Prevent clicks on the HUD from hiding itself
+		this.addListener(this.$hud, 'click', function(ev)
+		{
+			ev.stopPropagation();
+		});
 	},
 
 	/**
@@ -50,8 +54,8 @@ Garnish.HUD = Garnish.Base.extend({
 		this.windowScrollTop = Garnish.$win.scrollTop();
 
 		// get the trigger element's dimensions
-		this.triggerWidth = this.$trigger.width() + parseInt(this.$trigger.css('paddingLeft')) + parseInt(this.$trigger.css('borderLeftWidth')) + parseInt(this.$trigger.css('paddingRight')) + parseInt(this.$trigger.css('borderRightWidth'));
-		this.triggerHeight = this.$trigger.height() + parseInt(this.$trigger.css('paddingTop')) + parseInt(this.$trigger.css('borderTopWidth')) + parseInt(this.$trigger.css('paddingBottom')) + parseInt(this.$trigger.css('borderBottomWidth'));
+		this.triggerWidth = this.$trigger.outerWidth();
+		this.triggerHeight = this.$trigger.outerHeight();
 
 		// get the offsets for each side of the trigger element
 		this.triggerOffset = this.$trigger.offset();
@@ -138,7 +142,7 @@ Garnish.HUD = Garnish.Base.extend({
 			}
 		}
 
-		if (ev.stopPropagation)
+		if (ev && ev.stopPropagation)
 		{
 			ev.stopPropagation();
 		}
@@ -206,8 +210,8 @@ Garnish.HUD = Garnish.Base.extend({
 			this.$tip.removeClass(this.tipClass);
 		}
 
-		this.tipClass = c;
-		this.$tip.addClass(c);
+		this.tipClass = this.settings.tipClass+'-'+c;
+		this.$tip.addClass(this.tipClass);
 	},
 
 	/**
@@ -223,12 +227,16 @@ Garnish.HUD = Garnish.Base.extend({
 		// onHide callback
 		this.settings.onHide();
 	}
+},
+{
+	defaults: {
+		hudClass: 'hud',
+		tipClass: 'tip',
+		contentsClass: 'contents',
+		triggerSpacing: 7,
+		windowSpacing: 20,
+		tipWidth: 8,
+		onShow: $.noop,
+		onHide: $.noop
+	}
 });
-
-Garnish.HUD.defaults = {
-	triggerSpacing: 7,
-	windowSpacing: 20,
-	tipWidth: 8,
-	onShow: $.noop,
-	onHide: $.noop
-};

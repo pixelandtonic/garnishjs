@@ -156,6 +156,7 @@ HEADER;
 
 		$targetPaths = array(
 			$this->_repoPath.'assets/Source/themes/third_party/assets/lib/',
+			$this->_repoPath.'assets/Build/Assets/themes/third_party/assets/lib/',
 			$this->_repoPath.'Blocks/Source/Core/blocks/app/resources/lib/',
 		);
 

@@ -81,7 +81,7 @@ Garnish.Select = Garnish.Base.extend({
 	 */
 	isSelected: function($item)
 	{
-		return $item.hasClass('sel');
+		return $item.hasClass(this.settings.selectedClass);
 	},
 
 	/**
@@ -94,7 +94,7 @@ Garnish.Select = Garnish.Base.extend({
 			this.deselectAll();
 		}
 
-		$item.addClass('sel');
+		$item.addClass(this.settings.selectedClass);
 
 		this.$first = this.$last = $item;
 		this.first = this.last = this.getItemIndex($item);
@@ -119,7 +119,7 @@ Garnish.Select = Garnish.Base.extend({
 		this.$first = $(this.$items[this.first]);
 		this.$last = $(this.$items[this.last]);
 
-		this.$items.addClass(selectedClass);
+		this.$items.addClass(this.settings.selectedClass);
 		this.totalSelected = this.$items.length;
 		this.setCallbackTimeout();
 	},
@@ -154,7 +154,7 @@ Garnish.Select = Garnish.Base.extend({
 				sliceTo = this.first + 1;
 		}
 
-		this.$items.slice(sliceFrom, sliceTo).addClass('sel');
+		this.$items.slice(sliceFrom, sliceTo).addClass(this.settings.selectedClass);
 
 		this.totalSelected = sliceTo - sliceFrom;
 
@@ -166,7 +166,7 @@ Garnish.Select = Garnish.Base.extend({
 	 */
 	deselectItem: function($item)
 	{
-		$item.removeClass('sel');
+		$item.removeClass(this.settings.selectedClass);
 
 		var index = this.getItemIndex($item);
 		if (this.first === index) this.$first = this.first = null;
@@ -182,7 +182,7 @@ Garnish.Select = Garnish.Base.extend({
 	 */
 	deselectAll: function(clearFirst)
 	{
-		this.$items.removeClass('sel');
+		this.$items.removeClass(this.settings.selectedClass);
 
 		if (clearFirst)
 		{
@@ -300,13 +300,21 @@ Garnish.Select = Garnish.Base.extend({
 			{
 				ev.preventDefault();
 
-				if (metaKey)
+				// Select the last item if none are selected
+				if (this.first === null)
 				{
-					var $item = this.getFurthestItemToTheLeft(anchor);
+					var $item = this.getLastItem();
 				}
 				else
 				{
-					var $item = this.getItemToTheLeft(anchor);
+					if (metaKey)
+					{
+						var $item = this.getFurthestItemToTheLeft(anchor);
+					}
+					else
+					{
+						var $item = this.getItemToTheLeft(anchor);
+					}
 				}
 
 				break;
@@ -316,13 +324,21 @@ Garnish.Select = Garnish.Base.extend({
 			{
 				ev.preventDefault();
 
-				if (metaKey)
+				// Select the first item if none are selected
+				if (this.first === null)
 				{
-					var $item = this.getFurthestItemToTheRight(anchor);
+					var $item = this.getFirstItem();
 				}
 				else
 				{
-					var $item = this.getItemToTheRight(anchor);
+					if (metaKey)
+					{
+						var $item = this.getFurthestItemToTheRight(anchor);
+					}
+					else
+					{
+						var $item = this.getItemToTheRight(anchor);
+					}
 				}
 
 				break;
@@ -418,7 +434,7 @@ Garnish.Select = Garnish.Base.extend({
 		}
 
 		// Is there an item queued up for selection?
-		if (typeof $item != 'undefined' && $item.length)
+		if ($item && $item.length)
 		{
 			if (this.first !== null && ev.shiftKey)
 			{
@@ -453,7 +469,7 @@ Garnish.Select = Garnish.Base.extend({
 		return (index > 0);
 	},
 
-	_isNextItem: function(index)
+	isNextItem: function(index)
 	{
 		return (index < this.$items.length-1);
 	},
@@ -688,7 +704,7 @@ Garnish.Select = Garnish.Base.extend({
 			});
 		}
 
-		this.totalSelected += $items.filter('.sel').length;
+		this.totalSelected += $items.filter('.'+this.settings.selectedClass).length;
 
 		this.updateIndexes();
 	},
@@ -809,7 +825,7 @@ Garnish.Select = Garnish.Base.extend({
 			this.callbackTimeout = setTimeout($.proxy(function()
 			{
 				this.callbackTimeout = null;
-				this.settings.onSelectionChange.call();
+				this.settings.onSelectionChange();
 			}, this), 300);
 		}
 	},
@@ -819,11 +835,12 @@ Garnish.Select = Garnish.Base.extend({
 	 */
 	getSelectedItems: function()
 	{
-		return this.$items.filter('.sel');
+		return this.$items.filter('.'+this.settings.selectedClass);
 	}
 },
 {
 	defaults: {
+		selectedClass: 'sel',
 		multi: false,
 		vertical: false,
 		horizontal: false,

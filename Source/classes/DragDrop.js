@@ -53,22 +53,22 @@ Garnish.DragDrop = Garnish.Drag.extend({
 	{
 		if (this.$dropTargets)
 		{
-			Garnish.DragDrop.onDrag._activeDropTarget = null;
+			this.onDrag._activeDropTarget = null;
 
 			// is the cursor over any of the drop target?
-			for (Garnish.DragDrop.onDrag._i = 0; Garnish.DragDrop.onDrag._i < this.$dropTargets.length; Garnish.DragDrop.onDrag._i++)
+			for (this.onDrag._i = 0; this.onDrag._i < this.$dropTargets.length; this.onDrag._i++)
 			{
-				Garnish.DragDrop.onDrag._elem = this.$dropTargets[Garnish.DragDrop.onDrag._i];
+				this.onDrag._elem = this.$dropTargets[this.onDrag._i];
 
-				if (Garnish.hitTest(this.mouseX, this.mouseY, Garnish.DragDrop.onDrag._elem))
+				if (Garnish.hitTest(this.mouseX, this.mouseY, this.onDrag._elem))
 				{
-					Garnish.DragDrop.onDrag._activeDropTarget = Garnish.DragDrop.onDrag._elem;
+					this.onDrag._activeDropTarget = this.onDrag._elem;
 					break;
 				}
 			}
 
 			// has the drop target changed?
-			if (!this.$activeDropTarget || Garnish.DragDrop.onDrag._activeDropTarget != this.$activeDropTarget[0])
+			if (!this.$activeDropTarget || this.onDrag._activeDropTarget != this.$activeDropTarget[0])
 			{
 				// was there a previous one?
 				if (this.$activeDropTarget)
@@ -77,7 +77,7 @@ Garnish.DragDrop = Garnish.Drag.extend({
 				}
 
 				// remember the new drop target
-				this.$activeDropTarget = $(Garnish.DragDrop.onDrag._activeDropTarget);
+				this.$activeDropTarget = $(this.onDrag._activeDropTarget);
 
 				// is there a new one?
 				if (this.$activeDropTarget)
@@ -85,7 +85,7 @@ Garnish.DragDrop = Garnish.Drag.extend({
 					this.$activeDropTarget.addClass(this.settings.activeDropTargetClass);
 				}
 
-				this.settings.onDropTargetChange();
+				this.settings.onDropTargetChange(this.$activeDropTarget);
 			}
 		}
 
@@ -124,6 +124,7 @@ Garnish.DragDrop = Garnish.Drag.extend({
 {
 	defaults: {
 		dropTargets: null,
-		onDropTargetChange: $.noop
+		onDropTargetChange: $.noop,
+		activeDropTargetClass: 'active'
 	}
 });

@@ -7,6 +7,8 @@
 Garnish.Drag = Garnish.BaseDrag.extend({
 
 	$draggee: null,
+	otherItems: null,
+	totalOtherItems: null,
 	helpers: null,
 	helperTargets: null,
 	helperPositions: null,
@@ -58,6 +60,25 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		}
 
 		this.lastMouseX = this.lastMouseY = null;
+
+		// -------------------------------------------
+		//  Deal with the remaining items
+		// -------------------------------------------
+
+		// create an array of all the other items
+		this.otherItems = [];
+
+		for (var i = 0; i < this.$items.length; i++)
+		{
+			var item = this.$items[i];
+
+			if ($.inArray(item, this.$draggee) == -1)
+			{
+				this.otherItems.push(item);
+			}
+		};
+
+		this.totalOtherItems = this.otherItems.length;
 
 		// keep the helpers following the cursor, with a little lag to smooth it out
 		this.helperLagIncrement = this.helpers.length == 1 ? 0 : Garnish.Drag.helperLagIncrementDividend / (this.helpers.length-1);
@@ -168,9 +189,9 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		if (this.mouseX !== this.lastMouseX || this.mouseY !== this.lastMouseY)
 		{
 			// get the new target helper positions
-			for (Garnish.Drag.updateHelperPos._i = 0; Garnish.Drag.updateHelperPos._i < this.helpers.length; Garnish.Drag.updateHelperPos._i++)
+			for (this.updateHelperPos._i = 0; this.updateHelperPos._i < this.helpers.length; this.updateHelperPos._i++)
 			{
-				this.helperTargets[Garnish.Drag.updateHelperPos._i] = this.getHelperTarget(Garnish.Drag.updateHelperPos._i);
+				this.helperTargets[this.updateHelperPos._i] = this.getHelperTarget(this.updateHelperPos._i);
 			}
 
 			this.lastMouseX = this.mouseX;
@@ -178,41 +199,43 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		}
 
 		// gravitate helpers toward their target positions
-		for (Garnish.Drag.updateHelperPos._j = 0; Garnish.Drag.updateHelperPos._j < this.helpers.length; Garnish.Drag.updateHelperPos._j++)
+		for (this.updateHelperPos._j = 0; this.updateHelperPos._j < this.helpers.length; this.updateHelperPos._j++)
 		{
-			Garnish.Drag.updateHelperPos._lag = Garnish.Drag.helperLagBase + (this.helperLagIncrement * Garnish.Drag.updateHelperPos._j);
+			this.updateHelperPos._lag = Garnish.Drag.helperLagBase + (this.helperLagIncrement * this.updateHelperPos._j);
 
-			this.helperPositions[Garnish.Drag.updateHelperPos._j] = {
-				left: this.helperPositions[Garnish.Drag.updateHelperPos._j].left + ((this.helperTargets[Garnish.Drag.updateHelperPos._j].left - this.helperPositions[Garnish.Drag.updateHelperPos._j].left) / Garnish.Drag.updateHelperPos._lag),
-				top:  this.helperPositions[Garnish.Drag.updateHelperPos._j].top  + ((this.helperTargets[Garnish.Drag.updateHelperPos._j].top  - this.helperPositions[Garnish.Drag.updateHelperPos._j].top) / Garnish.Drag.updateHelperPos._lag)
+			this.helperPositions[this.updateHelperPos._j] = {
+				left: this.helperPositions[this.updateHelperPos._j].left + ((this.helperTargets[this.updateHelperPos._j].left - this.helperPositions[this.updateHelperPos._j].left) / this.updateHelperPos._lag),
+				top:  this.helperPositions[this.updateHelperPos._j].top  + ((this.helperTargets[this.updateHelperPos._j].top  - this.helperPositions[this.updateHelperPos._j].top) / this.updateHelperPos._lag)
 			};
 
-			this.helpers[Garnish.Drag.updateHelperPos._j].css(this.helperPositions[Garnish.Drag.updateHelperPos._j]);
+			this.helpers[this.updateHelperPos._j].css(this.helperPositions[this.updateHelperPos._j]);
 		}
 	},
 
 	/**
-	 * Return Helpers to Draggee(s)
+	 * Return Helpers to Draggees
 	 */
-	returnHelpersToDraggee: function()
+	returnHelpersToDraggees: function()
 	{
 		for (var i = 0; i < this.$draggee.length; i++)
 		{
 			var $draggee = $(this.$draggee[i]),
-				$draggeeHelper = this.helpers[i],
+				$helper = this.helpers[i],
 				draggeeOffset = $draggee.offset();
 
-			// preserve $draggee and $draggeeHelper for the end of the animation
-			(function($draggee, $draggeeHelper)
-			{
-				$draggeeHelper.animate({
-					left: draggeeOffset.left,
-					top: draggeeOffset.top
-				}, 'fast', function() {
-					$draggee.css('visibility', 'visible');
-					$draggeeHelper.remove();
-				});
-			})($draggee, $draggeeHelper);
+			// preserve $draggee and $helper for the end of the animation
+			(
+				function($draggee, $helper)
+				{
+					$helper.animate({left: draggeeOffset.left, top: draggeeOffset.top}, 'fast',
+						function()
+						{
+							$draggee.css('visibility', 'visible');
+							$helper.remove();
+						}
+					);
+				}
+			)($draggee, $helper);
 		}
 	}
 },
