@@ -76,8 +76,11 @@ Garnish.DragDrop = Garnish.Drag.extend({
 					this.$activeDropTarget.removeClass(this.settings.activeDropTargetClass);
 				}
 
-				// remember the new drop target
-				this.$activeDropTarget = $(this.onDrag._activeDropTarget);
+                // remember the new drop target, if we have a valid one
+                if (this.onDrag._activeDropTarget != null)
+                {
+                    this.$activeDropTarget = $(this.onDrag._activeDropTarget);
+                }
 
 				// is there a new one?
 				if (this.$activeDropTarget)
