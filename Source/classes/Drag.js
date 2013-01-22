@@ -156,7 +156,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 				position: 'absolute',
 				top: helperPos.top,
 				left: helperPos.left,
-				zIndex: Garnish.Drag.helperZindex, // + this.$draggee.length - i,
+				zIndex: Garnish.Drag.helperZindex + this.$draggee.length - i,
 				opacity: this.settings.helperOpacity
 			});
 
