@@ -345,31 +345,34 @@ Garnish.Base = Base.extend({
 				{
 					ev.preventDefault();
 
-					if (!$elem.hasClass('disabled'))
+					var elemIndex = $.inArray(ev.currentTarget, $elem),
+						$evElem = $(elem[elemIndex]);
+
+					if (!$evElem.hasClass('disabled'))
 					{
-						$elem.trigger('activate');
+						$evElem.trigger('activate');
 					}
 				});
 
 				$elem.on('keydown'+activateNamespace, function(ev)
 				{
-					var elemIndex = $.inArray(ev.target, $elem);
+					var elemIndex = $.inArray(ev.currentTarget, $elem);
 					if (elemIndex != -1 && ev.keyCode == Garnish.SPACE_KEY)
 					{
 						ev.preventDefault();
+						var $evElem = $($elem[elemIndex]);
 
-						if (!$elem.hasClass('disabled'))
+						if (!$evElem.hasClass('disabled'))
 						{
-							$elem.addClass('active');
+							$evElem.addClass('active');
 
 							Garnish.$doc.on('keyup'+activateNamespace, function(ev)
 							{
 								$elem.removeClass('active');
-								var elemIndex = $.inArray(ev.target, $elem);
-								if (elemIndex != -1 && ev.keyCode == Garnish.SPACE_KEY)
+								if (ev.keyCode == Garnish.SPACE_KEY)
 								{
 									ev.preventDefault();
-									$($elem[elemIndex]).trigger('activate');
+									$evElem.trigger('activate');
 								}
 								Garnish.$doc.off('keyup'+activateNamespace);
 							});
