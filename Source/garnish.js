@@ -204,22 +204,31 @@ Garnish = {
 			$elem = $(elem);
 
 		var scrollTop = $container.scrollTop(),
-			elOffset = $elem.offset().top,
-			containerOffset = $container.offset().top,
-			offsetDiff = elOffset - containerOffset;
+				elemOffset = $elem.offset().top;
 
-		if (offsetDiff < 0)
+		if ($container[0] == window)
 		{
-			$container.scrollTop(scrollTop + offsetDiff);
+			var elemScrollOffset = elemOffset - scrollTop;
 		}
 		else
 		{
-			var elHeight = $elem.outerHeight(),
-				containerHeight = $container[0].clientHeight;
+			var elemScrollOffset = elemOffset - $container.offset().top;
+		}
 
-			if (offsetDiff + elHeight > containerHeight)
+		// Is the element above the fold?
+		if (elemScrollOffset < 0)
+		{
+			$container.scrollTop(scrollTop + elemScrollOffset);
+		}
+		else
+		{
+			var elemHeight = $elem.outerHeight(),
+				containerHeight = ($container[0] == window ? window.innerHeight : $container[0].clientHeight);
+
+			// Is it below the fold?
+			if (elemScrollOffset + elemHeight > containerHeight)
 			{
-				$container.scrollTop(scrollTop + (offsetDiff - (containerHeight - elHeight)));
+				$container.scrollTop(scrollTop + (elemScrollOffset - (containerHeight - elemHeight)));
 			}
 		}
 	},
