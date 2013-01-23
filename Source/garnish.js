@@ -100,6 +100,17 @@ Garnish = {
 	},
 
 	/**
+	 * Returns whether something is a text node.
+	 *
+	 * @param object elem
+	 * @return bool
+	 */
+	isTextNode: function(elem)
+	{
+		return (elem.nodeType == Garnish.TEXT_NODE);
+	},
+
+	/**
 	 * Returns the distance between two coordinates.
 	 *
 	 * @param int x1 The first coordinate's X position.
@@ -269,6 +280,157 @@ Garnish = {
 				}, (Garnish.SHAKE_STEP_DURATION * i));
 			})(i);
 		}
+	},
+
+	/**
+	 * Returns the first element in an array or jQuery collection.
+	 *
+	 * @param mixed elem
+	 * @return mixed
+	 */
+	getElement: function(elem)
+	{
+		return $.makeArray(elem)[0];
+	},
+
+	/**
+	 * Returns the beginning of an input's name= attribute value with any [bracktes] stripped out.
+	 *
+	 * @param object elem
+	 * @return string|null
+	 */
+	getInputBasename: function(elem)
+	{
+		var name = $(elem).attr('name');
+
+		if (name)
+		{
+			return name.replace(/\[.*/, '');
+		}
+		else
+		{
+			return null;
+		}
+	},
+
+	/**
+	 * Returns an input's value as it would be POSTed.
+	 * So unchecked checkboxes and radio buttons return null,
+	 * and multi-selects whose name don't end in "[]" only return the last selection
+	 *
+	 * @param jQuery $input
+	 * @return mixed
+	 */
+	getInputPostVal: function($input)
+	{
+		var type = $input.attr('type'),
+			val  = $input.val();
+
+		// Is this an unchecked checkbox or radio button?
+		if ((type == 'checkbox' || type == 'radio'))
+		{
+			if ($input.prop('checked'))
+			{
+				return val;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		// Flatten any array values whose input name doesn't end in "[]"
+		//  - e.g. a multi-select
+		else if (Garnish.isArray(val) && $input.attr('name').substr(-2) != '[]')
+		{
+			if (val.length)
+			{
+				return val[val.length-1];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		// Just return the value
+		else
+		{
+			return val;
+		}
+	},
+
+	/**
+	 * Returns the inputs within a container
+	 *
+	 * @param mixed container The container element. Can be either an actual element or a jQuery collection.
+	 * @return jQuery
+	 */
+	findInputs: function(container)
+	{
+		return $(container).find('input,text,textarea,select,button');
+	},
+
+	/**
+	 * Returns the post data within a container.
+	 *
+	 * @param mixed container
+	 * @return array
+	 */
+	getPostData: function(container)
+	{
+		var postData = {},
+			arrayInputCounters = {},
+			$inputs = Garnish.findInputs(container);
+
+		for (var i = 0; i < $inputs.length; i++)
+		{
+			var $input = $($inputs[i]);
+
+			var inputName = $input.attr('name');
+			if (!inputName)
+			{
+				continue;
+			}
+
+			var inputVal = Garnish.getInputPostVal($input);
+			if (inputVal === null)
+			{
+				continue;
+			}
+
+			var isArrayInput = (inputName.substr(-2) == '[]');
+
+			if (isArrayInput)
+			{
+				// Get the cropped input name
+				var croppedName = inputName.substring(0, inputName.length-2);
+
+				// Prep the input counter
+				if (typeof arrayInputCounters[croppedName] == 'undefined')
+				{
+					arrayInputCounters[croppedName] = 0;
+				}
+			}
+
+			if (!Garnish.isArray(inputVal))
+			{
+				inputVal = [inputVal];
+			}
+
+			for (var j = 0; j < inputVal.length; j++)
+			{
+				if (isArrayInput)
+				{
+					var inputName = croppedName+'['+arrayInputCounters[croppedName]+']';
+					arrayInputCounters[croppedName]++;
+				}
+
+				postData[inputName] = inputVal[j];
+			}
+		}
+
+		return postData;
 	}
 };
 

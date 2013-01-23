@@ -158,6 +158,7 @@ HEADER;
 			$this->_repoPath.'assets/Source/themes/third_party/assets/lib/',
 			$this->_repoPath.'assets/Build/Assets/themes/third_party/assets/lib/',
 			$this->_repoPath.'Blocks/Source/Core/blocks/app/resources/lib/',
+			$this->_repoPath.'Blocks/Build/Blocks/blocks/app/resources/lib/',
 		);
 
 		$garnishFileNames = array($this->_uncompressedFileName, $this->_compressedFileName);
