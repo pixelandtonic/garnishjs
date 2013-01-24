@@ -123,8 +123,12 @@ Garnish.DragSort = Garnish.Drag.extend({
 		{
 			if (this.closestItem)
 			{
-				this.$insertion.remove();
 				this.closestItem = null;
+
+				if (this.$insertion)
+				{
+					this.$insertion.remove();
+				}
 			}
 		}
 		else
