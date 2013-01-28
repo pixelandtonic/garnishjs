@@ -27,6 +27,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 		var $menu = this.$btn.next('.menu');
 		this.menu = new Garnish.Menu($menu, {
+			attachToButton: this.$btn,
 			onOptionSelect: $.proxy(this, 'onOptionSelect')
 		});
 
@@ -54,7 +55,6 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 	showMenu: function()
 	{
-		this.menu.setPosition(this.$btn);
 		this.menu.show();
 		this.$btn.addClass('active');
 		this.showingMenu = true;
