@@ -257,11 +257,13 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		{
 			var item = this.$items[i],
 				$handle = $.data(item, 'drag-handle');
-			if ($handle != null)
+
+			$.data(item, 'drag', null);
+
+			if ($handle)
 			{
-				$handle.data('drag-item', null);
-				$.data(item, 'drag', null);
 				$.data(item, 'drag-handle', null);
+				$handle.data('drag-item', null);
 				this.removeAllListeners($handle);
 			}
 		}

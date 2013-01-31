@@ -147,7 +147,12 @@ Garnish.HUD = Garnish.Base.extend({
 			ev.stopPropagation();
 		}
 
-		this.addListener(this.settings.hideOnElemClick, 'click', 'hide');
+		this.addListener(Garnish.$bod, 'click', 'hide');
+
+		if (this.settings.closeBtn)
+		{
+			this.addListener(this.settings.closeBtn, 'activate', 'hide');
+		}
 
 		this.showing = true;
 		Garnish.HUD.active = this;
@@ -238,6 +243,6 @@ Garnish.HUD = Garnish.Base.extend({
 		tipWidth: 8,
 		onShow: $.noop,
 		onHide: $.noop,
-		hideOnElemClick: Garnish.$bod
+		closeBtn: null
 	}
 });
