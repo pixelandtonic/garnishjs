@@ -63,7 +63,10 @@ Garnish.MenuBtn = Garnish.Base.extend({
 			this.addListener(Garnish.$doc, 'mousedown', 'onMouseDown');
 		}, this), 1);
 
-		this.addListener(Garnish.$win, 'resize', 'hideMenu');
+		if (!Garnish.isMobileBrowser())
+		{
+			this.addListener(Garnish.$win, 'resize', 'hideMenu');
+		}
 	},
 
 	hideMenu: function()
@@ -73,7 +76,11 @@ Garnish.MenuBtn = Garnish.Base.extend({
 		this.showingMenu = false;
 
 		this.removeListener(Garnish.$doc, 'mousedown');
-		this.removeListener(Garnish.$doc, 'resize');
+
+		if (!Garnish.isMobileBrowser())
+		{
+			this.removeListener(Garnish.$doc, 'resize');
+		}
 	},
 
 	onOptionSelect: function(option)
