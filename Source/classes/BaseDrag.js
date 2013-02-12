@@ -194,7 +194,6 @@ Garnish.BaseDrag = Garnish.Base.extend({
 
 			// Add the item
 			$.data(item, 'drag', this);
-			this.$items = this.$items.add(item);
 
 			// Get the handle
 			if (this.settings.handle)
@@ -221,6 +220,8 @@ Garnish.BaseDrag = Garnish.Base.extend({
 			$handle.data('drag-item', item);
 			this.addListener($handle, 'mousedown', 'onMouseDown');
 		}
+
+		this.$items = $().add(this.$items.add(items));
 	},
 
 	/**
