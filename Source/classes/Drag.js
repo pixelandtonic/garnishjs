@@ -230,7 +230,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 					$helper.animate({left: draggeeOffset.left, top: draggeeOffset.top}, 'fast',
 						function()
 						{
-							$draggee.css('visibility', 'visible');
+							$draggee.css('visibility', 'inherit');
 							$helper.remove();
 						}
 					);
