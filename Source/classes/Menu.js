@@ -37,13 +37,22 @@ Garnish.Menu = Garnish.Base.extend({
 				minWidth: (btnWidth - 32)
 			};
 
-		if (this.$container.attr('data-align') == 'right')
+		switch (this.$container.data('align'))
 		{
-			css.right = 1 + Garnish.$win.width() - (btnOffset.left + btnWidth);
-		}
-		else
-		{
-			css.left = 1 + btnOffset.left;
+			case 'right':
+			{
+				css.right = 1 + Garnish.$win.width() - (btnOffset.left + btnWidth);
+				break;
+			}
+			case 'center':
+			{
+				css.left = Math.round((btnOffset.left + btnWidth / 2) - (this.$container.outerWidth() / 2));
+				break;
+			}
+			default:
+			{
+				css.left = 1 + btnOffset.left;
+			}
 		}
 
 		this.$container.css(css);
