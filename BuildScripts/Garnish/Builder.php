@@ -154,20 +154,19 @@ HEADER;
 	{
 		echo ('Copying Garnish files into other repos...'.PHP_EOL.PHP_EOL);
 
-		$targetPaths = array(
-			$this->_repoPath.'assets/Source/themes/third_party/assets/lib/',
-			$this->_repoPath.'assets/Build/Assets/themes/third_party/assets/lib/',
-			$this->_repoPath.'Craft/Source/Web/craft/app/resources/lib/',
+		$copyPaths = array(
+			'assets/Source/themes/third_party/assets/lib/'       => array($this->_compressedFileName, $this->_uncompressedFileName),
+			'assets/Build/Assets/themes/third_party/assets/lib/' => array($this->_compressedFileName, $this->_uncompressedFileName),
+			'Craft/Source/Web/craft/app/resources/lib/'          => array($this->_compressedFileName, $this->_uncompressedFileName),
+			'Craft-Docs/source/_static/lib/'                     => array($this->_compressedFileName),
 		);
 
-		$garnishFileNames = array($this->_uncompressedFileName, $this->_compressedFileName);
-
-		foreach ($targetPaths as $targetPath)
+		foreach ($copyPaths as $targetPath => $sourceFileNames)
 		{
-			foreach ($garnishFileNames as $garnishFileName)
+			foreach ($sourceFileNames as $sourceFileName)
 			{
-				$sourceFile = $this->_buildDir . $garnishFileName;
-				$targetFile = $targetPath . $garnishFileName;
+				$sourceFile = $this->_buildDir.$sourceFileName;
+				$targetFile = $this->_repoPath.$targetPath.$sourceFileName;
 
 				echo ('Copying file from '.$sourceFile.' to '.$targetFile.PHP_EOL);
 				copy($sourceFile, $targetFile);
