@@ -107,6 +107,8 @@ Garnish.Modal = Garnish.Base.extend({
 		Garnish.Modal.visibleModal = this;
 		Garnish.Modal.$shade.fadeIn(50);
 		this.addListener(Garnish.Modal.$shade, 'click', 'hide');
+
+		this.settings.onShow();
 	},
 
 	hide: function()
@@ -121,6 +123,8 @@ Garnish.Modal = Garnish.Base.extend({
 		Garnish.Modal.visibleModal = null;
 		Garnish.Modal.$shade.fadeOut('fast');
 		this.removeListener(Garnish.Modal.$shade, 'click');
+
+		this.settings.onHide();
 	},
 
 	getHeight: function()
@@ -216,7 +220,9 @@ Garnish.Modal = Garnish.Base.extend({
 {
 	relativeElemPadding: 8,
 	defaults: {
-		draggable: true
+		draggable: true,
+		onShow: $.noop(),
+		onHide: $.noop()
 	},
 	instances: [],
 	visibleModal: null,
