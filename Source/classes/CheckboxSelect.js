@@ -32,7 +32,7 @@ Garnish.CheckboxSelect = Garnish.Base.extend({
 	{
 		var isAllChecked = this.$all.prop('checked');
 
-		this.$options.attr({
+		this.$options.prop({
 			checked:  isAllChecked,
 			disabled: isAllChecked
 		});
