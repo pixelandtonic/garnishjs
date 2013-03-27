@@ -157,7 +157,7 @@ HEADER;
 		$copyPaths = array(
 			'assets/Source/themes/third_party/assets/lib/'       => array($this->_compressedFileName, $this->_uncompressedFileName),
 			'assets/Build/Assets/themes/third_party/assets/lib/' => array($this->_compressedFileName, $this->_uncompressedFileName),
-			'Craft/Source/Web/craft/app/resources/lib/'          => array($this->_compressedFileName, $this->_uncompressedFileName),
+			'Craft/Source/craft/app/resources/lib/'              => array($this->_compressedFileName, $this->_uncompressedFileName),
 			'Craft-Docs/source/_static/lib/'                     => array($this->_compressedFileName),
 		);
 
