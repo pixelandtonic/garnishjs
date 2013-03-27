@@ -533,69 +533,99 @@ Garnish.Base = Base.extend({
 		this._$listeners = this._$listeners.add(elem);
 
 		// Prep for activate event?
-		if (events.search(/\bactivate\b/) != -1)
+		if (events.search(/\bactivate\b/) != -1 && !$elem.data('activatable'))
 		{
-			if (!$elem.data('activatable'))
+			var activateNamespace = this._namespace+'-activate';
+
+			// Prevent buttons from getting focus on click
+			$elem.on('mousedown'+activateNamespace, function(ev)
 			{
-				var activateNamespace = this._namespace+'-activate';
+				ev.preventDefault();
+			});
 
-				// Prevent buttons from getting focus on click
-				$elem.on('mousedown'+activateNamespace, function(ev)
+			$elem.on('click'+activateNamespace, function(ev)
+			{
+				ev.preventDefault();
+
+				var elemIndex = $.inArray(ev.currentTarget, $elem),
+					$evElem = $(elem[elemIndex]);
+
+				if (!$evElem.hasClass('disabled'))
+				{
+					$evElem.trigger('activate');
+				}
+			});
+
+			$elem.on('keydown'+activateNamespace, function(ev)
+			{
+				var elemIndex = $.inArray(ev.currentTarget, $elem);
+				if (elemIndex != -1 && ev.keyCode == Garnish.SPACE_KEY)
 				{
 					ev.preventDefault();
-				});
-
-				$elem.on('click'+activateNamespace, function(ev)
-				{
-					ev.preventDefault();
-
-					var elemIndex = $.inArray(ev.currentTarget, $elem),
-						$evElem = $(elem[elemIndex]);
+					var $evElem = $($elem[elemIndex]);
 
 					if (!$evElem.hasClass('disabled'))
 					{
-						$evElem.trigger('activate');
-					}
-				});
+						$evElem.addClass('active');
 
-				$elem.on('keydown'+activateNamespace, function(ev)
-				{
-					var elemIndex = $.inArray(ev.currentTarget, $elem);
-					if (elemIndex != -1 && ev.keyCode == Garnish.SPACE_KEY)
-					{
-						ev.preventDefault();
-						var $evElem = $($elem[elemIndex]);
-
-						if (!$evElem.hasClass('disabled'))
+						Garnish.$doc.on('keyup'+activateNamespace, function(ev)
 						{
-							$evElem.addClass('active');
-
-							Garnish.$doc.on('keyup'+activateNamespace, function(ev)
+							$elem.removeClass('active');
+							if (ev.keyCode == Garnish.SPACE_KEY)
 							{
-								$elem.removeClass('active');
-								if (ev.keyCode == Garnish.SPACE_KEY)
-								{
-									ev.preventDefault();
-									$evElem.trigger('activate');
-								}
-								Garnish.$doc.off('keyup'+activateNamespace);
-							});
-						}
+								ev.preventDefault();
+								$evElem.trigger('activate');
+							}
+							Garnish.$doc.off('keyup'+activateNamespace);
+						});
 					}
-				});
-
-				if (!$elem.hasClass('disabled'))
-				{
-					$elem.attr('tabindex', '0');
 				}
-				else
-				{
-					$elem.removeAttr('tabindex');
-				}
+			});
 
-				$elem.data('activatable', true);
+			if (!$elem.hasClass('disabled'))
+			{
+				$elem.attr('tabindex', '0');
+			}
+			else
+			{
+				$elem.removeAttr('tabindex');
 			}
 
+			$elem.data('activatable', true);
+		}
+
+		// Prep for chanegtext event?
+		if (events.search(/\btextchange\b/) != -1)
+		{
+			// Store the initial values
+			for (var i = 0; i < $elem.length; i++)
+			{
+				var _$elem = $($elem[i]);
+				_$elem.data('textchangeValue', _$elem.val());
+
+				if (!_$elem.data('textchangeable'))
+				{
+					var textchangeNamespace = this._namespace+'-textchange',
+						events = 'keypress'+textchangeNamespace +
+							' keyup'+textchangeNamespace +
+							' change'+textchangeNamespace +
+							' blur'+textchangeNamespace;
+
+					_$elem.on(events, function(ev)
+					{
+						var _$elem = $(ev.currentTarget),
+							val = _$elem.val();
+
+						if (val != _$elem.data('textchangeValue'))
+						{
+							_$elem.data('textchangeValue', val);
+							_$elem.trigger('textchange');
+						}
+					});
+
+					_$elem.data('textchangeable', true);
+				}
+			}
 		}
 	},
 
