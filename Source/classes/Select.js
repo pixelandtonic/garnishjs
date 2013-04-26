@@ -247,7 +247,7 @@ Garnish.Select = Garnish.Base.extend({
 
 		var $item = $($.data(ev.currentTarget, 'select-item'));
 
-		if (ev.metaKey)
+		if (ev.metaKey || ev.ctrlKey)
 		{
 			this.toggleItem($item);
 		}
@@ -282,7 +282,7 @@ Garnish.Select = Garnish.Base.extend({
 		var $item = $($.data(ev.currentTarget, 'select-item'));
 
 		// was this a click?
-		if (! ev.metaKey && ! ev.shiftKey && Garnish.getDist(this.mousedownX, this.mousedownY, ev.pageX, ev.pageY) < 1)
+		if (! (ev.metaKey || ev.ctrlKey) && ! ev.shiftKey && Garnish.getDist(this.mousedownX, this.mousedownY, ev.pageX, ev.pageY) < 1)
 		{
 			this.selectItem($item);
 
