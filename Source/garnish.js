@@ -32,9 +32,8 @@ Garnish = {
 	CMD_KEY:    91,
 
 	// Mouse button constants
-	PRIMARY_CLICK:    0,
-    IE_PRIMARY_CLICK: 1,
-	SECONDARY_CLICK:  2,
+	PRIMARY_CLICK:   1,
+	SECONDARY_CLICK: 3,
 
 	// Axis constants
 	X_AXIS: 'x',

@@ -78,7 +78,7 @@ Garnish.ContextMenu = Garnish.Base.extend({
 	showMenu: function(ev)
 	{
 		// Ignore left mouse clicks
-		if (ev.type == 'mousedown' && ev.button != Garnish.SECONDARY_CLICK)
+		if (ev.type == 'mousedown' && ev.which != Garnish.SECONDARY_CLICK)
 		{
 			return;
 		}

@@ -231,7 +231,7 @@ Garnish.Select = Garnish.Base.extend({
 	onMouseDown: function(ev)
 	{
 		// ignore right clicks
-		if (ev.button != Garnish.PRIMARY_CLICK && ev.button != Garnish.IE_PRIMARY_CLICK)
+		if (ev.which != Garnish.PRIMARY_CLICK)
 		{
 			return;
 		}
@@ -268,7 +268,7 @@ Garnish.Select = Garnish.Base.extend({
 	onMouseUp: function(ev)
 	{
 		// ignore right clicks
-		if (ev.button != Garnish.PRIMARY_CLICK)
+		if (ev.which != Garnish.PRIMARY_CLICK)
 		{
 			return;
 		}

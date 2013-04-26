@@ -48,7 +48,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	onMouseDown: function(ev)
 	{
 		// Ignore right clicks
-		if (ev.button != Garnish.PRIMARY_CLICK)
+		if (ev.which != Garnish.PRIMARY_CLICK)
 		{
 			return;
 		}
