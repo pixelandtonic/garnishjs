@@ -236,7 +236,7 @@ Garnish.Select = Garnish.Base.extend({
 			return;
 		}
 
-		// Enfore the filter
+		// Enforce the filter
 		if (this.settings.filter && !$(ev.target).is(this.settings.filter))
 		{
 			return;
