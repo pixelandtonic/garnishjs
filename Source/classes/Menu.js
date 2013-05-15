@@ -25,7 +25,14 @@ Garnish.Menu = Garnish.Base.extend({
 			this.$btn = $(this.settings.attachToButton);
 		}
 
-		this.addListener(this.$options, 'mousedown', 'selectOption');
+		// Prevent clicking on the container from hiding the menu
+		this.addListener(this.$container, 'mousedown', function(ev)
+		{
+			ev.stopPropagation();
+		});
+
+		// Listen for option clicks
+		this.addListener(this.$options, 'click', 'selectOption');
 	},
 
 	setPositionRelativeToButton: function()
@@ -76,6 +83,7 @@ Garnish.Menu = Garnish.Base.extend({
 	selectOption: function(ev)
 	{
 		this.settings.onOptionSelect(ev.currentTarget);
+		this.hide();
 	}
 
 },
