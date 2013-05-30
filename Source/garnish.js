@@ -29,6 +29,7 @@ Garnish = {
 	RIGHT_KEY:  39,
 	DOWN_KEY:   40,
 	A_KEY:      65,
+	S_KEY:      83,
 	CMD_KEY:    91,
 
 	// Mouse button constants
