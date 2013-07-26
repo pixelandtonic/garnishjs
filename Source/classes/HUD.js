@@ -165,6 +165,8 @@ Garnish.HUD = Garnish.Base.extend({
 		this.showing = true;
 		Garnish.HUD.activeHUDs[this._namespace] = this;
 
+		Garnish.escManager.register(this, 'hide');
+
 		// onShow callback
 		this.settings.onShow();
 	},
@@ -236,6 +238,8 @@ Garnish.HUD = Garnish.Base.extend({
 		this.showing = false;
 
 		delete Garnish.HUD.activeHUDs[this._namespace];
+
+		Garnish.escManager.unregister(this);
 
 		// onHide callback
 		this.settings.onHide();

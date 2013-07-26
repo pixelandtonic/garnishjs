@@ -93,7 +93,6 @@ Garnish.Modal = Garnish.Base.extend({
 
 	show: function()
 	{
-
         // Close other modals as needed
 		if (Garnish.Modal.visibleModal && this.settings.closeOtherModals)
 		{
@@ -127,13 +126,7 @@ Garnish.Modal = Garnish.Base.extend({
 
 		this.addListener(this.$shade, 'click', 'hide');
 
-		this.addListener(Garnish.$bod, 'keyup', function(ev)
-		{
-			if (ev.keyCode == Garnish.ESC_KEY)
-			{
-				this.hide();
-			}
-		});
+		Garnish.escManager.register(this, 'hide');
 
 		this.settings.onShow();
 	},
@@ -157,6 +150,7 @@ Garnish.Modal = Garnish.Base.extend({
 		this.removeListener(this.$shade, 'click');
 		this.removeListener(Garnish.$bod, 'keyup');
 
+		Garnish.escManager.unregister(this);
 		this.settings.onHide();
 	},
 

@@ -94,11 +94,15 @@ Garnish.Menu = Garnish.Base.extend({
 		}
 
 		this.$container.fadeIn(50);
+
+		Garnish.escManager.register(this, 'hide');
 	},
 
 	hide: function()
 	{
 		this.$container.fadeOut('fast');
+
+		Garnish.escManager.unregister(this);
 	},
 
 	selectOption: function(ev)
