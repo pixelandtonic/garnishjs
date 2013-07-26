@@ -7,7 +7,7 @@ Garnish.Menu = Garnish.Base.extend({
 
 	$container: null,
 	$options: null,
-	$btn: null,
+	$trigger: null,
 
 	/**
 	 * Constructor
@@ -20,9 +20,9 @@ Garnish.Menu = Garnish.Base.extend({
 		this.$options = this.$container.find('a');
 		this.$options.data('menu', this);
 
-		if (this.settings.attachToButton)
+		if (this.settings.attachToElement)
 		{
-			this.$btn = $(this.settings.attachToButton);
+			this.$trigger = $(this.settings.attachToElement);
 		}
 
 		// Prevent clicking on the container from hiding the menu
@@ -44,9 +44,9 @@ Garnish.Menu = Garnish.Base.extend({
 		var windowHeight = Garnish.$win.height(),
 			windowScrollTop = Garnish.$win.scrollTop(),
 
-			btnOffset = this.$btn.offset(),
-			btnWidth = this.$btn.outerWidth(),
-			btnHeight = this.$btn.outerHeight(),
+			btnOffset = this.$trigger.offset(),
+			btnWidth = this.$trigger.outerWidth(),
+			btnHeight = this.$trigger.outerHeight(),
 			btnOffsetBottom = btnOffset.top + btnHeight,
 			btnOffsetTop = btnOffset.top,
 
@@ -88,7 +88,7 @@ Garnish.Menu = Garnish.Base.extend({
 
 	show: function()
 	{
-		if (this.$btn)
+		if (this.$trigger)
 		{
 			this.setPositionRelativeToButton();
 		}
@@ -110,7 +110,7 @@ Garnish.Menu = Garnish.Base.extend({
 },
 {
 	defaults: {
-		attachToButton: null,
+		attachToElement: null,
 		onOptionSelect: $.noop
 	}
 });
