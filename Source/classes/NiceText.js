@@ -255,9 +255,15 @@ Garnish.NiceText = Garnish.Base.extend({
 	destroy: function()
 	{
 		this.base();
-		this.$hint.remove();
-		this.$stage.remove();
-	}
+        if (this.$hint !== null)
+        {
+            this.$hint.remove();
+        }
+        if (this.$stage !== null)
+        {
+            this.$stage.remove();
+        }
+    }
 
 },
 {
