@@ -36,7 +36,7 @@ Garnish.HUD = Garnish.Base.extend({
 			return;
 		}
 
-		if (Garnish.HUD.active)
+		if (Garnish.HUD.active && !this.settings.closeOtherHUDs)
 		{
 			Garnish.HUD.active.hide();
 		}
@@ -243,6 +243,7 @@ Garnish.HUD = Garnish.Base.extend({
 		tipWidth: 8,
 		onShow: $.noop,
 		onHide: $.noop,
-		closeBtn: null
+		closeBtn: null,
+		closeOtherHUDs: false
 	}
 });
