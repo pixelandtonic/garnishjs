@@ -11,10 +11,10 @@ Garnish.HUD = Garnish.Base.extend({
 		this.$trigger = $(trigger);
 		this.setSettings(settings, Garnish.HUD.defaults);
 
-        if (typeof Garnish.HUD.activeHUDs == "undefined")
-        {
-            Garnish.HUD.activeHUDs = {};
-        }
+		if (typeof Garnish.HUD.activeHUDs == "undefined")
+		{
+			Garnish.HUD.activeHUDs = {};
+		}
 
 		this.showing = false;
 
@@ -42,11 +42,11 @@ Garnish.HUD = Garnish.Base.extend({
 			return;
 		}
 
-		if (Garnish.HUD.activeHUDs.length && !this.settings.closeOtherHUDs)
+		if (this.settings.closeOtherHUDs)
 		{
 			for (var hudID in Garnish.HUD.activeHUDs) {
-                Garnish.HUD.activeHUDs[hudID].hide();
-            }
+				Garnish.HUD.activeHUDs[hudID].hide();
+			}
 		}
 
 		this.$hud.show();
@@ -256,6 +256,6 @@ Garnish.HUD = Garnish.Base.extend({
 		onShow: $.noop,
 		onHide: $.noop,
 		closeBtn: null,
-		closeOtherHUDs: false
+		closeOtherHUDs: true
 	}
 });
