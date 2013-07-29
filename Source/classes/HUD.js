@@ -49,7 +49,7 @@ Garnish.HUD = Garnish.Base.extend({
 			}
 		}
 
-        this.$hud.show();
+		this.$hud.show();
 
 		// -------------------------------------------
 		//  Get all relevant dimensions, lengths, etc
