@@ -104,17 +104,6 @@ Garnish = {
 	},
 
 	/**
-	 * Returns whether a variable is a plain object (not an array, element, or jQuery collection).
-	 *
-	 * @param mixed val
-	 * @return bool
-	 */
-	isObject: function(val)
-	{
-		return (typeof val == 'object' && !Garnish.isArray(val) && !Garnish.isJquery(val) && typeof val.nodeType == 'undefined');
-	},
-
-	/**
 	 * Returns whether a variable is a string.
 	 *
 	 * @param mixed val

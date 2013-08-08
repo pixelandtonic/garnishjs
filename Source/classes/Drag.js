@@ -21,7 +21,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	init: function(items, settings)
 	{
 		// Param mapping
-		if (!settings && Garnish.isObject(items))
+		if (!settings && $.isPlainObject(items))
 		{
 			// (settings)
 			settings = items;
