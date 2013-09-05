@@ -51,9 +51,11 @@ class Builder
 
 		$this->_uncompressedFileName = 'garnish-'.$this->_version.'.js';
 		$this->_compressedFileName = 'garnish-'.$this->_version.'.min.js';
+		$this->_sourceMapFileName = 'garnish-'.$this->_version.'.min.map';
 
 		$this->_uncompressedFile = $this->_buildDir.$this->_uncompressedFileName;
 		$this->_compressedFile = $this->_buildDir.$this->_compressedFileName;
+		$this->_sourceMapFile = $this->_buildDir.$this->_sourceMapFileName;
 	}
 
 	/**
@@ -63,7 +65,7 @@ class Builder
 	{
 		$this->prepBuildDir();
 
-		$this->yuiCompressify();
+		$this->compressJs();
 		$this->copyGarnishFiles();
 
 		$totalTime = BuildUtils::getBenchmarkTime() - $this->_startTime;
@@ -88,7 +90,7 @@ class Builder
 	/**
 	 *
 	 */
-	protected function yuiCompressify()
+	protected function compressJs()
 	{
 		echo "Merging all of the JS files into {$this->_uncompressedFile}...".PHP_EOL;
 
@@ -102,12 +104,13 @@ class Builder
 
 		// Assempble the build file contents
 		$contents = <<<HEADER
-/*!
+/**
  * Garnish UI toolkit
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
  * @version   {$this->_version}
+ * @license   THIS IS NO F.O.S.S!
  */
 (function($){
 
@@ -131,8 +134,15 @@ HEADER;
 		// Compress it
 		echo "Compressing {$this->_uncompressedFile} into {$this->_compressedFile}...".PHP_EOL;
 
-		$yuiCompressorFile = $this->_buildScriptDir . 'lib/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar';
-		$command = "java -jar {$yuiCompressorFile} --charset utf-8 --type js {$this->_uncompressedFile} > {$this->_compressedFile}";
+		//$yuiCompressorFile = $this->_buildScriptDir . 'lib/yuicompressor-2.4.7/build/yuicompressor-2.4.7.jar';
+		//$command = "java -jar {$yuiCompressorFile} --charset utf-8 --type js {$this->_uncompressedFile} > {$this->_compressedFile}";
+
+		$command = "java -jar {$this->_buildScriptDir}lib/compiler/compiler.jar" .
+		           " --js {$this->_uncompressedFile}" .
+		           " --create_source_map {$this->_sourceMapFile}" .
+		           " --source_map_format=V3" .
+		           " --js_output_file {$this->_compressedFile}";
+
 		echo "Executing: {$command}".PHP_EOL;
 		exec("{$command} 2>&1", $output, $status);
 		echo "Status: {$status}".PHP_EOL;
@@ -141,10 +151,20 @@ HEADER;
 
 		if ($status !== 0)
 		{
-			throw new Exception('Could not YuiCompressify a file: '.$jsFile);
+			throw new Exception('Could not compressJs a file: '.$jsFile);
 		}
 
 		echo "Finished compressing {$this->_uncompressedFile} into {$this->_compressedFile}".PHP_EOL.PHP_EOL;
+
+		// Add the source map path to the compressed file
+		$contents = file_get_contents($this->_compressedFile);
+		$contents .= "\n//# sourceMappingURL=".pathinfo($this->_sourceMapFile, PATHINFO_BASENAME)."\n";
+		file_put_contents($this->_compressedFile, $contents);
+
+		// Clean up the source map
+		$contents = file_get_contents($this->_sourceMapFile);
+		$contents = str_replace($this->_buildDir, '', $contents);
+		file_put_contents($this->_sourceMapFile, $contents);
 	}
 
 	/**
@@ -155,9 +175,9 @@ HEADER;
 		echo ('Copying Garnish files into other repos...'.PHP_EOL.PHP_EOL);
 
 		$copyPaths = array(
-			'assets/Source/themes/third_party/assets/lib/'       => array($this->_compressedFileName, $this->_uncompressedFileName),
-			'assets/Build/Assets/themes/third_party/assets/lib/' => array($this->_compressedFileName, $this->_uncompressedFileName),
-			'Craft/Source/craft/app/resources/lib/'              => array($this->_compressedFileName, $this->_uncompressedFileName),
+			'assets/Source/themes/third_party/assets/lib/'       => array($this->_compressedFileName, $this->_uncompressedFileName, $this->_sourceMapFileName),
+			'assets/Build/Assets/themes/third_party/assets/lib/' => array($this->_compressedFileName, $this->_uncompressedFileName, $this->_sourceMapFileName),
+			'Craft/Source/craft/app/resources/lib/'              => array($this->_compressedFileName, $this->_uncompressedFileName, $this->_sourceMapFileName),
 		);
 
 		foreach ($copyPaths as $targetPath => $sourceFileNames)
