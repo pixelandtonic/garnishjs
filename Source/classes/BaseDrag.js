@@ -136,6 +136,30 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	 */
 	startDragging: function()
 	{
+		// Set the $draggee
+		switch (typeof this.settings.filter)
+		{
+			case 'function':
+			{
+				this.$draggee = this.settings.filter();
+				break;
+			}
+
+			case 'string':
+			{
+				this.$draggee = this.$items.filter(this.settings.filter);
+				break;
+			}
+
+			default:
+			{
+				this.$draggee = this.$targetItem;
+			}
+		}
+
+		// put the target item in the front of the list
+		this.$draggee = $([ this.$targetItem[0] ].concat(this.$draggee.not(this.$targetItem[0]).toArray()));
+
 		this.dragging = true;
 		this.onDragStart();
 	},
@@ -277,6 +301,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 
 	defaults: {
 		handle: null,
+		filter: null,
 		axis: null,
 		ignoreButtons: true,
 

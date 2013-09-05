@@ -74,7 +74,7 @@ Garnish.DragSort = Garnish.Drag.extend({
 			}
 		}
 
-		this.startDraggeeIndex = this.draggeeIndex;
+		this.startDraggeeIndex = $.inArray(this.$draggee[0], this.$items);
 	},
 
 	/**

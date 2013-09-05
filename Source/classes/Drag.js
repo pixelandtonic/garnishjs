@@ -41,9 +41,6 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		this.helperTargets = [];
 		this.helperPositions = [];
 
-		this.getDraggee();
-		this.draggeeIndex = $.inArray(this.$draggee[0], this.$items);
-
 		// save their display style (block/table-row) so we can re-apply it later
 		this.draggeeDisplay = this.$draggee.css('display');
 
@@ -99,35 +96,6 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	},
 
 	/**
-	 * Get the draggee(s) based on the filter setting, with the clicked item listed first
-	 */
-	getDraggee: function()
-	{
-		switch (typeof this.settings.filter)
-		{
-			case 'function':
-			{
-				this.$draggee = this.settings.filter();
-				break;
-			}
-
-			case 'string':
-			{
-				this.$draggee = this.$items.filter(this.settings.filter);
-				break;
-			}
-
-			default:
-			{
-				this.$draggee = this.$targetItem;
-			}
-		}
-
-		// put the target item in the front of the list
-		this.$draggee = $([ this.$targetItem[0] ].concat(this.$draggee.not(this.$targetItem[0]).toArray()));
-	},
-
-	/**
 	 * Creates helper clones of the draggee(s)
 	 */
 	createHelpers: function()
@@ -143,10 +111,17 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 				margin: 0
 			});
 
-			if (typeof this.settings.helper == 'function')
-				$draggeeHelper = this.settings.helper($draggeeHelper);
-			else if (this.settings.helper)
-				$draggeeHelper = $(this.settings.helper).append($draggeeHelper);
+			if (this.settings.helper)
+			{
+				if (typeof this.settings.helper == 'function')
+				{
+					$draggeeHelper = this.settings.helper($draggeeHelper);
+				}
+				else
+				{
+					$draggeeHelper = $(this.settings.helper).append($draggeeHelper);
+				}
+			}
 
 			$draggeeHelper.appendTo(Garnish.$bod);
 
