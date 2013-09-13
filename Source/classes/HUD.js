@@ -49,6 +49,7 @@ Garnish.HUD = Garnish.Base.extend({
 			}
 		}
 
+		this.$hud.css('top', Garnish.$win.scrollTop());
 		this.$hud.show();
 
 		// -------------------------------------------
