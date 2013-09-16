@@ -20,16 +20,11 @@ Garnish.HUD = Garnish.Base.extend({
 
 		this.$hud = $('<div class="'+this.settings.hudClass+'" />').appendTo(Garnish.$bod);
 		this.$tip = $('<div class="'+this.settings.tipClass+'" />').appendTo(this.$hud);
-		this.$body = $('<div class="'+this.settings.bodyClass+'" />').appendTo(this.$hud).append(bodyContents)
+		this.$body = $('<div class="'+this.settings.bodyClass+'" />').appendTo(this.$hud).append(bodyContents);
+
+		this.$shade = $('<div class="hud-shade"/>').insertBefore(this.$hud);
 
 		this.show();
-
-		// Prevent clicks on the HUD from hiding itself
-		this.addListener(this.$hud, 'click', function(ev)
-		{
-			ev.stopPropagation();
-		});
-
 	},
 
 	/**
@@ -156,7 +151,8 @@ Garnish.HUD = Garnish.Base.extend({
 			ev.stopPropagation();
 		}
 
-		this.addListener(Garnish.$bod, 'click', 'hide');
+		this.$shade.show();
+		this.addListener(this.$shade, 'click', 'hide');
 
 		if (this.settings.closeBtn)
 		{
@@ -236,6 +232,7 @@ Garnish.HUD = Garnish.Base.extend({
 	hide: function()
 	{
 		this.$hud.hide();
+		this.$shade.remove();
 		this.showing = false;
 
 		delete Garnish.HUD.activeHUDs[this._namespace];
