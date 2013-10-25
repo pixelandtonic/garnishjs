@@ -14,6 +14,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	helperPositions: null,
 	helperLagIncrement: null,
 	updateHelperPosInterval: null,
+	draggeeMouseOffsetX: null,
+	draggeeMouseOffsetY: null,
 
 	/**
 	 * init
@@ -80,6 +82,11 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		// keep the helpers following the cursor, with a little lag to smooth it out
 		this.helperLagIncrement = this.helpers.length == 1 ? 0 : Garnish.Drag.helperLagIncrementDividend / (this.helpers.length-1);
 		this.updateHelperPosInterval = setInterval($.proxy(this, 'updateHelperPos'), Garnish.Drag.updateHelperPosInterval);
+
+		// Capture the mouse offset
+		var offset = this.$draggee.offset();
+		this.draggeeMouseOffsetX = this.mouseX - (offset.left + this.$draggee.outerWidth() / 2);
+		this.draggeeMouseOffsetY = this.mouseY - (offset.top + this.$draggee.outerHeight() / 2);
 
 		this.base();
 	},
