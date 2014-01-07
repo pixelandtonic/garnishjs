@@ -31,6 +31,8 @@ Garnish.MenuBtn = Garnish.Base.extend({
 			onOptionSelect: $.proxy(this, 'onOptionSelect')
 		});
 
+		this.menu.on('hide', $.proxy(this, 'onMenuHide'));
+
 		this.addListener(this.$btn, 'mousedown', 'onMouseDown');
 	},
 
@@ -72,6 +74,10 @@ Garnish.MenuBtn = Garnish.Base.extend({
 	hideMenu: function()
 	{
 		this.menu.hide();
+	},
+
+	onMenuHide: function()
+	{
 		this.$btn.removeClass('active');
 		this.showingMenu = false;
 
