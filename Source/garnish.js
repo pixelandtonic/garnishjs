@@ -615,7 +615,7 @@ Garnish.Base = Base.extend({
 		this._$listeners = this._$listeners.add(elem);
 
 		// Prep for activate event?
-		if (events.search(/\bactivate\b/) != -1 && !$elem.data('activatable'))
+		if (events.search(/\bactivate\b/) != -1 && !$elem.data('garnish-activatable'))
 		{
 			var activateNamespace = this._namespace+'-activate';
 
@@ -673,7 +673,7 @@ Garnish.Base = Base.extend({
 				$elem.removeAttr('tabindex');
 			}
 
-			$elem.data('activatable', true);
+			$elem.data('garnish-activatable', true);
 		}
 
 		// Prep for chanegtext event?
@@ -683,9 +683,9 @@ Garnish.Base = Base.extend({
 			for (var i = 0; i < $elem.length; i++)
 			{
 				var _$elem = $($elem[i]);
-				_$elem.data('textchangeValue', _$elem.val());
+				_$elem.data('garnish-textchangeValue', _$elem.val());
 
-				if (!_$elem.data('textchangeable'))
+				if (!_$elem.data('garnish-textchangeable'))
 				{
 					var textchangeNamespace = this._namespace+'-textchange',
 						events = 'keypress'+textchangeNamespace +
@@ -698,14 +698,14 @@ Garnish.Base = Base.extend({
 						var _$elem = $(ev.currentTarget),
 							val = _$elem.val();
 
-						if (val != _$elem.data('textchangeValue'))
+						if (val != _$elem.data('garnish-textchangeValue'))
 						{
-							_$elem.data('textchangeValue', val);
+							_$elem.data('garnish-textchangeValue', val);
 							_$elem.trigger('textchange');
 						}
 					});
 
-					_$elem.data('textchangeable', true);
+					_$elem.data('garnish-textchangeable', true);
 				}
 			}
 		}
