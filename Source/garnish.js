@@ -709,6 +709,74 @@ Garnish.Base = Base.extend({
 				}
 			}
 		}
+
+		// Prep for resize event?
+		if (events.search(/\bresize\b/) != -1)
+		{
+			// Resize detection technique adapted from http://www.backalleycoder.com/2013/03/18/cross-browser-event-based-element-resize-detection/ -- thanks!
+			for (var i = 0; i < $elem.length; i++)
+			{
+				(function(elem)
+				{
+					if (elem == window)
+					{
+						return;
+					}
+
+					var _$elem = $(elem)
+					var resize = 'onresize' in elem;
+
+					if (!resize && !_$elem.data('garnish-resizable'))
+					{
+						var sensor = document.createElement('div');
+							sensor.className = 'resize-sensor';
+							sensor.innerHTML = '<div class="resize-overflow"><div></div></div><div class="resize-underflow"><div></div></div>';
+
+						_$elem.data('garnish-resizable', true);
+
+						var x = 0, y = 0,
+							first = sensor.firstElementChild.firstChild,
+							last = sensor.lastElementChild.firstChild,
+							matchFlow = function(ev)
+							{
+								var change = false,
+								width = elem.offsetWidth;
+								if (x != width)
+								{
+									first.style.width = width - 1 + 'px';
+									last.style.width = width + 1 + 'px';
+									change = true;
+									x = width;
+								}
+								var height = elem.offsetHeight;
+								if (y != height)
+								{
+									first.style.height = height - 1 + 'px';
+									last.style.height = height + 1 + 'px';
+									change = true;
+									y = height;
+								}
+								if (change && ev.currentTarget != elem)
+								{
+									$(elem).trigger('resize');
+								}
+							};
+
+						if (getComputedStyle(elem).position == 'static')
+						{
+							elem.style.position = 'relative';
+						}
+
+						addFlowListener(sensor, 'over', matchFlow);
+						addFlowListener(sensor, 'under', matchFlow);
+						addFlowListener(sensor.firstElementChild, 'over', matchFlow);
+						addFlowListener(sensor.lastElementChild, 'under', matchFlow);
+						elem.appendChild(sensor);
+						matchFlow({});
+					}
+				})($elem[i]);
+			}
+		}
 	},
 
 	removeListener: function(elem, events)
@@ -727,3 +795,23 @@ Garnish.Base = Base.extend({
 		this.removeAllListeners(this._$listeners);
 	}
 });
+
+/**
+ * Used by our resize detection script
+ */
+function addFlowListener(elem, type, func)
+{
+	var flow = type == 'over';
+
+	elem.addEventListener('OverflowEvent' in window ? 'overflowchanged' : type + 'flow', function(ev)
+	{
+		if (ev.type == (type + 'flow') ||
+		((ev.orient == 0 && ev.horizontalOverflow == flow) ||
+		(ev.orient == 1 && ev.verticalOverflow == flow) ||
+		(ev.orient == 2 && ev.horizontalOverflow == flow && ev.verticalOverflow == flow)))
+		{
+			ev.flow = type;
+			return func.call(this, ev);
+		}
+	}, false);
+};
