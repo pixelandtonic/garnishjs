@@ -735,11 +735,12 @@ Garnish.Base = Base.extend({
 						}
 
 						// Create the sensor div
-						var sensor = document.createElement('div');
-						sensor.className = 'resize-sensor';
-						sensor.innerHTML = '<div class="resize-overflow"><div></div></div><div class="resize-underflow"><div></div></div>';
+						var $sensor = $('<div class="resize-sensor">' +
+							'<div class="resize-overflow"><div></div></div>' +
+							'<div class="resize-underflow"><div></div></div>' +
+						'</div>').prependTo(_$elem);
 
-						$(sensor).add($('> div', sensor)).css({
+						$sensor.add($sensor.children()).css({
 							position: 'absolute',
 							top: 0,
 							left: 0,
@@ -749,18 +750,24 @@ Garnish.Base = Base.extend({
 							'z-index': -1
 						});
 
-						_$elem.prepend(sensor);
+						$sensor.next().addClass('first');
 
 						_$elem.data('garnish-resizable', true);
 
 						var width = elem.offsetWidth,
 							height = elem.offsetHeight,
-							first = sensor.firstElementChild.firstChild,
-							last = sensor.lastElementChild.firstChild,
-							matchFlow = function(ev)
+							first = $sensor[0].firstElementChild.firstChild,
+							last = $sensor[0].lastElementChild.firstChild,
+							hasSizeChanged = function()
 							{
-								if ((width != (width = elem.offsetWidth)) || (height != (height = elem.offsetHeight)))
+								return (width != elem.offsetWidth || (height != elem.offsetHeight));
+							},
+							onSizeChange = function(ev)
+							{
+								if (hasSizeChanged())
 								{
+									width = elem.offsetWidth;
+									height = elem.offsetHeight;
 									updateSensor();
 									$(elem).trigger('resize');
 								}
@@ -773,12 +780,26 @@ Garnish.Base = Base.extend({
 								last.style.height = height + 1 + 'px';
 							};
 
-						updateSensor();
+						if (width && height)
+						{
+							updateSensor();
+						}
+						else
+						{
+							var interval = setInterval(function()
+							{
+								if (hasSizeChanged())
+								{
+									clearInterval(interval);
+									onSizeChange();
+								}
+							}, 250);
+						}
 
-						addFlowListener(sensor, 'over', matchFlow);
-						addFlowListener(sensor, 'under', matchFlow);
-						addFlowListener(sensor.firstElementChild, 'over', matchFlow);
-						addFlowListener(sensor.lastElementChild, 'under', matchFlow);
+						addFlowListener($sensor[0], 'over', onSizeChange);
+						addFlowListener($sensor[0], 'under', onSizeChange);
+						addFlowListener($sensor[0].firstElementChild, 'over', onSizeChange);
+						addFlowListener($sensor[0].lastElementChild, 'under', onSizeChange);
 					}
 				})($elem[i]);
 			}
