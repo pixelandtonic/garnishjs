@@ -86,11 +86,8 @@ Garnish.HUD = Garnish.Base.extend({
 
 		Garnish.escManager.register(this, 'hide');
 
-		this.addListener(Garnish.$win, 'resize', function()
-		{
-			this.updateElementProperties();
-			this.setPosition();
-		});
+		this.addListener(this.$hud, 'resize', 'resetPosition');
+		this.addListener(Garnish.$win, 'resize', 'resetPosition');
 
 		this.addListener(this.$shade, 'click', 'hide');
 
@@ -219,6 +216,12 @@ Garnish.HUD = Garnish.Base.extend({
 				this.$hud.css('left', left);
 			}
 		}
+	},
+
+	resetPosition: function()
+	{
+		this.updateElementProperties();
+		this.setPosition();
 	},
 
 	/**
