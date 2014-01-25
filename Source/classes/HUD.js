@@ -137,17 +137,31 @@ Garnish.HUD = Garnish.Base.extend({
 
 		// find the actual available top/right/bottom/left clearances
 		var clearances = [
+			this.windowHeight + this.windowScrollTop - this.triggerOffset.bottom, // bottom
 			this.triggerOffset.top - this.windowScrollTop,                        // top
 			this.windowWidth + this.windowScrollLeft - this.triggerOffset.right,  // right
-			this.windowHeight + this.windowScrollTop - this.triggerOffset.bottom, // bottom
 			this.triggerOffset.left - this.windowScrollLeft                       // left
 		];
 
-		// Figure out which one is the biggest
-		var biggestClearance = Math.max.apply(null, clearances),
-			biggestClearanceIndex = $.inArray(biggestClearance, clearances);
+		// Find the first position that has enough room
+		for (var i = 0; i < 4; i++)
+		{
+			var prop = (i < 2 ? 'height' : 'width');
+			if (clearances[i] - (this.settings.windowSpacing + this.settings.triggerSpacing) >= this[prop])
+			{
+				var positionIndex = i;
+				break;
+			}
+		}
 
-		this.position = Garnish.HUD.positions[biggestClearanceIndex];
+		if (typeof positionIndex == 'undefined')
+		{
+			// Just figure out which one is the biggest
+			var biggestClearance = Math.max.apply(null, clearances),
+				positionIndex = $.inArray(biggestClearance, clearances);
+		}
+
+		this.position = Garnish.HUD.positions[positionIndex];
 
 		// Update the tip class
 		if (this.tipClass)
@@ -155,7 +169,7 @@ Garnish.HUD = Garnish.Base.extend({
 			this.$tip.removeClass(this.tipClass);
 		}
 
-		this.tipClass = this.settings.tipClass+'-'+Garnish.HUD.tipClasses[biggestClearanceIndex];
+		this.tipClass = this.settings.tipClass+'-'+Garnish.HUD.tipClasses[positionIndex];
 		this.$tip.addClass(this.tipClass);
 	},
 
@@ -246,8 +260,8 @@ Garnish.HUD = Garnish.Base.extend({
 	}
 },
 {
-	positions: ['top', 'right', 'bottom', 'left'],
-	tipClasses: ['bottom', 'left', 'top', 'right'],
+	positions: ['bottom', 'top', 'right', 'left'],
+	tipClasses: ['top', 'bottom', 'left', 'right'],
 
 	defaults: {
 		hudClass: 'hud',
