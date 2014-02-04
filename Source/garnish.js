@@ -759,7 +759,7 @@ Garnish.Base = Base.extend({
 							first = $sensor[0].firstElementChild.firstChild,
 							last = $sensor[0].lastElementChild.firstChild,
 
-							onSizeChange = function(ev)
+							testSizeChange = function(ev)
 							{
 								if (width != elem.offsetWidth || height != elem.offsetHeight)
 								{
@@ -783,12 +783,12 @@ Garnish.Base = Base.extend({
 							};
 
 						updateSensor();
-						_$elem.on('resize', onSizeChange);
+						_$elem.on('resize', testSizeChange);
 
-						addFlowListener($sensor[0], 'over', onSizeChange);
-						addFlowListener($sensor[0], 'under', onSizeChange);
-						addFlowListener($sensor[0].firstElementChild, 'over', onSizeChange);
-						addFlowListener($sensor[0].lastElementChild, 'under', onSizeChange);
+						addFlowListener($sensor[0], 'over', testSizeChange);
+						addFlowListener($sensor[0], 'under', testSizeChange);
+						addFlowListener($sensor[0].firstElementChild, 'over', testSizeChange);
+						addFlowListener($sensor[0].lastElementChild, 'under', testSizeChange);
 					}
 				})($elem[i]);
 			}
