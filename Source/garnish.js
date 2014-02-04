@@ -768,7 +768,7 @@ Garnish.Base = Base.extend({
 
 									updateSensor();
 
-									if (!ev || ev.type != 'resize')
+									if (!ev || ev.currentTarget != _$elem[0] || ev.type != 'resize')
 									{
 										_$elem.trigger('resize');
 									}
@@ -784,6 +784,7 @@ Garnish.Base = Base.extend({
 
 						updateSensor();
 						_$elem.on('resize', testSizeChange);
+						Garnish.$win.on('resize', testSizeChange);
 
 						addFlowListener($sensor[0], 'over', testSizeChange);
 						addFlowListener($sensor[0], 'under', testSizeChange);
