@@ -25,6 +25,8 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	scrollProperty: null,
 	scrollDir: null,
 
+	_: null,
+
 	/**
 	 * Init
 	 */
@@ -41,6 +43,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		this.settings = $.extend({}, Garnish.BaseDrag.defaults, settings);
 
 		this.$items = $();
+		this._ = {};
 
 		if (items) this.addItems(items);
 	},
@@ -190,18 +193,10 @@ Garnish.BaseDrag = Garnish.Base.extend({
 
 	scrollWindow: function()
 	{
-		this.scrollWindow._currentPos = Garnish.$win[this.scrollProperty]();
-		this.scrollWindow._scrollDiff = this.scrollDir * 3;
-		Garnish.$win[this.scrollProperty](this.scrollWindow._currentPos + this.scrollWindow._scrollDiff);
+		this._.scrollPos = Garnish.$win[this.scrollProperty]();
+		Garnish.$win[this.scrollProperty](this._.scrollPos + this.scrollDir * 3);
 
-		if (this.scrollProperty == 'scrollTop')
-		{
-			this.mouseY -= this.scrollwindow._scrollDiff;
-		}
-		else
-		{
-			this.mouseX -= this.scrollwindow._scrollDiff;
-		}
+		this.mouseY -= this._.scrollPos - Garnish.$win[this.scrollProperty]()
 
 		this.onMouseMove();
 	},
