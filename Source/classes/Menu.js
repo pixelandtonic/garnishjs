@@ -72,7 +72,7 @@ Garnish.Menu = Garnish.Base.extend({
 			align = 'left';
 		}
 
-		if (Garnish.$bod.hasClass('rtl'))
+		if (Garnish.rtl)
 		{
 			if (align == 'left')
 			{
