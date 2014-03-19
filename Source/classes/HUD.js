@@ -248,7 +248,7 @@ Garnish.HUD = Garnish.Base.extend({
 	hide: function()
 	{
 		this.$hud.hide();
-		this.$shade.remove();
+		this.$shade.hide();
 		this.showing = false;
 
 		delete Garnish.HUD.activeHUDs[this._namespace];
