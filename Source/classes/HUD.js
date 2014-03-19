@@ -21,6 +21,7 @@ Garnish.HUD = Garnish.Base.extend({
 	width: null,
 	height: null,
 
+	showing: false,
 	position: null,
 
 	/**
@@ -38,8 +39,6 @@ Garnish.HUD = Garnish.Base.extend({
 		{
 			Garnish.HUD.activeHUDs = {};
 		}
-
-		this.showing = false;
 
 		this.$hud = $('<div class="'+this.settings.hudClass+'" />').appendTo(Garnish.$bod);
 		this.$tip = $('<div class="'+this.settings.tipClass+'" />').appendTo(this.$hud);
@@ -262,6 +261,18 @@ Garnish.HUD = Garnish.Base.extend({
 	onHide: function()
 	{
 		this.trigger('hide');
+	},
+
+	toggle: function()
+	{
+		if (this.showing)
+		{
+			this.hide();
+		}
+		else
+		{
+			this.show();
+		}
 	}
 },
 {
