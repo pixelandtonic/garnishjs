@@ -140,8 +140,8 @@ Garnish.Modal = Garnish.Base.extend({
 		}
 
 		this.$container.css({
-			'width':      (this.desiredWidth ? this.desiredWidth : ''),
-			'height':     (this.desiredHeight ? this.desiredHeight : ''),
+			'width':      (this.desiredWidth ? Math.max(this.desiredWidth, 200) : ''),
+			'height':     (this.desiredHeight ? Math.max(this.desiredHeight, 200) : ''),
 			'min-width':  '',
 			'min-height': ''
 		});
