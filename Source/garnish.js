@@ -486,7 +486,7 @@ Garnish.Base = Base.extend({
 	setSettings: function(settings, defaults)
 	{
 		var baseSettings = (typeof this.settings == 'undefined' ? {} : this.settings);
-		this.settings = $.extend(baseSettings, defaults, settings);
+		this.settings = $.extend({}, baseSettings, defaults, settings);
 	},
 
 	on: function(events, data, handler)
