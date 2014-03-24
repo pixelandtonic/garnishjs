@@ -218,7 +218,7 @@ Garnish.Modal = Garnish.Base.extend({
 {
 	relativeElemPadding: 8,
 	defaults: {
-		draggable: true,
+		draggable: false,
 		dragHandleSelector: null,
 		onShow: $.noop,
 		onHide: $.noop,
