@@ -63,10 +63,11 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		if (this.$targetItem) return;
 
 		// Make sure the target isn't a button (unless the button is the handle)
-		if (this.settings.ignoreButtons && ev.currentTarget != ev.target)
+		if (ev.currentTarget != ev.target && this.settings.ignoreHandleSelector)
 		{
 			var $target = $(ev.target);
-			if ($target.hasClass('btn') || $target.closest('.btn').length)
+
+			if ($target.is(this.settings.ignoreHandleSelector) || $target.closest(this.settings.ignoreHandleSelector).length)
 			{
 				return;
 			}
@@ -402,7 +403,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		handle: null,
 		filter: null,
 		axis: null,
-		ignoreButtons: true,
+		ignoreHandleSelector: 'input, textarea, button, select, .btn',
 
 		onDragStart: $.noop,
 		onDrag:      $.noop,
