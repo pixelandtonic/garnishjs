@@ -4,12 +4,6 @@
 Garnish.Modal = Garnish.Base.extend({
 
 	$container: null,
-	$header: null,
-	$body: null,
-	$scrollpane: null,
-	$footer: null,
-	$footerBtns: null,
-	$submitBtn: null,
 	$shade: null,
 
 	_headerHeight: null,
@@ -64,31 +58,16 @@ Garnish.Modal = Garnish.Base.extend({
 
 		this.$container.data('modal', this);
 
-		this.$header = this.$container.find('.pane-head:first');
-		this.$body = this.$container.find('.pane-body:first');
-		this.$scrollpane = this.$body.children('.scrollpane:first');
-		this.$footer = this.$container.find('.pane-foot:first');
-		this.$footerBtns = this.$footer.find('.btn');
-		this.$submitBtn = this.$footerBtns.filter('.submit:first');
-		this.$closeBtn = this.$footerBtns.filter('.close:first');
-
 		if (this.settings.draggable)
 		{
-			var $dragHandles = this.$header.add(this.$footer);
-			if ($dragHandles.length)
-			{
-				this.dragger = new Garnish.DragMove(this.$container, {
-					handle: this.$container
-				});
-			}
+			this.dragger = new Garnish.DragMove(this.$container, {
+				handle: (this.settings.dragHandleSelector ? this.$container.find(this.settings.dragHandleSelector) : this.$container)
+			});
 		}
 
 		this.addListener(this.$container, 'click', function(ev) {
 			ev.stopPropagation();
 		});
-
-		this.addListener(this.$container, 'keydown', 'onKeyDown');
-		this.addListener(this.$closeBtn, 'click', 'hide');
 	},
 
 	show: function()
@@ -218,14 +197,6 @@ Garnish.Modal = Garnish.Base.extend({
 		return this.getWidth._width;
 	},
 
-	onKeyDown: function(ev)
-	{
-		if (ev.target.nodeName != 'TEXTAREA' && ev.keyCode == Garnish.RETURN_KEY)
-		{
-			this.$submitBtn.click();
-		}
-	},
-
 	destroy: function()
 	{
 		this.base();
@@ -246,6 +217,7 @@ Garnish.Modal = Garnish.Base.extend({
 	relativeElemPadding: 8,
 	defaults: {
 		draggable: true,
+		dragHandleSelector: null,
 		onShow: $.noop,
 		onHide: $.noop,
 		onFadeIn: $.noop,
