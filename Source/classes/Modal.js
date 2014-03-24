@@ -208,34 +208,6 @@ Garnish.Modal = Garnish.Base.extend({
 		return width;
 	},
 
-	positionRelativeTo: function(elem)
-	{
-		if (!this.$container)
-		{
-			throw 'Attempted to position a modal whose container has not been set.';
-		}
-
-		var $elem = $(elem),
-			elemOffset = $elem.offset(),
-			bodyScrollTop = Garnish.$bod.scrollTop(),
-			topClearance = elemOffset.top - bodyScrollTop,
-			modalHeight = this.getHeight();
-
-		if (modalHeight < topClearance + Garnish.navHeight + Garnish.Modal.relativeElemPadding*2)
-		{
-			var top = elemOffset.top - modalHeight - Garnish.Modal.relativeElemPadding;
-		}
-		else
-		{
-			var top = elemOffset.top + $elem.height() + Garnish.Modal.relativeElemPadding;
-		}
-
-		this.$container.css({
-			top: top,
-			left: elemOffset.left
-		});
-	},
-
 	onKeyDown: function(ev)
 	{
 		if (ev.target.nodeName != 'TEXTAREA' && ev.keyCode == Garnish.RETURN_KEY)
