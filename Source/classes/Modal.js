@@ -6,12 +6,15 @@ Garnish.Modal = Garnish.Base.extend({
 	$container: null,
 	$shade: null,
 
-	_headerHeight: null,
-	_footerHeight: null,
-
 	visible: false,
 
 	dragger: null,
+
+	desiredWidth: null,
+	desiredHeight: null,
+	resizeDragger: null,
+	resizeStartWidth: null,
+	resizeStartHeight: null,
 
 	init: function(container, settings)
 	{
@@ -34,7 +37,6 @@ Garnish.Modal = Garnish.Base.extend({
         {
             this.$shade = $('<div class="modal-shade"/>').appendTo(Garnish.$bod);
         }
-
 
         if (container)
 		{
@@ -62,6 +64,16 @@ Garnish.Modal = Garnish.Base.extend({
 		{
 			this.dragger = new Garnish.DragMove(this.$container, {
 				handle: (this.settings.dragHandleSelector ? this.$container.find(this.settings.dragHandleSelector) : this.$container)
+			});
+		}
+
+		if (this.settings.resizable)
+		{
+			var $resizeDragHandle = $('<div class="resizehandle"/>').appendTo(this.$container);
+
+			this.resizeDragger = new Garnish.BaseDrag($resizeDragHandle, {
+				onDragStart:   $.proxy(this, '_onResizeStart'),
+				onDrag:        $.proxy(this, '_onResize')
 			});
 		}
 
@@ -128,8 +140,8 @@ Garnish.Modal = Garnish.Base.extend({
 		}
 
 		this.$container.css({
-			width: '',
-			height: ''
+			width: (this.desiredWidth ? this.desiredWidth : ''),
+			height: (this.desiredHeight ? this.desiredHeight : '')
 		});
 
 		this.updateSizeAndPosition._windowWidth = Garnish.$win.width();
@@ -199,6 +211,28 @@ Garnish.Modal = Garnish.Base.extend({
 		return this.getWidth._width;
 	},
 
+	_onResizeStart: function()
+	{
+		this.resizeStartWidth = this.getWidth();
+		this.resizeStartHeight = this.getHeight();
+	},
+
+	_onResize: function()
+	{
+		if (Garnish.ltr)
+		{
+			this.desiredWidth = this.resizeStartWidth + (this.resizeDragger.mouseDistX * 2);
+			this.desiredHeight = this.resizeStartHeight + (this.resizeDragger.mouseDistY * 2);
+		}
+		else
+		{
+			this.desiredWidth = this.resizeStartWidth - (this.resizeDragger.mouseDistX * 2);
+			this.desiredHeight = this.resizeStartHeight - (this.resizeDragger.mouseDistY * 2);
+		}
+
+		this.updateSizeAndPosition();
+	},
+
 	destroy: function()
 	{
 		this.base();
@@ -206,6 +240,11 @@ Garnish.Modal = Garnish.Base.extend({
 		if (this.dragger)
 		{
 			this.dragger.destroy();
+		}
+
+		if (this.resizeDragger)
+		{
+			this.resizeDragger.destroy();
 		}
 	},
 
@@ -220,6 +259,7 @@ Garnish.Modal = Garnish.Base.extend({
 	defaults: {
 		draggable: false,
 		dragHandleSelector: null,
+		resizable: false,
 		onShow: $.noop,
 		onHide: $.noop,
 		onFadeIn: $.noop,
