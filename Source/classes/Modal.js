@@ -140,8 +140,10 @@ Garnish.Modal = Garnish.Base.extend({
 		}
 
 		this.$container.css({
-			width: (this.desiredWidth ? this.desiredWidth : ''),
-			height: (this.desiredHeight ? this.desiredHeight : '')
+			'width':      (this.desiredWidth ? this.desiredWidth : ''),
+			'height':     (this.desiredHeight ? this.desiredHeight : ''),
+			'min-width':  '',
+			'min-height': ''
 		});
 
 		this.updateSizeAndPosition._windowWidth = Garnish.$win.width();
@@ -150,10 +152,12 @@ Garnish.Modal = Garnish.Base.extend({
 		this.updateSizeAndPosition._height = Math.min(this.getHeight(), this.updateSizeAndPosition._windowHeight - 20);
 
 		this.$container.css({
-			'width':  this.updateSizeAndPosition._width,
-			'height': this.updateSizeAndPosition._height,
-			'left':   Math.round((this.updateSizeAndPosition._windowWidth - this.updateSizeAndPosition._width) / 2),
-			'top':    Math.round((this.updateSizeAndPosition._windowHeight - this.updateSizeAndPosition._height) / 2)
+			'width':      this.updateSizeAndPosition._width,
+			'height':     this.updateSizeAndPosition._height,
+			'min-width':  this.updateSizeAndPosition._width,
+			'min-height': this.updateSizeAndPosition._height,
+			'left':       Math.round((this.updateSizeAndPosition._windowWidth - this.updateSizeAndPosition._width) / 2),
+			'top':        Math.round((this.updateSizeAndPosition._windowHeight - this.updateSizeAndPosition._height) / 2)
 		});
 	},
 
