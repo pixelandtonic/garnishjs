@@ -132,14 +132,16 @@ Garnish.Modal = Garnish.Base.extend({
 			height: ''
 		});
 
-		this.updateSizeAndPosition._width = Math.min(this.getWidth(), Garnish.$win.width()-20);
-		this.updateSizeAndPosition._height = Math.min(this.getHeight(), Garnish.$win.height()-20);
+		this.updateSizeAndPosition._windowWidth = Garnish.$win.width();
+		this.updateSizeAndPosition._windowHeight = Garnish.$win.height();
+		this.updateSizeAndPosition._width = Math.min(this.getWidth(), this.updateSizeAndPosition._windowWidth - 20);
+		this.updateSizeAndPosition._height = Math.min(this.getHeight(), this.updateSizeAndPosition._windowHeight - 20);
 
 		this.$container.css({
-			'width':       this.updateSizeAndPosition._width,
-			'height':      this.updateSizeAndPosition._height,
-			'margin-left': -Math.round(this.updateSizeAndPosition._width/2),
-			'margin-top':  -Math.round(this.updateSizeAndPosition._height/2)
+			'width':  this.updateSizeAndPosition._width,
+			'height': this.updateSizeAndPosition._height,
+			'left':   Math.round((this.updateSizeAndPosition._windowWidth - this.updateSizeAndPosition._width) / 2),
+			'top':    Math.round((this.updateSizeAndPosition._windowHeight - this.updateSizeAndPosition._height) / 2)
 		});
 	},
 
