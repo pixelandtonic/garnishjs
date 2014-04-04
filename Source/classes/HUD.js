@@ -40,7 +40,8 @@ Garnish.HUD = Garnish.Base.extend({
 			Garnish.HUD.activeHUDs = {};
 		}
 
-		this.$hud = $('<div class="'+this.settings.hudClass+'" />').appendTo(Garnish.$bod);
+		this.$shade = $('<div class="hud-shade"/>');
+		this.$hud = $('<div class="'+this.settings.hudClass+'" />');
 		this.$tip = $('<div class="'+this.settings.tipClass+'" />').appendTo(this.$hud);
 		this.$body = $('<div class="'+this.settings.bodyClass+'" />').appendTo(this.$hud).append(bodyContents);
 
@@ -48,8 +49,6 @@ Garnish.HUD = Garnish.Base.extend({
 		{
 			this.$hud.addClass('has-footer');
 		}
-
-		this.$shade = $('<div class="hud-shade"/>').insertBefore(this.$hud);
 
 		this.show();
 	},
@@ -71,13 +70,18 @@ Garnish.HUD = Garnish.Base.extend({
 
 		if (this.settings.closeOtherHUDs)
 		{
-			for (var hudID in Garnish.HUD.activeHUDs) {
+			for (var hudID in Garnish.HUD.activeHUDs)
+			{
 				Garnish.HUD.activeHUDs[hudID].hide();
 			}
 		}
 
 		// Prevent the browser from jumping
 		this.$hud.css('top', Garnish.$win.scrollTop());
+
+		// Move it to the end of <body> so it gets the highest sub-z-index
+		this.$shade.appendTo(Garnish.$bod);
+		this.$hud.appendTo(Garnish.$bod);
 
 		this.$hud.show();
 		this.determineBestPosition();
