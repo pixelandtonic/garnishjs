@@ -245,13 +245,13 @@ Garnish.Modal = Garnish.Base.extend({
 		if (Garnish.ltr)
 		{
 			this.desiredWidth = this.resizeStartWidth + (this.resizeDragger.mouseDistX * 2);
-			this.desiredHeight = this.resizeStartHeight + (this.resizeDragger.mouseDistY * 2);
 		}
 		else
 		{
 			this.desiredWidth = this.resizeStartWidth - (this.resizeDragger.mouseDistX * 2);
-			this.desiredHeight = this.resizeStartHeight - (this.resizeDragger.mouseDistY * 2);
 		}
+
+		this.desiredHeight = this.resizeStartHeight + (this.resizeDragger.mouseDistY * 2);
 
 		this.updateSizeAndPosition();
 	},
