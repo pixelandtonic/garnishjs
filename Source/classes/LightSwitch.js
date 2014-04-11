@@ -111,14 +111,30 @@ Garnish.LightSwitch = Garnish.Base.extend({
 
 			case Garnish.RIGHT_KEY:
 			{
-				this.turnOn();
+				if (Garnish.ltr)
+				{
+					this.turnOn();
+				}
+				else
+				{
+					this.turnOff();
+				}
+
 				ev.preventDefault();
 				break;
 			}
 
 			case Garnish.LEFT_KEY:
 			{
-				this.turnOff();
+				if (Garnish.ltr)
+				{
+					this.turnOff();
+				}
+				else
+				{
+					this.turnOn();
+				}
+
 				ev.preventDefault();
 				break;
 			}

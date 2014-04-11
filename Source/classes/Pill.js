@@ -41,6 +41,40 @@ Garnish.Pill = Garnish.Base.extend({
 		this.$selectedBtn = $btn;
 	},
 
+	selectNext: function()
+	{
+		if (!this.$selectedBtn.length)
+		{
+			this.select(this.$btns[this.$btns.length-1]);
+		}
+		else
+		{
+			var nextIndex = this._getSelectedBtnIndex() + 1;
+
+			if (typeof this.$btns[nextIndex] != 'undefined')
+			{
+				this.select(this.$btns[nextIndex]);
+			}
+		}
+	},
+
+	selectPrev: function()
+	{
+		if (!this.$selectedBtn.length)
+		{
+			this.select(this.$btns[0]);
+		}
+		else
+		{
+			var prevIndex = this._getSelectedBtnIndex() - 1;
+
+			if (typeof this.$btns[prevIndex] != 'undefined')
+			{
+				this.select(this.$btns[prevIndex]);
+			}
+		}
+	},
+
 	onMouseDown: function(ev)
 	{
 		this.select(ev.currentTarget);
@@ -64,28 +98,30 @@ Garnish.Pill = Garnish.Base.extend({
 		{
 			case Garnish.RIGHT_KEY:
 			{
-				if (!this.$selectedBtn.length)
-					this.select(this.$btns[this.$btns.length-1]);
+				if (Garnish.ltr)
+				{
+					this.selectNext();
+				}
 				else
 				{
-					var nextIndex = this._getSelectedBtnIndex() + 1;
-					if (typeof this.$btns[nextIndex] != 'undefined')
-						this.select(this.$btns[nextIndex]);
+					this.selectPrev();
 				}
+
 				ev.preventDefault();
 				break;
 			}
 
 			case Garnish.LEFT_KEY:
 			{
-				if (!this.$selectedBtn.length)
-					this.select(this.$btns[0]);
+				if (Garnish.ltr)
+				{
+					this.selectPrev();
+				}
 				else
 				{
-					var prevIndex = this._getSelectedBtnIndex() - 1;
-					if (typeof this.$btns[prevIndex] != 'undefined')
-						this.select(this.$btns[prevIndex]);
+					this.selectNext();
 				}
+
 				ev.preventDefault();
 				break;
 			}

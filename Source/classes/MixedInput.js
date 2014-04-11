@@ -1,4 +1,8 @@
-
+/**
+ * Mixed input
+ *
+ * @todo RTL support, in the event that the input doesn't have dir="ltr".
+ */
 Garnish.MixedInput = Garnish.Base.extend({
 
 	$container: null,
@@ -275,7 +279,7 @@ var TextElement = Garnish.Base.extend({
 		this.parentInput = parentInput;
 
 		this.$input = $('<input type="text"/>').appendTo(this.parentInput.$container);
-		this.$input.css('margin-'+(Garnish.ltr ? 'right' : 'left'), (2-TextElement.padding)+'px');
+		this.$input.css('margin-right', (2-TextElement.padding)+'px');
 
 		this.setWidth();
 

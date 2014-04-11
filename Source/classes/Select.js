@@ -327,7 +327,14 @@ Garnish.Select = Garnish.Base.extend({
 				// Select the last item if none are selected
 				if (this.first === null)
 				{
-					var $item = this.getLastItem();
+					if (Garnish.ltr)
+					{
+						var $item = this.getLastItem();
+					}
+					else
+					{
+						var $item = this.getFirstItem();
+					}
 				}
 				else
 				{
@@ -351,7 +358,14 @@ Garnish.Select = Garnish.Base.extend({
 				// Select the first item if none are selected
 				if (this.first === null)
 				{
-					var $item = this.getFirstItem();
+					if (Garnish.ltr)
+					{
+						var $item = this.getFirstItem();
+					}
+					else
+					{
+						var $item = this.getLastItem();
+					}
 				}
 				else
 				{
@@ -526,11 +540,13 @@ Garnish.Select = Garnish.Base.extend({
 
 	getItemToTheLeft: function(index)
 	{
-		if (this.isPreviousItem(index))
+		var func = (Garnish.ltr ? 'Previous' : 'Next');
+
+		if (this['is'+func+'Item'](index))
 		{
 			if (this.settings.horizontal)
 			{
-				return this.getPreviousItem(index);
+				return this['get'+func+'Item'](index);
 			}
 			if (!this.settings.vertical)
 			{
@@ -541,11 +557,13 @@ Garnish.Select = Garnish.Base.extend({
 
 	getItemToTheRight: function(index)
 	{
-		if (this.isNextItem(index))
+		var func = (Garnish.ltr ? 'Next' : 'Previous');
+
+		if (this['is'+func+'Item'](index))
 		{
 			if (this.settings.horizontal)
 			{
-				return this.getNextItem(index);
+				return this['get'+func+'Item'](index);
 			}
 			else if (!this.settings.vertical)
 			{
@@ -596,7 +614,17 @@ Garnish.Select = Garnish.Base.extend({
 			smallestMidpointDiff = null,
 			$closestItem = null;
 
-		for (var i = index + dirProps.step; (typeof this.$items[i] != 'undefined'); i += dirProps.step)
+		// Go the other way if this is the X axis and a RTL page
+		if (Garnish.rtl && axis == Garnish.X_AXIS)
+		{
+			var step = dirProps.step * -1;
+		}
+		else
+		{
+			var step = dirProps.step;
+		}
+
+		for (var i = index + step; (typeof this.$items[i] != 'undefined'); i += step)
 		{
 			var $otherItem = $(this.$items[i]),
 				otherOffset = $otherItem.offset();
