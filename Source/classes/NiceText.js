@@ -128,8 +128,7 @@ Garnish.NiceText = Garnish.Base.extend({
 			display: 'block',
 			position: 'absolute',
 			top: -9999,
-			left: -9999,
-			wordWrap: 'break-word'
+			left: -9999
 		});
 
 		this.inputBoxSizing = this.$input.css('box-sizing');
