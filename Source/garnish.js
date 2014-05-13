@@ -190,12 +190,16 @@ Garnish = $.extend(Garnish, {
 			$target = $(target);
 
 		$target.css({
-			lineHeight:    $source.css('lineHeight'),
-			fontSize:      $source.css('fontSize'),
 			fontFamily:    $source.css('fontFamily'),
+			fontSize:      $source.css('fontSize'),
 			fontWeight:    $source.css('fontWeight'),
 			letterSpacing: $source.css('letterSpacing'),
-			textAlign:     $source.css('textAlign')
+			lineHeight:    $source.css('lineHeight'),
+			textAlign:     $source.css('textAlign'),
+			textIndent:    $source.css('textIndent'),
+			whiteSpace:    $source.css('whiteSpace'),
+			wordSpacing:   $source.css('wordSpacing'),
+			wordWrap:      $source.css('wordWrap')
 		});
 	},
 
