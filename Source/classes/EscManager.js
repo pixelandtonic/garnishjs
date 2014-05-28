@@ -53,6 +53,11 @@ Garnish.EscManager = Garnish.Base.extend({
 			}
 
 			func.call(handler.obj, ev);
+
+			if (typeof handler.obj.trigger == 'function')
+			{
+				handler.obj.trigger('escape');
+			}
 		}
 	}
 
