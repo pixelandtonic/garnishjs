@@ -17,15 +17,21 @@ Garnish.MenuBtn = Garnish.Base.extend({
 		// Is this already a menu button?
 		if (this.$btn.data('menubtn'))
 		{
+			// Grab the old MenuBtn's menu container
+			var $menu = this.$btn.data('menubtn').menu.$container;
+
 			Garnish.log('Double-instantiating a menu button on an element');
 			this.$btn.data('menubtn').destroy();
+		}
+		else
+		{
+			var $menu = this.$btn.next('.menu').detach();
 		}
 
 		this.$btn.data('menubtn', this);
 
 		this.setSettings(settings, Garnish.MenuBtn.defaults);
 
-		var $menu = this.$btn.next('.menu').detach();
 		this.menu = new Garnish.Menu($menu, {
 			attachToElement: this.$btn,
 			onOptionSelect: $.proxy(this, 'onOptionSelect')
