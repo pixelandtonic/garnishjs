@@ -302,7 +302,7 @@ Garnish = $.extend(Garnish, {
 				{
 					Garnish.shake._properties = {};
 					Garnish.shake._properties[prop] = startingPoint + (i % 2 ? -1 : 1) * (10-i);
-					$elem.animate(Garnish.shake._properties, Garnish.SHAKE_STEP_DURATION);
+					$elem.velocity(Garnish.shake._properties, Garnish.SHAKE_STEP_DURATION);
 				}, (Garnish.SHAKE_STEP_DURATION * i));
 			})(i);
 		}
