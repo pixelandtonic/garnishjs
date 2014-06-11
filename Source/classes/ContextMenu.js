@@ -48,6 +48,7 @@ Garnish.ContextMenu = Garnish.Base.extend({
 			if (option == '-')
 			{
 				// Create a new <ul>
+				$('<hr/>').appendTo(this.$menu);
 				$ul = $('<ul/>').appendTo(this.$menu);
 			}
 			else
