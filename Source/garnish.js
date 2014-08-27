@@ -122,6 +122,17 @@ Garnish = $.extend(Garnish, {
 	},
 
 	/**
+	 * Returns whether an element has an attribute.
+	 *
+	 * @see http://stackoverflow.com/questions/1318076/jquery-hasattr-checking-to-see-if-there-is-an-attribute-on-an-element/1318091#1318091
+	 */
+	hasAttr: function(elem, attr)
+	{
+		var val = $(elem).attr(attr);
+		return (typeof val != 'undefined' && val !== false);
+	},
+
+	/**
 	 * Returns whether something is a text node.
 	 *
 	 * @param object elem
