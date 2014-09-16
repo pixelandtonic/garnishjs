@@ -118,8 +118,11 @@ Garnish.DragDrop = Garnish.Drag.extend({
 		{
 			(function($draggeeHelper)
 			{
-				$draggeeHelper.fadeOut('fast', function() {
-					$draggeeHelper.remove();
+				$draggeeHelper.velocity('fadeOut', {
+					duration: 'fast',
+					complete: function() {
+						$draggeeHelper.remove();
+					}
 				});
 			})(this.helpers[i]);
 		}

@@ -112,8 +112,10 @@ Garnish.Modal = Garnish.Base.extend({
 			this.$container.show();
 			this.updateSizeAndPosition();
 
-			this.$shade.fadeIn(50);
-			this.$container.delay(50).fadeIn($.proxy(this, 'onFadeIn'));
+			this.$shade.velocity('fadeIn', { duration: 50 });
+			this.$container.delay(50).velocity('fadeIn', {
+				complete: $.proxy(this, 'onFadeIn')
+			});
 
 			if (this.settings.hideOnShadeClick)
 			{
@@ -157,8 +159,11 @@ Garnish.Modal = Garnish.Base.extend({
 
 		if (this.$container)
 		{
-			this.$container.fadeOut('fast');
-			this.$shade.fadeOut('fast', $.proxy(this, 'onFadeOut'));
+			this.$container.velocity('fadeOut', { duration: 'fast' });
+			this.$shade.velocity('fadeOut', {
+				duration: 'fast',
+				complete: $.proxy(this, 'onFadeOut')
+			});
 
 			if (this.settings.hideOnShadeClick)
 			{

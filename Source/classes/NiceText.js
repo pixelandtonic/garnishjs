@@ -103,13 +103,19 @@ Garnish.NiceText = Garnish.Base.extend({
 
 	showHint: function()
 	{
-		this.$hint.fadeIn(Garnish.NiceText.hintFadeDuration);
+		this.$hint.velocity('fadeIn', {
+			complete: Garnish.NiceText.hintFadeDuration
+		});
+
 		this.showingHint = true;
 	},
 
 	hideHint: function()
 	{
-		this.$hint.fadeOut(Garnish.NiceText.hintFadeDuration);
+		this.$hint.velocity('fadeOut', {
+			complete: Garnish.NiceText.hintFadeDuration
+		});
+
 		this.showingHint = false;
 	},
 
