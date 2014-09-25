@@ -762,27 +762,27 @@ Garnish.Base = Base.extend({
 							elem.style.position = 'relative';
 						}
 
-						var $resizeTriggers = $(
-							'<div class="resize-triggers">' +
-								'<div class="expand-trigger"><div></div></div>' +
-								'<div class="contract-trigger"></div>' +
-							'</div>'
-						).prependTo(elem);
-
-						elem.__resizeLast__ = {};
-						elem.__resizeTriggers__ = $resizeTriggers[0];
-
-						resetTriggers(elem);
-						elem.addEventListener('scroll', scrollListener, true);
+						var obj = elem.__resizeTrigger__ = document.createElement('object');
+						obj.className = 'resize-trigger';
+						obj.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1;');
+						obj.__resizeElement__ = $(elem);
+						obj.onload = objectLoad;
+						obj.type = 'text/html';
+						obj.__resizeElement__.prepend(obj);
+						obj.data = 'about:blank';
 
 						// Listen for window resizes too
 						Garnish.$win.on('resize', function()
 						{
-							scrollListener.apply(elem);
+							// Has the object been loaded yet?
+							if (obj.contentDocument)
+							{
+								resizeListener({ target: obj.contentDocument.defaultView });
+							}
 						});
 
 						// Avoid a top margin on the next element
-						$resizeTriggers.next().addClass('first');
+						$(obj).next().addClass('first');
 					}
 				})($elem[i]);
 			}
@@ -806,73 +806,37 @@ Garnish.Base = Base.extend({
 	}
 });
 
-/**
- * Used by our resize detection script
- */
-if (!document.attachEvent)
+// Resize event helper functions
+// =============================================================================
+
+function resizeListener(e)
 {
-	var requestFrame = (function()
+	var win = (e.target || e.srcElement);
+
+	// Ignore if there's no resize trigger yet
+	if (typeof win.__resizeTrigger__ == typeof undefined)
 	{
-		var raf = window.requestAnimationFrame ||
-				  window.mozRequestAnimationFrame ||
-				  window.webkitRequestAnimationFrame ||
-				  function(fn){ return window.setTimeout(fn, 20); };
-
-		  return function(fn){ return raf(fn); };
-	})();
-
-	var cancelFrame = (function()
-	{
-		var cancel = window.cancelAnimationFrame ||
-					 window.mozCancelAnimationFrame ||
-					 window.webkitCancelAnimationFrame ||
-					 window.clearTimeout;
-
-		return function(id){ return cancel(id); };
-	})();
-
-	var resetTriggers = function(elem)
-	{
-		var triggers    = elem.__resizeTriggers__,
-			expand      = triggers.firstElementChild,
-			contract    = triggers.lastElementChild,
-			expandChild = expand.firstElementChild;
-
-		contract.scrollLeft = contract.scrollWidth;
-		contract.scrollTop  = contract.scrollHeight;
-
-		expandChild.style.width  = expand.offsetWidth + 1 + 'px';
-		expandChild.style.height = expand.offsetHeight + 1 + 'px';
-
-		expand.scrollLeft = expand.scrollWidth;
-		expand.scrollTop  = expand.scrollHeight;
+		return;
 	}
 
-	var checkTriggers = function(elem)
+	// Ignore if the size hasn't changed
+	if (
+		typeof win.__lastOffsetWidth__ != typeof undefined &&
+		win.__resizeTrigger__.prop('offsetWidth') == win.__lastOffsetWidth__ &&
+		win.__resizeTrigger__.prop('offsetHeight') == win.__lastOffsetHeight__
+	)
 	{
-		return elem.offsetWidth  != elem.__resizeLast__.width ||
-			   elem.offsetHeight != elem.__resizeLast__.height;
+		return;
 	}
 
-	var scrollListener = function(ev)
-	{
-		var elem = this;
-		resetTriggers(elem);
+	win.__lastOffsetWidth__ = win.__resizeTrigger__.prop('offsetWidth');
+	win.__lastOffsetHeight__ = win.__resizeTrigger__.prop('offsetHeight');
 
-		if (elem.__resizeRAF__)
-		{
-			cancelFrame(elem.__resizeRAF__);
-		}
+	win.__resizeTrigger__.trigger('resize');
+}
 
-		elem.__resizeRAF__ = requestFrame(function()
-		{
-			if (checkTriggers(elem))
-			{
-				elem.__resizeLast__.width  = elem.offsetWidth;
-				elem.__resizeLast__.height = elem.offsetHeight;
-
-				$(elem).trigger('resize');
-			}
-		});
-	}
+function objectLoad(e)
+{
+	this.contentDocument.defaultView.__resizeTrigger__ = this.__resizeElement__;
+	this.contentDocument.defaultView.addEventListener('resize', resizeListener);
 }
