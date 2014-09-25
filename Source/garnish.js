@@ -740,6 +740,7 @@ Garnish.Base = Base.extend({
 			{
 				(function(elem)
 				{
+					// window is the only element that natively supports a resize event
 					if (elem == window)
 					{
 						return;
@@ -747,8 +748,13 @@ Garnish.Base = Base.extend({
 
 					// IE < 11 had a proprietary 'resize' event and 'attachEvent' method.
 					// Conveniently both dropped in 11.
+					if (document.attachEvent)
+					{
+						return;
+					}
 
-					if (!document.attachEvent && !elem.__resizeTriggers__)
+					// Is this the first resize listener added to this element?
+					if (!elem.__resizeTrigger__)
 					{
 						// The element must be relative, absolute, or fixed
 						if (getComputedStyle(elem).position == 'static')
