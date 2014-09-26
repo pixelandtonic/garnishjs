@@ -809,9 +809,21 @@ Garnish.Base = Base.extend({
 // Resize event helper functions
 // =============================================================================
 
+var requestFrame = (function(){
+	var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame ||
+			function(fn){ return window.setTimeout(fn, 20); };
+	return function(fn){ return raf(fn); };
+})();
+
+var cancelFrame = (function(){
+	var cancel = window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame ||
+				 window.clearTimeout;
+	return function(id){ return cancel(id); };
+})();
+
 function resizeListener(ev)
 {
-	var win = (ev.target || ev.srcElement);
+	var win = ev.currentTarget;
 
 	// Ignore if there's no resize trigger yet
 	if (typeof win.__resizeTrigger__ == typeof undefined)
@@ -819,20 +831,25 @@ function resizeListener(ev)
 		return;
 	}
 
-	// Ignore if the size hasn't changed
-	if (
-		typeof win.__lastOffsetWidth__ != typeof undefined &&
-		win.__resizeTrigger__.prop('offsetWidth') == win.__lastOffsetWidth__ &&
-		win.__resizeTrigger__.prop('offsetHeight') == win.__lastOffsetHeight__
-	)
-	{
-		return;
-	}
+	if (win.__resizeRAF__) cancelFrame(win.__resizeRAF__);
+	win.__resizeRAF__ = requestFrame(function(){
 
-	win.__lastOffsetWidth__ = win.__resizeTrigger__.prop('offsetWidth');
-	win.__lastOffsetHeight__ = win.__resizeTrigger__.prop('offsetHeight');
+		// Ignore if the size hasn't changed
+		if (
+			typeof win.__lastOffsetWidth__ != typeof undefined &&
+			win.__resizeTrigger__.prop('offsetWidth') == win.__lastOffsetWidth__ &&
+			win.__resizeTrigger__.prop('offsetHeight') == win.__lastOffsetHeight__
+		)
+		{
+			return;
+		}
 
-	win.__resizeTrigger__.trigger('resize');
+		win.__lastOffsetWidth__ = win.__resizeTrigger__.prop('offsetWidth');
+		win.__lastOffsetHeight__ = win.__resizeTrigger__.prop('offsetHeight');
+
+		win.__resizeTrigger__.trigger('resize');
+
+	});
 }
 
 function objectLoad(e)
