@@ -777,7 +777,7 @@ Garnish.Base = Base.extend({
 							// Has the object been loaded yet?
 							if (obj.contentDocument)
 							{
-								resizeListener({ target: obj.contentDocument.defaultView });
+								$(obj.contentDocument.defaultView).trigger('resize');
 							}
 						});
 
