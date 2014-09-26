@@ -855,5 +855,5 @@ function resizeListener(ev)
 function objectLoad(e)
 {
 	this.contentDocument.defaultView.__resizeTrigger__ = this.__resizeElement__;
-	this.contentDocument.defaultView.addEventListener('resize', resizeListener);
+	$(this.contentDocument.defaultView).on('resize', resizeListener);
 }
