@@ -809,9 +809,9 @@ Garnish.Base = Base.extend({
 // Resize event helper functions
 // =============================================================================
 
-function resizeListener(e)
+function resizeListener(ev)
 {
-	var win = (e.target || e.srcElement);
+	var win = (ev.target || ev.srcElement);
 
 	// Ignore if there's no resize trigger yet
 	if (typeof win.__resizeTrigger__ == typeof undefined)
