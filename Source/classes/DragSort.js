@@ -197,7 +197,15 @@ Garnish.DragSort = Garnish.Drag.extend({
 	{
 		if (this.closestItem)
 		{
-			this.$draggee.insertBefore(this.closestItem);
+			// Going down?
+			if (this.$draggee.index() < $(this.closestItem).index())
+			{
+				this.$draggee.insertAfter(this.closestItem);
+			}
+			else
+			{
+				this.$draggee.insertBefore(this.closestItem);
+			}
 
 			if (this.$insertion)
 			{
