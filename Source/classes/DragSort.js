@@ -128,8 +128,8 @@ Garnish.DragSort = Garnish.Drag.extend({
 	 */
 	onDrag: function()
 	{
-		this.draggeeMidpointX = this.mouseX - this.draggeeMouseOffsetX;
-		this.draggeeMidpointY = this.mouseY - this.draggeeMouseOffsetY;
+		this.draggeeMidpointX = this.mouseX - this.draggeeMidpointMouseOffsetX;
+		this.draggeeMidpointY = this.mouseY - this.draggeeMidpointMouseOffsetY;
 
 		// if there's a container set, make sure that we're hovering over it
 		if (this.$heightedContainer && !Garnish.hitTest(this.mouseX, this.mouseY, this.$heightedContainer))

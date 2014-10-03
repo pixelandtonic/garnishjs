@@ -14,8 +14,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	helperPositions: null,
 	helperLagIncrement: null,
 	updateHelperPosInterval: null,
-	draggeeMouseOffsetX: null,
-	draggeeMouseOffsetY: null,
+	draggeeMidpointMouseOffsetX: null,
+	draggeeMidpointMouseOffsetY: null,
 
 	/**
 	 * init
@@ -85,8 +85,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 
 		// Capture the mouse offset
 		var offset = this.$draggee.offset();
-		this.draggeeMouseOffsetX = this.mouseX - (offset.left + this.$draggee.outerWidth() / 2);
-		this.draggeeMouseOffsetY = this.mouseY - (offset.top + this.$draggee.outerHeight() / 2);
+		this.draggeeMidpointMouseOffsetX = this.mouseX - (offset.left + this.$draggee.outerWidth() / 2);
+		this.draggeeMidpointMouseOffsetY = this.mouseY - (offset.top + this.$draggee.outerHeight() / 2);
 
 		this.base();
 	},
