@@ -15,6 +15,8 @@ Garnish.BaseDrag = Garnish.Base.extend({
 
 	mousedownX: null,
 	mousedownY: null,
+	realMouseX: null,
+	realMouseY: null,
 	mouseX: null,
 	mouseY: null,
 	mouseDistX: null,
@@ -364,6 +366,9 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	{
 		ev.preventDefault();
 
+		this.realMouseX = ev.pageX;
+		this.realMouseY = ev.pageY;
+
 		if (this.settings.axis != Garnish.Y_AXIS)
 		{
 			this.mouseX = ev.pageX;
@@ -380,7 +385,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		if (!this.dragging)
 		{
 			// Has the mouse moved far enough to initiate dragging yet?
-			this._onMouseMove._mouseDist = Garnish.getDist(this.mousedownX, this.mousedownY, this.mouseX, this.mouseY);
+			this._onMouseMove._mouseDist = Garnish.getDist(this.mousedownX, this.mousedownY, this.realMouseX, this.realMouseY);
 
 			if (this._onMouseMove._mouseDist >= Garnish.BaseDrag.minMouseDist)
 			{
