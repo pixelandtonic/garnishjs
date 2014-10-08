@@ -5,15 +5,23 @@
  */
 Garnish.DragSort = Garnish.Drag.extend({
 
+	// Properties
+	// =========================================================================
+
 	$heightedContainer: null,
 	$insertion: null,
+	insertionVisible: false,
 	startDraggeeIndex: null,
 	closestItem: null,
-	draggeeMidpointX: null,
-	draggeeMidpointY: null,
+
+	// Public methods
+	// =========================================================================
 
 	/**
 	 * Constructor
+	 *
+	 * @param mixed  items    Elements that should be draggable right away. (Can be skipped.)
+	 * @param object settings Any settings that should override the defaults.
 	 */
 	init: function(items, settings)
 	{
@@ -30,20 +38,40 @@ Garnish.DragSort = Garnish.Drag.extend({
 	},
 
 	/**
+	 * Creates the insertion element.
+	 */
+	createInsertion: function()
+	{
+		if (this.settings.insertion)
+		{
+			if (typeof this.settings.insertion == 'function')
+			{
+				return $(this.settings.insertion(this.$draggee));
+			}
+			else
+			{
+				return $(this.settings.insertion);
+			}
+		}
+	},
+
+	// Events
+	// -------------------------------------------------------------------------
+
+	/**
 	 * On Drag Start
 	 */
 	onDragStart: function()
 	{
 		this.base();
 
+		this.$insertion = this.createInsertion();
+		this._placeInsertionWithDraggee();
+
 		this.closestItem = null;
-		this.setMidpoints();
-		this.setInsertion();
+		this._setMidpoints();
 
-		// -------------------------------------------
 		//  Get the closest container that has a height
-		// -------------------------------------------
-
 		if (this.settings.container)
 		{
 			this.$heightedContainer = $(this.settings.container);
@@ -58,73 +86,28 @@ Garnish.DragSort = Garnish.Drag.extend({
 	},
 
 	/**
-	 * Sets the insertion element
-	 */
-	setInsertion: function()
-	{
-		// get the insertion
-		if (this.settings.insertion)
-		{
-			if (typeof this.settings.insertion == 'function')
-			{
-				this.$insertion = $(this.settings.insertion(this.$draggee));
-			}
-			else
-			{
-				this.$insertion = $(this.settings.insertion);
-			}
-		}
-	},
-
-	/**
-	 * Sets the item midpoints up front so we don't have to keep checking on every mouse move
-	 */
-	setMidpoints: function()
-	{
-		for (var i = 0; i < this.$items.length; i++)
-		{
-			this.setMidpoint(this.$items[i]);
-		}
-	},
-
-	setMidpoint: function(item)
-	{
-		var $item = $(item),
-			offset = $item.offset();
-
-		$item.data('midpoint', {
-			left: offset.left + $item.outerWidth() / 2,
-			top:  offset.top + $item.outerHeight() / 2
-		});
-	},
-
-	/**
 	 * On Drag
 	 */
 	onDrag: function()
 	{
-		this.draggeeMidpointX = this.mouseX - this.draggeeMidpointMouseOffsetX;
-		this.draggeeMidpointY = this.mouseY - this.draggeeMidpointMouseOffsetY;
-
-		// if there's a container set, make sure that we're hovering over it
+		// If there's a container set, make sure that we're hovering over it
 		if (this.$heightedContainer && !Garnish.hitTest(this.mouseX, this.mouseY, this.$heightedContainer))
 		{
 			if (this.closestItem)
 			{
 				this.closestItem = null;
-
-				if (this.$insertion)
-				{
-					this.$insertion.remove();
-				}
+				this._removeInsertion();
 			}
 		}
 		else
 		{
-			// is there a new closest item?
-			if (this.closestItem != (this.closestItem = this.getClosestItem()) && this.closestItem != this.$draggee[0])
+			// Is there a new closest item?
+			if (
+				this.closestItem !== (this.closestItem = this._getClosestItem()) &&
+				this.closestItem !== null
+			)
 			{
-				this.onInsertionPointChange();
+				this._updateInsertion();
 			}
 		}
 
@@ -132,43 +115,144 @@ Garnish.DragSort = Garnish.Drag.extend({
 	},
 
 	/**
-	 * Returns the closest item to the cursor.
+	 * On Drag Stop
 	 */
-	getClosestItem: function()
+	onDragStop: function()
 	{
-		this.getClosestItem._closestItem = this.$draggee[0];
-		this.getClosestItem._midpoint = this.$draggee.data('midpoint');
-		this.getClosestItem._closestItemMouseDiff = Garnish.getDist(this.getClosestItem._midpoint.left, this.getClosestItem._midpoint.top, this.draggeeMidpointX, this.draggeeMidpointY);
+		this._removeInsertion();
 
-		for (this.getClosestItem._i = 0; this.getClosestItem._i < this.totalOtherItems; this.getClosestItem._i++)
+		// Return the helpers to the draggees
+		this.returnHelpersToDraggees();
+
+		this.base();
+
+		// Has the item actually moved?
+		this.$items = $().add(this.$items);
+		var newDraggeeIndex = $.inArray(this.$draggee[0], this.$items);
+
+		if (this.startDraggeeIndex != newDraggeeIndex)
 		{
-			this.testForClosestItem(this.otherItems[this.getClosestItem._i]);
-		}
-
-		return this.getClosestItem._closestItem;
-	},
-
-	testForClosestItem: function(item)
-	{
-		this.getClosestItem._$item = $(item);
-		this.getClosestItem._midpoint = this.getClosestItem._$item.data('midpoint');
-
-		if (this.getClosestItem._midpoint.top >= this.draggeeMidpointY || this.getClosestItem._midpoint.left >= this.draggeeMidpointX)
-		{
-			this.getClosestItem._mouseDiff = Garnish.getDist(this.getClosestItem._midpoint.left, this.getClosestItem._midpoint.top, this.draggeeMidpointX, this.draggeeMidpointY);
-
-			if (this.getClosestItem._mouseDiff < this.getClosestItem._closestItemMouseDiff)
-			{
-				this.getClosestItem._closestItem = this.getClosestItem._$item[0];
-				this.getClosestItem._closestItemMouseDiff = this.getClosestItem._mouseDiff;
-			}
+			this.onSortChange();
 		}
 	},
 
 	/**
-	 * On Insertion Point Change
+	 * On Insertion Point Change event
 	 */
 	onInsertionPointChange: function()
+	{
+		Garnish.requestAnimationFrame($.proxy(function()
+		{
+			this.trigger('insertionPointChange');
+			this.settings.onInsertionPointChange();
+		}, this));
+	},
+
+	/**
+	 * On Sort Change event
+	 */
+	onSortChange: function()
+	{
+		Garnish.requestAnimationFrame($.proxy(function()
+		{
+			this.trigger('sortChange');
+			this.settings.onSortChange();
+		}, this));
+	},
+
+	// Private methods
+	// =========================================================================
+
+	/**
+	 * Sets the item midpoints up front so we don't have to keep checking on every mouse move
+	 */
+	_setMidpoints: function()
+	{
+		for (this._setMidpoints._i = 0; this._setMidpoints._i < this.totalOtherItems; this._setMidpoints._i++)
+		{
+			this._setMidpoint($(this.$items[this._setMidpoints._i]));
+		}
+
+		if (!this.settings.removeDraggee)
+		{
+			this._setMidpoint(this.$draggee);
+		}
+		else if (this.insertionVisible)
+		{
+			this._setMidpoint(this.$insertion);
+		}
+	},
+
+	/**
+	 * Set the midpoint on an item.
+	 */
+	_setMidpoint: function($item)
+	{
+		this._setMidpoint._offset = $item.offset();
+		$item.data('midpointX', this._setMidpoint._offset.left + $item.outerWidth() / 2);
+		$item.data('midpointY', this._setMidpoint._offset.top + $item.outerHeight() / 2);
+	},
+
+	/**
+	 * Returns the closest item to the cursor.
+	 */
+	_getClosestItem: function()
+	{
+		this._getClosestItem._closestItem = null;
+
+		if (!this.settings.removeDraggee)
+		{
+			this._testForClosestItem(this.$draggee[0]);
+		}
+		else if (this.insertionVisible)
+		{
+			this._testForClosestItem(this.$insertion[0]);
+		}
+
+		for (this._getClosestItem._i = 0; this._getClosestItem._i < this.totalOtherItems; this._getClosestItem._i++)
+		{
+			this._testForClosestItem(this.otherItems[this._getClosestItem._i]);
+		}
+
+		// Ignore if it's the draggee or insertion
+		if (
+			this._getClosestItem._closestItem != this.$draggee[0] &&
+			(!this.insertionVisible || this._getClosestItem._closestItem != this.$insertion[0])
+		)
+		{
+			return this._getClosestItem._closestItem;
+		}
+		else
+		{
+			return null;
+		}
+	},
+
+	_testForClosestItem: function(item)
+	{
+		this._testForClosestItem._$item = $(item);
+
+		this._testForClosestItem._mouseDiff = Garnish.getDist(
+			this._testForClosestItem._$item.data('midpointX'),
+			this._testForClosestItem._$item.data('midpointY'),
+			this.draggeeVirtualMidpointX,
+			this.draggeeVirtualMidpointY
+		);
+
+		if (
+			this._getClosestItem._closestItem === null ||
+			this._testForClosestItem._mouseDiff < this._getClosestItem._closestItemMouseDiff
+		)
+		{
+			this._getClosestItem._closestItem          = this._testForClosestItem._$item[0];
+			this._getClosestItem._closestItemMouseDiff = this._testForClosestItem._mouseDiff;
+		}
+	},
+
+	/**
+	 * Updates the position of the insertion point.
+	 */
+	_updateInsertion: function()
 	{
 		if (this.closestItem)
 		{
@@ -182,46 +266,40 @@ Garnish.DragSort = Garnish.Drag.extend({
 				this.$draggee.insertBefore(this.closestItem);
 			}
 
-			if (this.$insertion)
-			{
-				this.$insertion.insertBefore(this.closestItem);
-			}
+			this._placeInsertionWithDraggee();
 		}
 
-		this.setMidpoints();
-		this.settings.onInsertionPointChange();
+		// Now that things have shifted around we need to set the new midpoints
+		this._setMidpoints();
+
+		this.onInsertionPointChange();
 	},
 
-	/**
-	 * On Drag Stop
-	 */
-	onDragStop: function()
+	_placeInsertionWithDraggee: function()
 	{
 		if (this.$insertion)
 		{
-			this.$insertion.remove();
+			this.$insertion.insertBefore(this.$draggee.first());
+			this.insertionVisible = true;
 		}
+	},
 
-		// "show" the drag items, but make them invisible
-		this.$draggee.css({
-			display:    this.draggeeDisplay,
-			visibility: 'hidden'
-		});
-
-		// return the helpers to the draggees
-		this.returnHelpersToDraggees();
-
-		this.base();
-
-		// has the item actually moved?
-		this.$items = $().add(this.$items);
-		var newDraggeeIndex = $.inArray(this.$draggee[0], this.$items);
-		if (this.startDraggeeIndex != newDraggeeIndex)
+	/**
+	 * Removes the insertion, if it's visible.
+	 */
+	_removeInsertion: function()
+	{
+		if (this.insertionVisible)
 		{
-			this.settings.onSortChange();
+			this.$insertion.remove();
+			this.insertionVisible = false;
 		}
 	}
 },
+
+// Static Properties
+// =============================================================================
+
 {
 	defaults: {
 		container: null,

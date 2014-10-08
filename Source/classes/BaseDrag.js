@@ -6,29 +6,39 @@
  */
 Garnish.BaseDrag = Garnish.Base.extend({
 
+	// Properties
+	// =========================================================================
+
 	$items: null,
 
 	dragging: false,
 
 	mousedownX: null,
 	mousedownY: null,
-	mouseDistX: null,
-	mouseDistY: null,
-	$targetItem: null,
-	targetItemMouseDiffX: null,
-	targetItemMouseDiffY: null,
 	mouseX: null,
 	mouseY: null,
-	lastMouseX: null,
-	lastMouseY: null,
+	mouseDistX: null,
+	mouseDistY: null,
+
+	$targetItem: null,
+	targetItemMouseOffsetX: null,
+	targetItemMouseOffsetY: null,
 
 	scrollProperty: null,
 	scrollDir: null,
+	scrollProxy: null,
+	scrollFrame: null,
 
 	_: null,
 
+	// Public methods
+	// =========================================================================
+
 	/**
-	 * Init
+	 * Constructor
+	 *
+	 * @param mixed  items    Elements that should be draggable right away. (Can be skipped.)
+	 * @param object settings Any settings that should override the defaults.
 	 */
 	init: function(items, settings)
 	{
@@ -45,189 +55,10 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		this.$items = $();
 		this._ = {};
 
-		if (items) this.addItems(items);
-	},
-
-	/**
-	 * On Mouse Down
-	 */
-	onMouseDown: function(ev)
-	{
-		// Ignore right clicks
-		if (ev.which != Garnish.PRIMARY_CLICK)
+		if (items)
 		{
-			return;
+			this.addItems(items);
 		}
-
-		// ignore if we already have a target
-		if (this.$targetItem) return;
-
-		// Make sure the target isn't a button (unless the button is the handle)
-		if (ev.currentTarget != ev.target && this.settings.ignoreHandleSelector)
-		{
-			var $target = $(ev.target);
-
-			if ($target.is(this.settings.ignoreHandleSelector) || $target.closest(this.settings.ignoreHandleSelector).length)
-			{
-				return;
-			}
-		}
-
-		ev.preventDefault();
-
-		// capture the target
-		this.$targetItem = $($.data(ev.currentTarget, 'drag-item'));
-
-		// capture the current mouse position
-		this.mousedownX = this.mouseX = ev.pageX;
-		this.mousedownY = this.mouseY = ev.pageY;
-
-		// capture the difference between the mouse position and the target item's offset
-		var offset = this.$targetItem.offset();
-		this.targetItemMouseDiffX = ev.pageX - offset.left;
-		this.targetItemMouseDiffY = ev.pageY - offset.top;
-
-		// listen for mousemove, mouseup
-		this.addListener(Garnish.$doc, 'mousemove', 'onMouseMove');
-		this.addListener(Garnish.$doc, 'mouseup', 'onMouseUp');
-	},
-
-	/**
-	 * On Moues Move
-	 */
-	onMouseMove: function(ev)
-	{
-		if (ev)
-		{
-			ev.preventDefault();
-
-			if (this.settings.axis != Garnish.Y_AXIS) this.mouseX = ev.pageX;
-			if (this.settings.axis != Garnish.X_AXIS) this.mouseY = ev.pageY;
-		}
-
-		this.mouseDistX = this.mouseX - this.mousedownX;
-		this.mouseDistY = this.mouseY - this.mousedownY;
-
-		if (!this.dragging)
-		{
-			// Has the mouse moved far enough to initiate dragging yet?
-			this.onMouseMove._mouseDist = Garnish.getDist(this.mousedownX, this.mousedownY, this.mouseX, this.mouseY);
-			if (this.onMouseMove._mouseDist >= Garnish.BaseDrag.minMouseDist)
-			{
-				this.startDragging();
-			}
-			else
-			{
-				return;
-			}
-		}
-
-		if (ev)
-		{
-			// Is the mouse up against one of the window edges?
-			this.onMouseMove._scrollProperty = null;
-
-			if (this.settings.axis != Garnish.X_AXIS)
-			{
-				// Scrolling up?
-				this.onMouseMove._winScrollTop = Garnish.$win.scrollTop();
-
-				if (this.mouseY < this.onMouseMove._winScrollTop + Garnish.BaseDrag.windowScrollTargetSize)
-				{
-					this.onMouseMove._scrollProperty = 'scrollTop';
-					this.onMouseMove._scrollDir = -1;
-				}
-				else
-				{
-					// Scrolling down?
-					this.onMouseMove._winHeight = Garnish.$win.height();
-
-					if (this.mouseY > this.onMouseMove._winScrollTop + this.onMouseMove._winHeight - Garnish.BaseDrag.windowScrollTargetSize)
-					{
-						this.onMouseMove._scrollProperty = 'scrollTop';
-						this.onMouseMove._scrollDir = 1;
-					}
-				}
-			}
-
-			if (!this.onMouseMove._scrollProperty && this.settings.axis != Garnish.Y_AXIS)
-			{
-				// Scrolling left?
-				this.onMouseMove._winScrollLeft = Garnish.$win.scrollLeft();
-
-				if (this.mouseX < this.onMouseMove._winScrollLeft + Garnish.BaseDrag.windowScrollTargetSize)
-				{
-					this.onMouseMove._scrollProperty = 'scrollLeft';
-					this.onMouseMove._scrollDir = -1;
-				}
-				else
-				{
-					// Scrolling right?
-					this.onMouseMove._winWidth = Garnish.$win.width();
-
-					if (this.mouseX > this.onMouseMove._winScrollLeft + this.onMouseMove._winWidth - Garnish.BaseDrag.windowScrollTargetSize)
-					{
-						this.onMouseMove._scrollProperty = 'scrollLeft';
-						this.onMouseMove._scrollDir = 1;
-					}
-				}
-			}
-
-			if (this.onMouseMove._scrollProperty)
-			{
-				if (!this.scrollProperty)
-				{
-					this.scrollInterval = setInterval($.proxy(this, 'scrollWindow'), 20);
-				}
-
-				this.scrollProperty = this.onMouseMove._scrollProperty;
-				this.scrollDir = this.onMouseMove._scrollDir;
-			}
-			else
-			{
-				this.cancelWindowScroll();
-			}
-		}
-
-		this.onDrag();
-	},
-
-	scrollWindow: function()
-	{
-		this._.scrollPos = Garnish.$win[this.scrollProperty]();
-		Garnish.$win[this.scrollProperty](this._.scrollPos + this.scrollDir * 3);
-
-		this.mouseY -= this._.scrollPos - Garnish.$win[this.scrollProperty]()
-
-		this.onMouseMove();
-	},
-
-	cancelWindowScroll: function()
-	{
-		if (this.scrollInterval)
-		{
-			clearInterval(this.scrollInterval);
-			this.scrollInterval = null;
-		}
-
-		this.scrollProperty = null;
-		this.scrollDir = null;
-	},
-
-	/**
-	 * On Moues Up
-	 */
-	onMouseUp: function(ev)
-	{
-		// unbind the document events
-		this.removeAllListeners(Garnish.$doc);
-
-		if (this.dragging)
-		{
-			this.stopDragging();
-		}
-
-		this.$targetItem = null;
 	},
 
 	/**
@@ -235,32 +66,89 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	 */
 	startDragging: function()
 	{
-		// Set the $draggee
-		switch (typeof this.settings.filter)
+		this.dragging = true;
+		this.onDragStart();
+	},
+
+	/**
+	 * Drag
+	 */
+	drag: function(didMouseMove)
+	{
+		if (didMouseMove)
 		{
-			case 'function':
+			// Is the mouse up against one of the window edges?
+			this.drag._scrollProperty = null;
+
+			if (this.settings.axis != Garnish.X_AXIS)
 			{
-				this.$draggee = this.settings.filter();
-				break;
+				// Scrolling up?
+				this.drag._winScrollTop = Garnish.$win.scrollTop();
+
+				if (this.mouseY < this.drag._winScrollTop + Garnish.BaseDrag.windowScrollTargetSize)
+				{
+					this.drag._scrollProperty = 'scrollTop';
+					this.drag._scrollDir = -1;
+				}
+				else
+				{
+					// Scrolling down?
+					this.drag._winHeight = Garnish.$win.height();
+
+					if (this.mouseY > this.drag._winScrollTop + this.drag._winHeight - Garnish.BaseDrag.windowScrollTargetSize)
+					{
+						this.drag._scrollProperty = 'scrollTop';
+						this.drag._scrollDir = 1;
+					}
+				}
 			}
 
-			case 'string':
+			if (!this.drag._scrollProperty && this.settings.axis != Garnish.Y_AXIS)
 			{
-				this.$draggee = this.$items.filter(this.settings.filter);
-				break;
+				// Scrolling left?
+				this.drag._winScrollLeft = Garnish.$win.scrollLeft();
+
+				if (this.mouseX < this.drag._winScrollLeft + Garnish.BaseDrag.windowScrollTargetSize)
+				{
+					this.drag._scrollProperty = 'scrollLeft';
+					this.drag._scrollDir = -1;
+				}
+				else
+				{
+					// Scrolling right?
+					this.drag._winWidth = Garnish.$win.width();
+
+					if (this.mouseX > this.drag._winScrollLeft + this.drag._winWidth - Garnish.BaseDrag.windowScrollTargetSize)
+					{
+						this.drag._scrollProperty = 'scrollLeft';
+						this.drag._scrollDir = 1;
+					}
+				}
 			}
 
-			default:
+			if (this.drag._scrollProperty)
 			{
-				this.$draggee = this.$targetItem;
+				// Are we starting to scroll now?
+				if (!this.scrollProperty)
+				{
+					if (!this.scrollProxy)
+					{
+						this.scrollProxy = $.proxy(this, '_scrollWindow');
+					}
+
+					this.scrollFrame = Garnish.requestAnimationFrame(this.scrollProxy);
+				}
+
+				this.scrollProperty = this.drag._scrollProperty;
+				this.scrollDir = this.drag._scrollDir;
+			}
+			else
+			{
+				this._cancelWindowScroll();
 			}
 		}
 
-		// put the target item in the front of the list
-		this.$draggee = $([ this.$targetItem[0] ].concat(this.$draggee.not(this.$targetItem[0]).toArray()));
-
-		this.dragging = true;
-		this.onDragStart();
+		this.onDrag();
 	},
 
 	/**
@@ -270,35 +158,15 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	{
 		this.dragging = false;
 		this.onDragStop();
-		this.cancelWindowScroll();
-	},
 
-	/**
-	 * On Drag Start
-	 */
-	onDragStart: function()
-	{
-		this.settings.onDragStart();
-	},
-
-	/**
-	 * On Drag
-	 */
-	onDrag: function()
-	{
-		this.settings.onDrag();
-	},
-
-	/**
-	 * On Drag Stop
-	 */
-	onDragStop: function()
-	{
-		this.settings.onDragStop();
+		// Clear the scroll animation
+		this._cancelWindowScroll();
 	},
 
 	/**
 	 * Add Items
+	 *
+	 * @param mixed items Elements that should be draggable.
 	 */
 	addItems: function(items)
 	{
@@ -341,7 +209,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 
 			$.data(item, 'drag-handle', $handle);
 			$handle.data('drag-item', item);
-			this.addListener($handle, 'mousedown', 'onMouseDown');
+			this.addListener($handle, 'mousedown', '_onMouseDown');
 		}
 
 		this.$items = $().add(this.$items.add(items));
@@ -349,6 +217,8 @@ Garnish.BaseDrag = Garnish.Base.extend({
 
 	/**
 	 * Remove Items
+	 *
+	 * @param mixed items Elements that should no longer be draggable.
 	 */
 	removeItems: function(items)
 	{
@@ -393,15 +263,191 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		}
 
 		this.$items = $();
+	},
+
+	// Events
+	// -------------------------------------------------------------------------
+
+	/**
+	 * On Drag Start
+	 */
+	onDragStart: function()
+	{
+		Garnish.requestAnimationFrame($.proxy(function()
+		{
+			this.trigger('dragStart');
+			this.settings.onDragStart();
+		}, this));
+	},
+
+	/**
+	 * On Drag
+	 */
+	onDrag: function()
+	{
+		Garnish.requestAnimationFrame($.proxy(function()
+		{
+			this.trigger('drag');
+			this.settings.onDrag();
+		}, this));
+	},
+
+	/**
+	 * On Drag Stop
+	 */
+	onDragStop: function()
+	{
+		Garnish.requestAnimationFrame($.proxy(function()
+		{
+			this.trigger('dragStop');
+			this.settings.onDragStop();
+		}, this));
+	},
+
+	// Private methods
+	// =========================================================================
+
+	/**
+	 * On Mouse Down
+	 */
+	_onMouseDown: function(ev)
+	{
+		// Ignore right clicks
+		if (ev.which != Garnish.PRIMARY_CLICK)
+		{
+			return;
+		}
+
+		// Ignore if we already have a target
+		if (this.$targetItem)
+		{
+			return;
+		}
+
+		// Make sure the target isn't a button (unless the button is the handle)
+		if (ev.currentTarget != ev.target && this.settings.ignoreHandleSelector)
+		{
+			var $target = $(ev.target);
+
+			if (
+				$target.is(this.settings.ignoreHandleSelector) ||
+				$target.closest(this.settings.ignoreHandleSelector).length
+			)
+			{
+				return;
+			}
+		}
+
+		ev.preventDefault();
+
+		// Capture the target
+		this.$targetItem = $($.data(ev.currentTarget, 'drag-item'));
+
+		// Capture the current mouse position
+		this.mousedownX = this.mouseX = ev.pageX;
+		this.mousedownY = this.mouseY = ev.pageY;
+
+		// Capture the difference between the mouse position and the target item's offset
+		var offset = this.$targetItem.offset();
+		this.targetItemMouseOffsetX = offset.left - ev.pageX;
+		this.targetItemMouseOffsetY = offset.top - ev.pageY;
+
+		// Listen for mousemove, mouseup
+		this.addListener(Garnish.$doc, 'mousemove', '_onMouseMove');
+		this.addListener(Garnish.$doc, 'mouseup', '_onMouseUp');
+	},
+
+	/**
+	 * On Mouse Move
+	 */
+	_onMouseMove: function(ev)
+	{
+		ev.preventDefault();
+
+		if (this.settings.axis != Garnish.Y_AXIS)
+		{
+			this.mouseX = ev.pageX;
+		}
+
+		if (this.settings.axis != Garnish.X_AXIS)
+		{
+			this.mouseY = ev.pageY;
+		}
+
+		this.mouseDistX = this.mouseX - this.mousedownX;
+		this.mouseDistY = this.mouseY - this.mousedownY;
+
+		if (!this.dragging)
+		{
+			// Has the mouse moved far enough to initiate dragging yet?
+			this._onMouseMove._mouseDist = Garnish.getDist(this.mousedownX, this.mousedownY, this.mouseX, this.mouseY);
+
+			if (this._onMouseMove._mouseDist >= Garnish.BaseDrag.minMouseDist)
+			{
+				this.startDragging();
+			}
+		}
+
+		if (this.dragging)
+		{
+			this.drag(true);
+		}
+	},
+
+	/**
+	 * On Moues Up
+	 */
+	_onMouseUp: function(ev)
+	{
+		// Unbind the document events
+		this.removeAllListeners(Garnish.$doc);
+
+		if (this.dragging)
+		{
+			this.stopDragging();
+		}
+
+		this.$targetItem = null;
+	},
+
+	/**
+	 * Scroll Window
+	 */
+	_scrollWindow: function()
+	{
+		this._.scrollPos = Garnish.$win[this.scrollProperty]();
+		Garnish.$win[this.scrollProperty](this._.scrollPos + this.scrollDir * 3);
+
+		this.mouseY -= this._.scrollPos - Garnish.$win[this.scrollProperty]()
+
+		this.drag();
+	},
+
+	/**
+	 * Cancel Window Scroll
+	 */
+	_cancelWindowScroll: function()
+	{
+		if (this.scrollFrame)
+		{
+			Garnish.cancelAnimationFrame(this.scrollFrame);
+			this.scrollFrame = null;
+		}
+
+		this.scrollProperty = null;
+		this.scrollDir = null;
 	}
 },
+
+// Static Properties
+// =============================================================================
+
 {
 	minMouseDist: 1,
 	windowScrollTargetSize: 20,
 
 	defaults: {
 		handle: null,
-		filter: null,
 		axis: null,
 		ignoreHandleSelector: 'input, textarea, button, select, .btn',
 
