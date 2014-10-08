@@ -55,6 +55,38 @@ Garnish.DragSort = Garnish.Drag.extend({
 		}
 	},
 
+	/**
+	 * Returns the helper’s target X position
+	 */
+	getHelperTargetX: function()
+	{
+		if (this.settings.magnetStrength != 1)
+		{
+			this.getHelperTargetX._draggeeOffsetX = this.$draggee.offset().left - this.targetItemMouseOffsetX;
+			return this.getHelperTargetX._draggeeOffsetX + ((this.mouseX - this.getHelperTargetX._draggeeOffsetX) / this.settings.magnetStrength);
+		}
+		else
+		{
+			return this.mouseX;
+		}
+	},
+
+	/**
+	 * Returns the helper’s target Y position
+	 */
+	getHelperTargetY: function()
+	{
+		if (this.settings.magnetStrength != 1)
+		{
+			this.getHelperTargetY._draggeeOffsetY = this.$draggee.offset().top - this.targetItemMouseOffsetY;
+			return this.getHelperTargetY._draggeeOffsetY + ((this.mouseY - this.getHelperTargetY._draggeeOffsetY) / this.settings.magnetStrength);
+		}
+		else
+		{
+			return this.mouseY;
+		}
+	},
+
 	// Events
 	// -------------------------------------------------------------------------
 
@@ -69,7 +101,7 @@ Garnish.DragSort = Garnish.Drag.extend({
 		this._placeInsertionWithDraggee();
 
 		this.closestItem = null;
-		this._setMidpoints();
+		this._recordPositions();
 
 		//  Get the closest container that has a height
 		if (this.settings.container)
@@ -166,31 +198,31 @@ Garnish.DragSort = Garnish.Drag.extend({
 	/**
 	 * Sets the item midpoints up front so we don't have to keep checking on every mouse move
 	 */
-	_setMidpoints: function()
+	_recordPositions: function()
 	{
-		for (this._setMidpoints._i = 0; this._setMidpoints._i < this.totalOtherItems; this._setMidpoints._i++)
+		for (this._recordPositions._i = 0; this._recordPositions._i < this.totalOtherItems; this._recordPositions._i++)
 		{
-			this._setMidpoint($(this.$items[this._setMidpoints._i]));
+			this._recordPosition($(this.otherItems[this._recordPositions._i]));
 		}
 
 		if (!this.settings.removeDraggee)
 		{
-			this._setMidpoint(this.$draggee);
+			this._recordPosition(this.$draggee);
 		}
 		else if (this.insertionVisible)
 		{
-			this._setMidpoint(this.$insertion);
+			this._recordPosition(this.$insertion);
 		}
 	},
 
 	/**
 	 * Set the midpoint on an item.
 	 */
-	_setMidpoint: function($item)
+	_recordPosition: function($item)
 	{
-		this._setMidpoint._offset = $item.offset();
-		$item.data('midpointX', this._setMidpoint._offset.left + $item.outerWidth() / 2);
-		$item.data('midpointY', this._setMidpoint._offset.top + $item.outerHeight() / 2);
+		$item.data('offset', $item.offset());
+		$item.data('midpointX', $item.data('offset').left + $item.outerWidth() / 2);
+		$item.data('midpointY', $item.data('offset').top + $item.outerHeight() / 2);
 	},
 
 	/**
@@ -270,7 +302,7 @@ Garnish.DragSort = Garnish.Drag.extend({
 		}
 
 		// Now that things have shifted around we need to set the new midpoints
-		this._setMidpoints();
+		this._recordPositions();
 
 		this.onInsertionPointChange();
 	},
@@ -304,6 +336,7 @@ Garnish.DragSort = Garnish.Drag.extend({
 	defaults: {
 		container: null,
 		insertion: null,
+		magnetStrength: 1,
 		onInsertionPointChange: $.noop,
 		onSortChange: $.noop
 	}

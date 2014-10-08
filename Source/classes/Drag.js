@@ -9,11 +9,10 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	// Properties
 	// =========================================================================
 
+	targetItemWidth: null,
+	targetItemHeight: null,
+
 	$draggee: null,
-	draggeeMouseOffsetX: null,
-	draggeeMouseOffsetY: null,
-	draggeeWidth: null,
-	draggeeHeight: null,
 
 	otherItems: null,
 	totalOtherItems: null,
@@ -62,18 +61,15 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		this.helperPositions = [];
 		this.lastMouseX = this.lastMouseY = null;
 
+		// Capture the target item's width/height
+		this.targetItemWidth  = this.$targetItem.outerWidth();
+		this.targetItemHeight = this.$targetItem.outerHeight();
+
 		// Set the $draggee
 		this.$draggee = this.findDraggee();
 
 		// Put the target item in the front of the list
 		this.$draggee = $([ this.$targetItem[0] ].concat(this.$draggee.not(this.$targetItem[0]).toArray()));
-
-		// Capture the mouse offset and width
-		var offset = this.$draggee.offset();
-		this.draggeeMouseOffsetX = offset.left - this.mouseX;
-		this.draggeeMouseOffsetY = offset.top - this.mouseY;
-		this.draggeeWidth        = this.$draggee.outerWidth();
-		this.draggeeHeight       = this.$draggee.outerHeight();
 
 		// Save the draggee's display style (block/table-row) so we can re-apply it later
 		this.draggeeDisplay = this.$draggee.css('display');
@@ -117,8 +113,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	drag: function()
 	{
 		// Update the draggee's virtual midpoint
-		this.draggeeVirtualMidpointX = this.mouseX + this.draggeeMouseOffsetX + (this.draggeeWidth / 2);
-		this.draggeeVirtualMidpointY = this.mouseY + this.draggeeMouseOffsetY + (this.draggeeHeight / 2);
+		this.draggeeVirtualMidpointX = this.mouseX + this.targetItemMouseOffsetX + (this.targetItemWidth / 2);
+		this.draggeeVirtualMidpointY = this.mouseY + this.targetItemMouseOffsetY + (this.targetItemHeight / 2);
 
 		this.base();
 	},
@@ -159,6 +155,22 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	},
 
 	/**
+	 * Returns the helper’s target X position
+	 */
+	getHelperTargetX: function()
+	{
+		return this.mouseX;
+	},
+
+	/**
+	 * Returns the helper’s target Y position
+	 */
+	getHelperTargetY: function()
+	{
+		return this.mouseY;
+	},
+
+	/**
 	 * Return Helpers to Draggees
 	 */
 	returnHelpersToDraggees: function()
@@ -184,8 +196,20 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 				var callback = null;
 			}
 
-			$helper.velocity({left: draggeeOffset.left, top: draggeeOffset.top}, 'fast', callback);
+			$helper.velocity({left: draggeeOffset.left, top: draggeeOffset.top}, 100, callback);
 		}
+	},
+
+	// Events
+	// -------------------------------------------------------------------------
+
+	onReturnHelpersToDraggees: function()
+	{
+		Garnish.requestAnimationFrame($.proxy(function()
+		{
+			this.trigger('returnHelpersToDraggees');
+			this.settings.onReturnHelpersToDraggees();
+		}, this));
 	},
 
 	// Private methods
@@ -296,8 +320,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	_getHelperTarget: function(i)
 	{
 		return {
-			left: this.mouseX + this.targetItemMouseOffsetX + (i * Garnish.Drag.helperSpacingX),
-			top:  this.mouseY + this.targetItemMouseOffsetY + (i * Garnish.Drag.helperSpacingY)
+			left: this.getHelperTargetX() + this.targetItemMouseOffsetX + (i * Garnish.Drag.helperSpacingX),
+			top:  this.getHelperTargetY() + this.targetItemMouseOffsetY + (i * Garnish.Drag.helperSpacingY)
 		};
 	},
 
@@ -329,6 +353,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		this.helpers = null;
 
 		this.$draggee.show().css('visibility', 'inherit');
+
+		this.onReturnHelpersToDraggees();
 	}
 },
 
@@ -346,8 +372,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		filter: null,
 		collapseDraggees: false,
 		removeDraggee: false,
-		magneticHelpers: false,
 		helperOpacity: 1,
-		helper: null
+		helper: null,
+		onReturnHelpersToDraggees: $.noop
 	}
 });
