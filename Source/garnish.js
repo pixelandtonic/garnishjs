@@ -240,6 +240,34 @@ Garnish = $.extend(Garnish, {
 		return Garnish.getBodyScrollTop._scrollTop;
 	},
 
+	requestAnimationFrame: (
+		function()
+		{
+			var raf = (
+				window.requestAnimationFrame ||
+				window.mozRequestAnimationFrame ||
+				window.webkitRequestAnimationFrame ||
+				function(fn){ return window.setTimeout(fn, 20); }
+			);
+
+			return function(fn){ return raf(fn); };
+		}
+	)(),
+
+	cancelAnimationFrame: (
+		function()
+		{
+			var cancel = (
+				window.cancelAnimationFrame ||
+				window.mozCancelAnimationFrame ||
+				window.webkitCancelAnimationFrame ||
+				window.clearTimeout
+			);
+
+			return function(id){ return cancel(id); };
+		}
+	)(),
+
 	/**
 	 * Scrolls a container element to an element within it.
 	 *
@@ -809,18 +837,6 @@ Garnish.Base = Base.extend({
 // Resize event helper functions
 // =============================================================================
 
-var requestFrame = (function(){
-	var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame ||
-			function(fn){ return window.setTimeout(fn, 20); };
-	return function(fn){ return raf(fn); };
-})();
-
-var cancelFrame = (function(){
-	var cancel = window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame ||
-				 window.clearTimeout;
-	return function(id){ return cancel(id); };
-})();
-
 function resizeListener(ev)
 {
 	var win = ev.currentTarget;
@@ -831,9 +847,13 @@ function resizeListener(ev)
 		return;
 	}
 
-	if (win.__resizeRAF__) cancelFrame(win.__resizeRAF__);
-	win.__resizeRAF__ = requestFrame(function(){
+	if (win.__resizeRAF__)
+	{
+		Garnish.cancelAnimationFrame(win.__resizeRAF__);
+	}
 
+	win.__resizeRAF__ = Garnish.requestAnimationFrame(function()
+	{
 		// Ignore if the size hasn't changed
 		if (
 			typeof win.__lastOffsetWidth__ != typeof undefined &&
