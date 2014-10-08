@@ -256,17 +256,6 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	},
 
 	/**
-	 * Get the helper position for a draggee helper
-	 */
-	_getHelperTarget: function(i)
-	{
-		return {
-			left: this.mouseX + this.targetItemMouseOffsetX + (i * Garnish.Drag.helperSpacingX),
-			top:  this.mouseY + this.targetItemMouseOffsetY + (i * Garnish.Drag.helperSpacingY)
-		};
-	},
-
-	/**
 	 * Update Helper Position
 	 */
 	_updateHelperPos: function()
@@ -299,6 +288,17 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 
 		// Let's do this again on the next frame!
 		this.updateHelperPosFrame = Garnish.requestAnimationFrame(this.updateHelperPosProxy);
+	},
+
+	/**
+	 * Get the helper position for a draggee helper
+	 */
+	_getHelperTarget: function(i)
+	{
+		return {
+			left: this.mouseX + this.targetItemMouseOffsetX + (i * Garnish.Drag.helperSpacingX),
+			top:  this.mouseY + this.targetItemMouseOffsetY + (i * Garnish.Drag.helperSpacingY)
+		};
 	},
 
 	_hideDraggee: function()
@@ -346,6 +346,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		filter: null,
 		collapseDraggees: false,
 		removeDraggee: false,
+		magneticHelpers: false,
 		helperOpacity: 1,
 		helper: null
 	}
