@@ -47,6 +47,8 @@ Garnish = $.extend(Garnish, {
 	X_AXIS: 'x',
 	Y_AXIS: 'y',
 
+	FX_DURATION: 100,
+
 	// Node types
 	TEXT_NODE: 3,
 

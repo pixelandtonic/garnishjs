@@ -162,9 +162,9 @@ Garnish.Modal = Garnish.Base.extend({
 
 		if (this.$container)
 		{
-			this.$container.velocity('fadeOut', { duration: 'fast' });
+			this.$container.velocity('fadeOut', { duration: Garnish.FX_DURATION });
 			this.$shade.velocity('fadeOut', {
-				duration: 'fast',
+				duration: Garnish.FX_DURATION,
 				complete: $.proxy(this, 'onFadeOut')
 			});
 

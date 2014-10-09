@@ -196,7 +196,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 				var callback = null;
 			}
 
-			$helper.velocity({left: draggeeOffset.left, top: draggeeOffset.top}, 100, callback);
+			$helper.velocity({left: draggeeOffset.left, top: draggeeOffset.top}, Garnish.FX_DURATION, callback);
 		}
 	},
 

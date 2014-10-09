@@ -119,7 +119,7 @@ Garnish.DragDrop = Garnish.Drag.extend({
 			(function($draggeeHelper)
 			{
 				$draggeeHelper.velocity('fadeOut', {
-					duration: 'fast',
+					duration: Garnish.FX_DURATION,
 					complete: function() {
 						$draggeeHelper.remove();
 					}

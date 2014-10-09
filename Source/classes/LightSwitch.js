@@ -48,7 +48,7 @@ Garnish.LightSwitch = Garnish.Base.extend({
 
 	turnOn: function()
 	{
-		this.$innerContainer.velocity('stop').velocity({marginLeft: 0}, 'fast');
+		this.$innerContainer.velocity('stop').velocity({marginLeft: 0}, Garnish.FX_DURATION);
 		this.$input.val(Garnish.Y_AXIS);
 		this.on = true;
 		this.onChange();
@@ -57,19 +57,19 @@ Garnish.LightSwitch = Garnish.Base.extend({
 		this.$toggleTarget.height('auto');
 		var height = this.$toggleTarget.height();
 		this.$toggleTarget.height(0);
-		this.$toggleTarget.velocity('stop').velocity({height: height}, 'fast', $.proxy(function() {
+		this.$toggleTarget.velocity('stop').velocity({height: height}, Garnish.FX_DURATION, $.proxy(function() {
 			this.$toggleTarget.height('auto');
 		}, this));
 	},
 
 	turnOff: function()
 	{
-		this.$innerContainer.velocity('stop').velocity({marginLeft: Garnish.LightSwitch.offMargin}, 'fast');
+		this.$innerContainer.velocity('stop').velocity({marginLeft: Garnish.LightSwitch.offMargin}, Garnish.FX_DURATION);
 		this.$input.val('');
 		this.on = false;
 		this.onChange();
 
-		this.$toggleTarget.velocity('stop').velocity({height: 0}, 'fast');
+		this.$toggleTarget.velocity('stop').velocity({height: 0}, Garnish.FX_DURATION);
 	},
 
 	toggle: function(ev)
