@@ -136,7 +136,11 @@ Garnish.Menu = Garnish.Base.extend({
 			this.setPositionRelativeToTrigger();
 		}
 
-		this.$container.velocity('fadeIn', { duration: 50 });
+		this.$container.velocity('stop');
+		this.$container.css({
+			opacity: 1,
+			display: 'block'
+		});
 
 		Garnish.escManager.register(this, 'hide');
 	},
