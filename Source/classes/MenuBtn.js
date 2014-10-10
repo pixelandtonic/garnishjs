@@ -86,6 +86,11 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 	hideMenu: function()
 	{
+		if (!Garnish.isMobileBrowser())
+		{
+			this.removeListener(Garnish.$win, 'resize');
+		}
+
 		this.menu.hide();
 	},
 
