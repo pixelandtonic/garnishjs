@@ -36,6 +36,14 @@ Garnish.CheckboxSelect = Garnish.Base.extend({
 			checked:  isAllChecked,
 			disabled: isAllChecked
 		});
-	}
+	},
 
+	/**
+	 * Destroy
+	 */
+	destroy: function()
+	{
+		this.$container.removeData('checkboxSelect');
+		this.base();
+	}
 });

@@ -126,6 +126,14 @@ Garnish.Pill = Garnish.Base.extend({
 				break;
 			}
 		}
-	}
+	},
 
+	/**
+	 * Destroy
+	 */
+	destroy: function()
+	{
+		this.$outerContainer.removeData('pill');
+		this.base();
+	}
 });

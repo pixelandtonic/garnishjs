@@ -188,12 +188,15 @@ Garnish.LightSwitch = Garnish.Base.extend({
 		}
 	},
 
+	/**
+	 * Destroy
+	 */
 	destroy: function()
 	{
-		this.base();
+		this.$outerContainer.removeData('lightswitch');
 		this.dragger.destroy();
+		this.base();
 	}
-
 },
 {
 	offMargin: -50,

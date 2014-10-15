@@ -172,8 +172,8 @@ Garnish.NiceText = Garnish.Base.extend({
 				'padding-bottom':      this.$input.css('padding-bottom'),
 				'padding-left':        this.$input.css('padding-left'),
 				'-webkit-box-sizing':  this.inputBoxSizing,
-		  		'-moz-box-sizing':     this.inputBoxSizing,
-		        'box-sizing':          this.inputBoxSizing
+				'-moz-box-sizing':     this.inputBoxSizing,
+				'box-sizing':          this.inputBoxSizing
 			});
 		}
 
@@ -274,19 +274,25 @@ Garnish.NiceText = Garnish.Base.extend({
 		}
 	},
 
+	/**
+	 * Destroy
+	 */
 	destroy: function()
 	{
-		this.base();
-        if (this.$hint !== null)
-        {
-            this.$hint.remove();
-        }
-        if (this.$stage !== null)
-        {
-            this.$stage.remove();
-        }
-    }
+		this.$input.removeData('nicetext');
 
+		if (this.$hint)
+		{
+			this.$hint.remove();
+		}
+
+		if (this.$stage)
+		{
+			this.$stage.remove();
+		}
+
+		this.base();
+	}
 },
 {
 	interval: 100,

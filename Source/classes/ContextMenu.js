@@ -142,8 +142,16 @@ Garnish.ContextMenu = Garnish.Base.extend({
 	disable: function()
 	{
 		this.removeListener(this.$target, 'contextmenu,mousedown');
-	}
+	},
 
+	/**
+	 * Destroy
+	 */
+	destroy: function()
+	{
+		this.$target.removeData('contextmenu');
+		this.base();
+	}
 },
 {
 	defaults: {

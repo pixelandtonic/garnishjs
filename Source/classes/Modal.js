@@ -312,9 +312,15 @@ Garnish.Modal = Garnish.Base.extend({
 		this.updateSizeAndPosition();
 	},
 
+	/**
+	 * Destroy
+	 */
 	destroy: function()
 	{
-		this.base();
+		if (this.$container)
+		{
+			this.$container.removeData('modal');
+		}
 
 		if (this.dragger)
 		{
@@ -325,6 +331,8 @@ Garnish.Modal = Garnish.Base.extend({
 		{
 			this.resizeDragger.destroy();
 		}
+
+		this.base();
 	}
 },
 {

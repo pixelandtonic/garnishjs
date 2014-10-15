@@ -120,6 +120,15 @@ Garnish.MenuBtn = Garnish.Base.extend({
 	disable: function ()
 	{
 		this.disabled = true;
+	},
+
+	/**
+	 * Destroy
+	 */
+	destroy: function()
+	{
+		this.$btn.removeData('menubtn');
+		this.base();
 	}
 },
 {
