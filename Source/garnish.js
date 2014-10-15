@@ -642,6 +642,13 @@ Garnish.Base = Base.extend({
 	addListener: function(elem, events, data, func)
 	{
 		var $elem = $(elem);
+
+		// Ignore if there aren't any elements
+		if (!$elem.length)
+		{
+			return;
+		}
+
 		events = this._formatEvents(events);
 
 		// Param mapping
