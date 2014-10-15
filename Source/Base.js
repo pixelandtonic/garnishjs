@@ -96,7 +96,18 @@ Base.prototype = {
 			}
 			// copy each of the source object's properties to this object
 			for (var key in source) {
-				if (!proto[key]) extend.call(this, key, source[key]);
+				if (!proto[key]) {
+					var desc = Object.getOwnPropertyDescriptor(source, key);
+					if (typeof desc.value != typeof undefined) {
+						extend.call(this, key, desc.value);
+					}
+					if (desc.get || desc.set) {
+						Object.defineProperty(this, key, {
+							get: desc.get,
+							set: desc.set
+						});
+					}
+				}
 			}
 		}
 		return this;
