@@ -450,6 +450,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		}
 
 		this.scrollProperty = null;
+		this.scrollAxis = null;
 		this.scrollDir = null;
 	},
 
