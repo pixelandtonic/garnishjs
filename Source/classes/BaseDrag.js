@@ -234,11 +234,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 			var index = $.inArray(item, this.$items);
 			if (index != -1)
 			{
-				var $handle = $.data(item, 'drag-handle');
-				$handle.data('drag-item', null);
-				$.data(item, 'drag', null);
-				$.data(item, 'drag-handle', null);
-				this.removeAllListeners($handle);
+				this._deinitItem(item);
 				this.$items.splice(index, 1);
 			}
 		}
@@ -251,20 +247,19 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	{
 		for (var i = 0; i < this.$items.length; i++)
 		{
-			var item = this.$items[i],
-				$handle = $.data(item, 'drag-handle');
-
-			$.data(item, 'drag', null);
-
-			if ($handle)
-			{
-				$.data(item, 'drag-handle', null);
-				$handle.data('drag-item', null);
-				this.removeAllListeners($handle);
-			}
+			this._deinitItem(this.$items[i]);
 		}
 
 		this.$items = $();
+	},
+
+	/**
+	 * Destroy
+	 */
+	destroy: function()
+	{
+		this.removeAllItems();
+		this.base();
 	},
 
 	// Events
@@ -441,6 +436,23 @@ Garnish.BaseDrag = Garnish.Base.extend({
 
 		this.scrollProperty = null;
 		this.scrollDir = null;
+	},
+
+	/**
+	 * Deinitialize an item.
+	 */
+	_deinitItem: function(item)
+	{
+		var $handle = $.data(item, 'drag-handle');
+
+		if ($handle)
+		{
+			$handle.removeData('drag-item');
+			this.removeAllListeners($handle);
+		}
+
+		$.removeData(item, 'drag');
+		$.removeData(item, 'drag-handle');
 	}
 },
 

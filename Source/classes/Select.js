@@ -504,15 +504,25 @@ Garnish.Select = Garnish.Base.extend({
 			var index = $.inArray(item, this.$items);
 			if (index != -1)
 			{
-				var $handle = $.data(item, 'select-handle');
-				$handle.data('select-item', null);
-				$.data(item, 'select', null);
-				$.data(item, 'select-handle', null);
-				this.removeAllListeners($handle);
+				this._deinitItem(item);
 				this.$items.splice(index, 1);
 			}
 		}
 
+		this.updateIndexes();
+	},
+
+	/**
+	 * Remove All Items
+	 */
+	removeAllItems: function()
+	{
+		for (var i = 0; i < this.$items.length; i++)
+		{
+			this._deinitItem(this.$items[i]);
+		}
+
+		this.$items = $();
 		this.updateIndexes();
 	},
 
@@ -584,6 +594,7 @@ Garnish.Select = Garnish.Base.extend({
 	destroy: function()
 	{
 		this.$container.removeData('select');
+		this.removeAllItems();
 		this.base();
 	},
 
@@ -897,6 +908,23 @@ Garnish.Select = Garnish.Base.extend({
 		$items.removeClass(this.settings.selectedClass);
 		this.$selectedItems = this.$selectedItems.not($items);
 		this.onSelectionChange();
+	},
+
+	/**
+	 * Deinitialize an item.
+	 */
+	_deinitItem: function(item)
+	{
+		var $handle = $.data(item, 'select-handle');
+
+		if ($handle)
+		{
+			$handle.removeData('select-item');
+			this.removeAllListeners($handle);
+		}
+
+		$.removeData(item, 'select');
+		$.removeData(item, 'select-handle');
 	}
 },
 
