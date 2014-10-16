@@ -91,7 +91,6 @@ Base.prototype = {
 			while (key = hidden[i++]) {
 				if (source[key] != proto[key]) {
 					extend.call(this, key, source[key]);
-
 				}
 			}
 			// copy each of the source object's properties to this object
@@ -99,14 +98,12 @@ Base.prototype = {
 				if (!proto[key]) {
 					var desc = Object.getOwnPropertyDescriptor(source, key);
 					if (typeof desc.value != typeof undefined) {
+						// set the value normally in case it's a function that needs to be overwritten
 						extend.call(this, key, desc.value);
+						desc.value = this[key];
 					}
-					if (desc.get || desc.set) {
-						Object.defineProperty(this, key, {
-							get: desc.get,
-							set: desc.set
-						});
-					}
+					// now set it (again?) while maintaining the original descriptor settings
+					Object.defineProperty(this, key, desc);
 				}
 			}
 		}
