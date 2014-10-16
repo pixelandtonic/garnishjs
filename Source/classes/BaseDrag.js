@@ -27,6 +27,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	targetItemMouseOffsetY: null,
 
 	scrollProperty: null,
+	scrollAxis: null,
 	scrollDir: null,
 	scrollProxy: null,
 	scrollFrame: null,
@@ -90,6 +91,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 				if (this.mouseY < this.drag._winScrollTop + Garnish.BaseDrag.windowScrollTargetSize)
 				{
 					this.drag._scrollProperty = 'scrollTop';
+					this.drag._scrollAxis = 'Y';
 					this.drag._scrollDir = -1;
 				}
 				else
@@ -100,6 +102,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 					if (this.mouseY > this.drag._winScrollTop + this.drag._winHeight - Garnish.BaseDrag.windowScrollTargetSize)
 					{
 						this.drag._scrollProperty = 'scrollTop';
+						this.drag._scrollAxis = 'Y';
 						this.drag._scrollDir = 1;
 					}
 				}
@@ -113,6 +116,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 				if (this.mouseX < this.drag._winScrollLeft + Garnish.BaseDrag.windowScrollTargetSize)
 				{
 					this.drag._scrollProperty = 'scrollLeft';
+					this.drag._scrollAxis = 'X';
 					this.drag._scrollDir = -1;
 				}
 				else
@@ -123,6 +127,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 					if (this.mouseX > this.drag._winScrollLeft + this.drag._winWidth - Garnish.BaseDrag.windowScrollTargetSize)
 					{
 						this.drag._scrollProperty = 'scrollLeft';
+						this.drag._scrollAxis = 'X';
 						this.drag._scrollDir = 1;
 					}
 				}
@@ -148,6 +153,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 				}
 
 				this.scrollProperty = this.drag._scrollProperty;
+				this.scrollAxis = this.drag._scrollAxis;
 				this.scrollDir = this.drag._scrollDir;
 			}
 			else
@@ -424,7 +430,8 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		this._.scrollPos = Garnish.$win[this.scrollProperty]();
 		Garnish.$win[this.scrollProperty](this._.scrollPos + this.scrollDir * 3);
 
-		this.mouseY -= this._.scrollPos - Garnish.$win[this.scrollProperty]()
+		this['mouse'+this.scrollAxis] -= this._.scrollPos - Garnish.$win[this.scrollProperty]();
+		this['realMouse'+this.scrollAxis] = this['mouse'+this.scrollAxis];
 
 		this.drag();
 
