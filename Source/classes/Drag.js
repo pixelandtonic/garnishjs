@@ -110,13 +110,13 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	/**
 	 * Drag
 	 */
-	drag: function()
+	drag: function(didMouseMove)
 	{
 		// Update the draggee's virtual midpoint
 		this.draggeeVirtualMidpointX = this.mouseX + this.targetItemMouseOffsetX + (this.targetItemWidth / 2);
 		this.draggeeVirtualMidpointY = this.mouseY + this.targetItemMouseOffsetY + (this.targetItemHeight / 2);
 
-		this.base();
+		this.base(didMouseMove);
 	},
 
 	/**

@@ -138,6 +138,12 @@ Garnish.BaseDrag = Garnish.Base.extend({
 						this.scrollProxy = $.proxy(this, '_scrollWindow');
 					}
 
+					if (this.scrollFrame)
+					{
+						Garnish.cancelAnimationFrame(this.scrollFrame);
+						this.scrollFrame = null;
+					}
+
 					this.scrollFrame = Garnish.requestAnimationFrame(this.scrollProxy);
 				}
 
@@ -421,6 +427,8 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		this.mouseY -= this._.scrollPos - Garnish.$win[this.scrollProperty]()
 
 		this.drag();
+
+		this.scrollFrame = Garnish.requestAnimationFrame(this.scrollProxy);
 	},
 
 	/**
