@@ -585,7 +585,7 @@ Garnish.Select = Garnish.Base.extend({
 	 */
 	getSelectedItems: function()
 	{
-		return this.$items.filter('.'+this.settings.selectedClass);
+		return this.$selectedItems;
 	},
 
 	/**
