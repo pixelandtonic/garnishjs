@@ -62,12 +62,12 @@ Garnish.DragSort = Garnish.Drag.extend({
 	{
 		if (this.settings.magnetStrength != 1)
 		{
-			this.getHelperTargetX._draggeeOffsetX = this.$draggee.offset().left - this.targetItemMouseOffsetX;
-			return this.getHelperTargetX._draggeeOffsetX + ((this.mouseX - this.getHelperTargetX._draggeeOffsetX) / this.settings.magnetStrength);
+			this.getHelperTargetX._draggeeOffsetX = this.$draggee.offset().left;
+			return this.getHelperTargetX._draggeeOffsetX + ((this.mouseX - this.mouseOffsetX - this.getHelperTargetX._draggeeOffsetX) / this.settings.magnetStrength);
 		}
 		else
 		{
-			return this.mouseX;
+			return this.base();
 		}
 	},
 
@@ -78,12 +78,12 @@ Garnish.DragSort = Garnish.Drag.extend({
 	{
 		if (this.settings.magnetStrength != 1)
 		{
-			this.getHelperTargetY._draggeeOffsetY = this.$draggee.offset().top - this.targetItemMouseOffsetY;
-			return this.getHelperTargetY._draggeeOffsetY + ((this.mouseY - this.getHelperTargetY._draggeeOffsetY) / this.settings.magnetStrength);
+			this.getHelperTargetY._draggeeOffsetY = this.$draggee.offset().top;
+			return this.getHelperTargetY._draggeeOffsetY + ((this.mouseY - this.mouseOffsetY - this.getHelperTargetY._draggeeOffsetY) / this.settings.magnetStrength);
 		}
 		else
 		{
-			return this.mouseY;
+			return this.base();
 		}
 	},
 

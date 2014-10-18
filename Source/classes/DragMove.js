@@ -8,8 +8,8 @@ Garnish.DragMove = Garnish.BaseDrag.extend({
 	onDrag: function(items, settings)
 	{
 		this.$targetItem.css({
-			left: this.mouseX + this.targetItemMouseOffsetX,
-			top:  this.mouseY + this.targetItemMouseOffsetY
+			left: this.mouseX - this.mouseOffsetX,
+			top:  this.mouseY - this.mouseOffsetY
 		});
 	}
 

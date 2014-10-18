@@ -113,8 +113,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	drag: function(didMouseMove)
 	{
 		// Update the draggee's virtual midpoint
-		this.draggeeVirtualMidpointX = this.mouseX + this.targetItemMouseOffsetX + (this.targetItemWidth / 2);
-		this.draggeeVirtualMidpointY = this.mouseY + this.targetItemMouseOffsetY + (this.targetItemHeight / 2);
+		this.draggeeVirtualMidpointX = this.mouseX - this.mouseOffsetX + (this.targetItemWidth / 2);
+		this.draggeeVirtualMidpointY = this.mouseY - this.mouseOffsetY + (this.targetItemHeight / 2);
 
 		this.base(didMouseMove);
 	},
@@ -159,7 +159,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	 */
 	getHelperTargetX: function()
 	{
-		return this.mouseX;
+		return this.mouseX - this.mouseOffsetX;
 	},
 
 	/**
@@ -167,7 +167,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	 */
 	getHelperTargetY: function()
 	{
-		return this.mouseY;
+		return this.mouseY - this.mouseOffsetY;
 	},
 
 	/**
@@ -321,8 +321,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	_getHelperTarget: function(i)
 	{
 		return {
-			left: this.getHelperTargetX() + this.targetItemMouseOffsetX + (i * Garnish.Drag.helperSpacingX),
-			top:  this.getHelperTargetY() + this.targetItemMouseOffsetY + (i * Garnish.Drag.helperSpacingY)
+			left: this.getHelperTargetX() + (Garnish.Drag.helperSpacingX * i),
+			top:  this.getHelperTargetY() + (Garnish.Drag.helperSpacingY * i)
 		};
 	},
 

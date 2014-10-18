@@ -21,10 +21,10 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	mouseY: null,
 	mouseDistX: null,
 	mouseDistY: null,
+	mouseOffsetX: null,
+	mouseOffsetY: null,
 
 	$targetItem: null,
-	targetItemMouseOffsetX: null,
-	targetItemMouseOffsetY: null,
 
 	scrollProperty: null,
 	scrollAxis: null,
@@ -360,8 +360,8 @@ Garnish.BaseDrag = Garnish.Base.extend({
 
 		// Capture the difference between the mouse position and the target item's offset
 		var offset = this.$targetItem.offset();
-		this.targetItemMouseOffsetX = offset.left - ev.pageX;
-		this.targetItemMouseOffsetY = offset.top - ev.pageY;
+		this.mouseOffsetX = ev.pageX - offset.left;
+		this.mouseOffsetY = ev.pageY - offset.top;
 
 		// Listen for mousemove, mouseup
 		this.addListener(Garnish.$doc, 'mousemove', '_onMouseMove');
