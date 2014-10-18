@@ -541,14 +541,6 @@ Garnish.Select = Garnish.Base.extend({
 	},
 
 	/**
-	 * Refresh Item Order
-	 */
-	refreshItemOrder: function()
-	{
-		this.$items = $(this.$items);
-	},
-
-	/**
 	 * Update First/Last indexes
 	 */
 	updateIndexes: function()
