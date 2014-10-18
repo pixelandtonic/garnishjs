@@ -264,7 +264,7 @@ Garnish.DragSort = Garnish.Drag.extend({
 	{
 		this._testForClosestItem._$item = $(item);
 
-		this._testForClosestItem._mouseDiff = Garnish.getDist(
+		this._testForClosestItem._mouseDist = Garnish.getDist(
 			this._testForClosestItem._$item.data('midpointX'),
 			this._testForClosestItem._$item.data('midpointY'),
 			this.draggeeVirtualMidpointX,
@@ -273,11 +273,11 @@ Garnish.DragSort = Garnish.Drag.extend({
 
 		if (
 			this._getClosestItem._closestItem === null ||
-			this._testForClosestItem._mouseDiff < this._getClosestItem._closestItemMouseDiff
+			this._testForClosestItem._mouseDist < this._getClosestItem._closestItemMouseDist
 		)
 		{
 			this._getClosestItem._closestItem          = this._testForClosestItem._$item[0];
-			this._getClosestItem._closestItemMouseDiff = this._testForClosestItem._mouseDiff;
+			this._getClosestItem._closestItemMouseDist = this._testForClosestItem._mouseDist;
 		}
 	},
 
