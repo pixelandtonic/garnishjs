@@ -84,9 +84,19 @@ Garnish.Select = Garnish.Base.extend({
 	/**
 	 * Is Selected?
 	 */
-	isSelected: function($item)
+	isSelected: function(item)
 	{
-		return $item.hasClass(this.settings.selectedClass);
+		if (Garnish.isJquery(item))
+		{
+			if (!item[0])
+			{
+				return false;
+			}
+
+			item = item[0];
+		}
+
+		return ($.inArray(item, this.$selectedItems) != -1);
 	},
 
 	/**
