@@ -57,18 +57,21 @@ Garnish.Select = Garnish.Base.extend({
 
 		// --------------------------------------------------------------------
 
-		this.addListener(this.$container, 'click', function(ev)
+		if (this.settings.allowEmpty)
 		{
-			if (this.ignoreClick)
+			this.addListener(this.$container, 'click', function(ev)
 			{
-				this.ignoreClick = false;
-			}
-			else
-			{
-				// deselect all items on container click
-				this.deselectAll(true);
-			}
-		});
+				if (this.ignoreClick)
+				{
+					this.ignoreClick = false;
+				}
+				else
+				{
+					// Deselect all items on container click
+					this.deselectAll(true);
+				}
+			});
+		}
 	},
 
 	// --------------------------------------------------------------------
@@ -205,13 +208,16 @@ Garnish.Select = Garnish.Base.extend({
 	 */
 	toggleItem: function($item)
 	{
-		if (! this.isSelected($item))
+		if (!this.isSelected($item))
 		{
 			this.selectItem($item);
 		}
 		else
 		{
-			this.deselectItem($item);
+			if (this._canDeselect($item))
+			{
+				this.deselectItem($item);
+			}
 		}
 	},
 
@@ -830,7 +836,10 @@ Garnish.Select = Garnish.Base.extend({
 
 					if (this.isSelected(this.$focusable))
 					{
-						this.deselectItem(this.$focusable);
+						if (this._canDeselect(this.$focusable))
+						{
+							this.deselectItem(this.$focusable);
+						}
 					}
 					else
 					{
@@ -900,6 +909,11 @@ Garnish.Select = Garnish.Base.extend({
 	// Private methods
 	// =========================================================================
 
+	_canDeselect: function($items)
+	{
+		return (this.settings.allowEmpty || this.totalSelected > $items.length);
+	},
+
 	_selectItems: function($items)
 	{
 		$items.addClass(this.settings.selectedClass);
@@ -939,6 +953,7 @@ Garnish.Select = Garnish.Base.extend({
 	defaults: {
 		selectedClass: 'sel',
 		multi: false,
+		allowEmpty: true,
 		vertical: false,
 		horizontal: false,
 		arrowsChangeSelection: true,
