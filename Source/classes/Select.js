@@ -10,8 +10,6 @@ Garnish.Select = Garnish.Base.extend({
 	$items: null,
 	$selectedItems: null,
 
-	totalSelected: null,
-
 	mousedownX: null,
 	mousedownY: null,
 	mouseUpTimeout: null,
@@ -422,11 +420,19 @@ Garnish.Select = Garnish.Base.extend({
 	// --------------------------------------------------------------------
 
 	/**
+	 * totalSelected getter
+	 */
+	get totalSelected()
+	{
+		return this.getTotalSelected();
+	},
+
+	/**
 	 * Get Total Selected
 	 */
 	getTotalSelected: function()
 	{
-		return this.totalSelected;
+		return this.$selectedItems.length;
 	},
 
 	/**
@@ -483,8 +489,6 @@ Garnish.Select = Garnish.Base.extend({
 				this.ignoreClick = true;
 			});
 		}
-
-		this.totalSelected += $items.filter('.'+this.settings.selectedClass).length;
 
 		this.updateIndexes();
 	},
@@ -877,8 +881,6 @@ Garnish.Select = Garnish.Base.extend({
 	 */
 	onSelectionChange: function()
 	{
-		this.totalSelected = this.$selectedItems.length;
-
 		if (this.callbackFrame)
 		{
 			Garnish.cancelAnimationFrame(this.callbackFrame);

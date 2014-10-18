@@ -138,6 +138,7 @@ HEADER;
 		//$command = "java -jar {$yuiCompressorFile} --charset utf-8 --type js {$this->_uncompressedFile} > {$this->_compressedFile}";
 
 		$command = "java -jar {$this->_buildScriptDir}lib/compiler/compiler.jar" .
+		           " --language_in ECMASCRIPT5" .
 		           " --js {$this->_uncompressedFile}" .
 		           " --create_source_map {$this->_sourceMapFile}" .
 		           " --source_map_format=V3" .
