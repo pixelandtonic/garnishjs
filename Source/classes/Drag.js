@@ -242,7 +242,6 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 			$draggeeHelper = $draggee.clone().addClass('draghelper');
 
 		$draggeeHelper.css({
-
 			width: $draggee.width() + 1, // Prevent the brower from wrapping text if the width was actually a fraction of a pixel larger
 			height: $draggee.height(),
 			margin: 0
