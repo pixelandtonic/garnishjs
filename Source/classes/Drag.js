@@ -101,7 +101,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 			this.updateHelperPosProxy = $.proxy(this, '_updateHelperPos');
 		}
 
-		this.helperLagIncrement = this.helpers.length == 1 ? 0 : Garnish.Drag.helperLagIncrementDividend / (this.helpers.length-1);
+		this.helperLagIncrement = this.helpers.length == 1 ? 0 : this.settings.helperLagIncrementDividend / (this.helpers.length-1);
 		this.updateHelperPosFrame = Garnish.requestAnimationFrame(this.updateHelperPosProxy);
 
 		this.base();
@@ -267,7 +267,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 			position: 'absolute',
 			top: helperPos.top,
 			left: helperPos.left,
-			zIndex: Garnish.Drag.helperZindex + this.$draggee.length - i,
+			zIndex: this.settings.helperBaseZindex + this.$draggee.length - i,
 			opacity: this.settings.helperOpacity
 		});
 
@@ -300,7 +300,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		// Gravitate helpers toward their target positions
 		for (this._updateHelperPos._j = 0; this._updateHelperPos._j < this.helpers.length; this._updateHelperPos._j++)
 		{
-			this._updateHelperPos._lag = Garnish.Drag.helperLagBase + (this.helperLagIncrement * this._updateHelperPos._j);
+			this._updateHelperPos._lag = this.settings.helperLagBase + (this.helperLagIncrement * this._updateHelperPos._j);
 
 			this.helperPositions[this._updateHelperPos._j] = {
 				left: this.helperPositions[this._updateHelperPos._j].left + ((this.helperTargets[this._updateHelperPos._j].left - this.helperPositions[this._updateHelperPos._j].left) / this._updateHelperPos._lag),
@@ -320,8 +320,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	_getHelperTarget: function(i)
 	{
 		return {
-			left: this.getHelperTargetX() + (Garnish.Drag.helperSpacingX * i),
-			top:  this.getHelperTargetY() + (Garnish.Drag.helperSpacingY * i)
+			left: this.getHelperTargetX() + (this.settings.helperSpacingX * i),
+			top:  this.getHelperTargetY() + (this.settings.helperSpacingY * i)
 		};
 	},
 
@@ -362,18 +362,17 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 // =============================================================================
 
 {
-	helperZindex: 1000,
-	helperLagBase: 1,
-	helperLagIncrementDividend: 1.5,
-	helperSpacingX: 5,
-	helperSpacingY: 5,
-
 	defaults: {
 		filter: null,
 		collapseDraggees: false,
 		removeDraggee: false,
 		helperOpacity: 1,
 		helper: null,
+		helperBaseZindex: 1000,
+		helperLagBase: 1,
+		helperLagIncrementDividend: 1.5,
+		helperSpacingX: 5,
+		helperSpacingY: 5,
 		onReturnHelpersToDraggees: $.noop
 	}
 });
