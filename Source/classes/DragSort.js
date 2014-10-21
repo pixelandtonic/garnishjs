@@ -95,8 +95,6 @@ Garnish.DragSort = Garnish.Drag.extend({
 	 */
 	onDragStart: function()
 	{
-		this.base();
-
 		this.$insertion = this.createInsertion();
 		this._placeInsertionWithDraggee();
 
@@ -115,6 +113,8 @@ Garnish.DragSort = Garnish.Drag.extend({
 		}
 
 		this.startDraggeeIndex = $.inArray(this.$draggee[0], this.$items);
+
+		this.base();
 	},
 
 	/**
