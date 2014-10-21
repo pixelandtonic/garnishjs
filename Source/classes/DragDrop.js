@@ -18,10 +18,7 @@ Garnish.DragDrop = Garnish.Drag.extend({
 		this.base(settings);
 	},
 
-	/**
-	 * On Drag Start
-	 */
-	onDragStart: function()
+	updateDropTargets: function()
 	{
 		if (this.settings.dropTargets)
 		{
@@ -34,15 +31,21 @@ Garnish.DragDrop = Garnish.Drag.extend({
 				this.$dropTargets = $(this.settings.dropTargets);
 			}
 
-			// ignore if an empty array
+			// Discard if it's an empty array
 			if (!this.$dropTargets.length)
 			{
 				this.$dropTargets = null;
 			}
 		}
+	},
 
+	/**
+	 * On Drag Start
+	 */
+	onDragStart: function()
+	{
+		this.updateDropTargets();
 		this.$activeDropTarget = null;
-
 		this.base();
 	},
 
