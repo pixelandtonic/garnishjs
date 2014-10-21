@@ -269,8 +269,8 @@ Garnish.DragSort = Garnish.Drag.extend({
 		// Check items before the draggee
 		// ---------------------------------------------------------------------
 
-		if (this.settings.axis != Garnish.Y_AXIS) this._getClosestItem._lastXDist = this._getClosestItem._closestItem ? Math.abs($.data(this._getClosestItem._closestItem, 'midpointX') - this.draggeeVirtualMidpointX) : null;
-		if (this.settings.axis != Garnish.X_AXIS) this._getClosestItem._lastYDist = this._getClosestItem._closestItem ? Math.abs($.data(this._getClosestItem._closestItem, 'midpointY') - this.draggeeVirtualMidpointY) : null;
+		if (this.settings.axis != Garnish.Y_AXIS) this._getClosestItem._startXDist = this._getClosestItem._lastXDist = this._getClosestItem._closestItem ? Math.abs($.data(this._getClosestItem._closestItem, 'midpointX') - this.draggeeVirtualMidpointX) : null;
+		if (this.settings.axis != Garnish.X_AXIS) this._getClosestItem._startYDist = this._getClosestItem._lastYDist = this._getClosestItem._closestItem ? Math.abs($.data(this._getClosestItem._closestItem, 'midpointY') - this.draggeeVirtualMidpointY) : null;
 
 		this._getClosestItem._$otherItem = this.$draggee.first().prev();
 
@@ -304,8 +304,8 @@ Garnish.DragSort = Garnish.Drag.extend({
 		// Check items after the draggee
 		// ---------------------------------------------------------------------
 
-		if (this.settings.axis != Garnish.Y_AXIS) this._getClosestItem._lastXDist = this._getClosestItem._closestItem ? Math.abs($.data(this._getClosestItem._closestItem, 'midpointX') - this.draggeeVirtualMidpointX) : null;
-		if (this.settings.axis != Garnish.X_AXIS) this._getClosestItem._lastYDist = this._getClosestItem._closestItem ? Math.abs($.data(this._getClosestItem._closestItem, 'midpointY') - this.draggeeVirtualMidpointY) : null;
+		if (this.settings.axis != Garnish.Y_AXIS) this._getClosestItem._lastXDist = this._getClosestItem._startXDist;
+		if (this.settings.axis != Garnish.X_AXIS) this._getClosestItem._lastYDist = this._getClosestItem._startYDist;
 
 		this._getClosestItem._$otherItem = this.$draggee.last().next();
 
