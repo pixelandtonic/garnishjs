@@ -128,7 +128,7 @@ Garnish.DragSort = Garnish.Drag.extend({
 			}
 		}
 
-		this.startDraggeeIndex = $.inArray(this.$draggee[0], this.$items);
+		this.startDraggeeIndex = this._getDraggeeIndex();
 
 		this.base();
 	},
@@ -176,9 +176,8 @@ Garnish.DragSort = Garnish.Drag.extend({
 
 		// Has the item actually moved?
 		this.$items = $().add(this.$items);
-		var newDraggeeIndex = $.inArray(this.$draggee[0], this.$items);
 
-		if (this.startDraggeeIndex != newDraggeeIndex)
+		if (this._getDraggeeIndex() != this.startDraggeeIndex)
 		{
 			this.onSortChange();
 		}
@@ -210,6 +209,11 @@ Garnish.DragSort = Garnish.Drag.extend({
 
 	// Private methods
 	// =========================================================================
+
+	_getDraggeeIndex: function()
+	{
+		return $.inArray(this.$draggee[0], this.$items);
+	},
 
 	/**
 	 * Sets the item midpoints up front so we don't have to keep checking on every mouse move
