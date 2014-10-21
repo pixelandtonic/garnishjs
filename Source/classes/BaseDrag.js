@@ -223,9 +223,12 @@ Garnish.BaseDrag = Garnish.Base.extend({
 				var $handle = $(item);
 			}
 
-			$.data(item, 'drag-handle', $handle);
-			$handle.data('drag-item', item);
-			this.addListener($handle, 'mousedown', '_onMouseDown');
+			if ($handle.length)
+			{
+				$.data(item, 'drag-handle', $handle[0]);
+				$handle.data('drag-item', item);
+				this.addListener($handle, 'mousedown', '_onMouseDown');
+			}
 		}
 
 		this.$items = $().add(this.$items.add(items));
@@ -461,12 +464,12 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	 */
 	_deinitItem: function(item)
 	{
-		var $handle = $.data(item, 'drag-handle');
+		var handle = $.data(item, 'drag-handle');
 
-		if ($handle)
+		if (handle)
 		{
-			$handle.removeData('drag-item');
-			this.removeAllListeners($handle);
+			$.removeData(handle, 'drag-item');
+			this.removeAllListeners(handle);
 		}
 
 		$.removeData(item, 'drag');
