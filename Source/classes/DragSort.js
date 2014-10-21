@@ -87,6 +87,22 @@ Garnish.DragSort = Garnish.Drag.extend({
 		}
 	},
 
+	/**
+	 * Returns whether the draggee can be inserted before a given item.
+	 */
+	canInsertBefore: function($item)
+	{
+		return true;
+	},
+
+	/**
+	 * Returns whether the draggee can be inserted after a given item.
+	 */
+	canInsertAfter: function($item)
+	{
+		return true;
+	},
+
 	// Events
 	// -------------------------------------------------------------------------
 
@@ -271,8 +287,13 @@ Garnish.DragSort = Garnish.Drag.extend({
 			if (this.settings.axis != Garnish.Y_AXIS) this._getClosestItem._lastXDist = this._getClosestItem._xDist;
 			if (this.settings.axis != Garnish.X_AXIS) this._getClosestItem._lastYDist = this._getClosestItem._yDist;
 
-			// Check to see if this is the closest, and prep the next item
-			this._testForClosestItem(this._getClosestItem._$otherItem);
+			// Give the extending class a chance to allow/disallow this item
+			if (this.canInsertBefore(this._getClosestItem._$otherItem))
+			{
+				this._testForClosestItem(this._getClosestItem._$otherItem);
+			}
+
+			// Prep the next item
 			this._getClosestItem._$otherItem = this._getClosestItem._$otherItem.prev();
 		}
 
@@ -301,8 +322,13 @@ Garnish.DragSort = Garnish.Drag.extend({
 			if (this.settings.axis != Garnish.Y_AXIS) this._getClosestItem._lastXDist = this._getClosestItem._xDist;
 			if (this.settings.axis != Garnish.X_AXIS) this._getClosestItem._lastYDist = this._getClosestItem._yDist;
 
-			// Check to see if this is the closest, and prep the next item
-			this._testForClosestItem(this._getClosestItem._$otherItem);
+			// Give the extending class a chance to allow/disallow this item
+			if (this.canInsertAfter(this._getClosestItem._$otherItem))
+			{
+				this._testForClosestItem(this._getClosestItem._$otherItem);
+			}
+
+			// Prep the next item
 			this._getClosestItem._$otherItem = this._getClosestItem._$otherItem.next();
 		}
 
