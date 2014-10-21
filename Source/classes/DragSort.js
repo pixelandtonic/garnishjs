@@ -255,8 +255,6 @@ Garnish.DragSort = Garnish.Drag.extend({
 		// Start by checking the draggee/insertion, if either are visible
 		// ---------------------------------------------------------------------
 
-		this._getClosestItem._counter = 0;
-
 		if (!this.settings.removeDraggee)
 		{
 			this._testForClosestItem(this.$draggee.first());
@@ -355,7 +353,6 @@ Garnish.DragSort = Garnish.Drag.extend({
 
 	_testForClosestItem: function($item)
 	{
-		this._getClosestItem._counter++;
 
 		this._testForClosestItem._mouseDist = Garnish.getDist(
 			$item.data('midpointX'),
