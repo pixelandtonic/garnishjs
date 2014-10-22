@@ -27,6 +27,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	lastMouseX: null,
 	lastMouseY: null,
 
+	_returningHelpersToDraggees: false,
+
 	// Public methods
 	// =========================================================================
 
@@ -48,6 +50,15 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 
 		settings = $.extend({}, Garnish.Drag.defaults, settings);
 		this.base(items, settings);
+	},
+
+	/**
+	 * Returns whether dragging is allowed right now.
+	 */
+	allowDragging: function()
+	{
+		// Don't allow dragging if we're in the middle of animating the helpers back to the draggees
+		return !this._returningHelpersToDraggees;
 	},
 
 	/**
@@ -175,6 +186,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	 */
 	returnHelpersToDraggees: function()
 	{
+		this._returningHelpersToDraggees = true;
+
 		for (var i = 0; i < this.helpers.length; i++)
 		{
 			var $draggee = $(this.$draggee[i]),
@@ -355,6 +368,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		this.$draggee.show().css('visibility', 'inherit');
 
 		this.onReturnHelpersToDraggees();
+
+		this._returningHelpersToDraggees = false;
 	}
 },
 

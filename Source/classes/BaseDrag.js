@@ -65,6 +65,14 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	},
 
 	/**
+	 * Returns whether dragging is allowed right now.
+	 */
+	allowDragging: function()
+	{
+		return true;
+	},
+
+	/**
 	 * Start Dragging
 	 */
 	startDragging: function()
@@ -353,6 +361,12 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		}
 
 		ev.preventDefault();
+
+		// Make sure that dragging is allowed right now
+		if (!this.allowDragging())
+		{
+			return;
+		}
 
 		// Capture the target
 		this.$targetItem = $($.data(ev.currentTarget, 'drag-item'));
