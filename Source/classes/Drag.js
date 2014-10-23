@@ -346,8 +346,8 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		}
 		else if (this.settings.collapseDraggees)
 		{
-			this.$draggee.first().css('visibility', 'hidden');
-			this.$draggee.not(this.$draggee.first()).hide();
+			this.$targetItem.css('visibility', 'hidden');
+			this.$draggee.not(this.$targetItem).hide();
 		}
 		else
 		{
