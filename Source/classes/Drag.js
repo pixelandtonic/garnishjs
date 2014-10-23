@@ -76,20 +76,11 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		this.targetItemWidth  = this.$targetItem.outerWidth();
 		this.targetItemHeight = this.$targetItem.outerHeight();
 
-		// Set the $draggee
-		this.$draggee = this.findDraggee();
-
-		// Put the target item in the front of the list
-		this.$draggee = $([ this.$targetItem[0] ].concat(this.$draggee.not(this.$targetItem[0]).toArray()));
-
 		// Save the draggee's display style (block/table-row) so we can re-apply it later
-		this.draggeeDisplay = this.$draggee.css('display');
+		this.draggeeDisplay = this.$targetItem.css('display');
 
-		// Create the helper(s)
-		this._createHelpers();
-
-		// Remove/hide the draggee
-		this._hideDraggee();
+		// Set the $draggee
+		this.setDraggee(this.findDraggee());
 
 		// Create an array of all the other items
 		this.otherItems = [];
@@ -116,6 +107,61 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		this.updateHelperPosFrame = Garnish.requestAnimationFrame(this.updateHelperPosProxy);
 
 		this.base();
+	},
+
+	/**
+	 * Sets the draggee.
+	 */
+	setDraggee: function($draggee)
+	{
+		// Keep the target item at the front of the list
+		this.$draggee = $([ this.$targetItem[0] ].concat($draggee.not(this.$targetItem).toArray()));
+
+		// Create the helper(s)
+		if (this.settings.collapseDraggees)
+		{
+			this._createHelper(0);
+		}
+		else
+		{
+			for (var i = 0; i < this.$draggee.length; i++)
+			{
+				this._createHelper(i);
+			}
+		}
+
+		this._hideDraggee();
+	},
+
+	/**
+	 * Appends additional items to the draggee.
+	 */
+	appendDraggee: function($newDraggee)
+	{
+		if (!$newDraggee.length)
+		{
+			return;
+		}
+
+		if (!this.settings.collapseDraggees)
+		{
+			var oldLength = this.$draggee.length;
+		}
+
+		this.$draggee = $(this.$draggee.toArray().concat($newDraggee.not(this.$draggee).toArray()));
+
+		// Create new helpers?
+		if (!this.settings.collapseDraggees)
+		{
+			var newLength = this.$draggee.length;
+
+			for (var i = oldLength; i < newLength; i++)
+			{
+				this._createHelper(i);
+			}
+		}
+
+		this._hideDraggee();
 	},
 
 	/**
@@ -227,24 +273,6 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 
 	// Private methods
 	// =========================================================================
-
-	/**
-	 * Creates helper clones of the draggee(s)
-	 */
-	_createHelpers: function()
-	{
-		if (this.settings.collapseDraggees)
-		{
-			this._createHelper(0);
-		}
-		else
-		{
-			for (var i = 0; i < this.$draggee.length; i++)
-			{
-				this._createHelper(i);
-			}
-		}
-	},
 
 	/**
 	 * Creates a helper.
