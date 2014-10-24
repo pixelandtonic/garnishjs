@@ -1,1 +1,1 @@
-/Applications/MAMP/bin/php/php5.5.17/bin/php ${GITREPO_PATH}/Garnish/BuildScripts/buildgarnish.php $*
+${GARNISH_PHP_PATH} ${GITREPO_PATH}/Garnish/BuildScripts/buildgarnish.php $*
