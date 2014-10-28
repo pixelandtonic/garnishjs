@@ -301,6 +301,11 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		var $draggee = $(this.$draggee[i]),
 			$draggeeHelper = $draggee.clone().addClass('draghelper');
 
+		if (this.settings.copyDraggeeInputValuesToHelper)
+		{
+			Garnish.copyInputValues($draggee, $draggeeHelper);
+		}
+
 		$draggeeHelper.css({
 			width: $draggee.width() + 1, // Prevent the brower from wrapping text if the width was actually a fraction of a pixel larger
 			height: $draggee.height(),
@@ -411,6 +416,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		filter: null,
 		collapseDraggees: false,
 		removeDraggee: false,
+		copyDraggeeInputValuesToHelper: false,
 		helperOpacity: 1,
 		helper: null,
 		helperBaseZindex: 1000,
