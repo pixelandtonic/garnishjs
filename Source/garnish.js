@@ -503,6 +503,24 @@ Garnish = $.extend(Garnish, {
 		}
 
 		return postData;
+	},
+
+	copyInputValues: function(source, target)
+	{
+		var $sourceInputs = Garnish.findInputs(source),
+			$targetInputs = Garnish.findInputs(target);
+
+		for (var i = 0; i < $sourceInputs.length; i++)
+		{
+			if (typeof $targetInputs[i] == typeof undefined)
+			{
+				break;
+			}
+
+			$targetInputs.eq(i).val(
+				$sourceInputs.eq(i).val()
+			);
+		}
 	}
 });
 
