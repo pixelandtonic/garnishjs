@@ -452,7 +452,7 @@ Garnish = $.extend(Garnish, {
 
 		for (var i = 0; i < $inputs.length; i++)
 		{
-			var $input = $($inputs[i]);
+			var $input = $inputs.eq(i);
 
 			if ($input.prop('disabled'))
 			{
@@ -721,7 +721,7 @@ Garnish.Base = Base.extend({
 				if (elemIndex != -1 && ev.keyCode == Garnish.SPACE_KEY)
 				{
 					ev.preventDefault();
-					var $evElem = $($elem[elemIndex]);
+					var $evElem = $elem.eq(elemIndex);
 
 					if (!$evElem.hasClass('disabled'))
 					{
@@ -759,7 +759,7 @@ Garnish.Base = Base.extend({
 			// Store the initial values
 			for (var i = 0; i < $elem.length; i++)
 			{
-				var _$elem = $($elem[i]);
+				var _$elem = $elem.eq(i);
 				_$elem.data('garnish-textchangeValue', _$elem.val());
 
 				if (!_$elem.data('garnish-textchangeable'))

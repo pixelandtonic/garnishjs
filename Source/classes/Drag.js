@@ -255,7 +255,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 
 		for (var i = 0; i < this.helpers.length; i++)
 		{
-			var $draggee = $(this.$draggee[i]),
+			var $draggee = this.$draggee.eq(i),
 				$helper = this.helpers[i];
 
 			$draggee.css({
@@ -298,7 +298,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	 */
 	_createHelper: function(i)
 	{
-		var $draggee = $(this.$draggee[i]),
+		var $draggee = this.$draggee.eq(i),
 			$draggeeHelper = $draggee.clone().addClass('draghelper');
 
 		if (this.settings.copyDraggeeInputValuesToHelper)

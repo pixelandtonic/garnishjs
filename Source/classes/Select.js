@@ -130,8 +130,8 @@ Garnish.Select = Garnish.Base.extend({
 
 		this.first = 0;
 		this.last = this.$items.length-1;
-		this.$first = $(this.$items[this.first]);
-		this.$last = $(this.$items[this.last]);
+		this.$first = this.$items.eq(this.first);
+		this.$last = this.$items.eq(this.last);
 
 		this._selectItems(this.$items);
 	},
@@ -232,7 +232,7 @@ Garnish.Select = Garnish.Base.extend({
 	{
 		if (this.$items.length)
 		{
-			return $(this.$items[0]);
+			return this.$items.first();
 		}
 	},
 
@@ -240,7 +240,7 @@ Garnish.Select = Garnish.Base.extend({
 	{
 		if (this.$items.length)
 		{
-			return $(this.$items[this.$items.length-1]);
+			return this.$items.last();
 		}
 	},
 
@@ -258,7 +258,7 @@ Garnish.Select = Garnish.Base.extend({
 	{
 		if (this.isPreviousItem(index))
 		{
-			return $(this.$items[index-1]);
+			return this.$items.eq(index-1);
 		}
 	},
 
@@ -266,7 +266,7 @@ Garnish.Select = Garnish.Base.extend({
 	{
 		if (this.isNextItem(index))
 		{
-			return $(this.$items[index+1]);
+			return this.$items.eq(index+1);
 		}
 	},
 
@@ -339,7 +339,7 @@ Garnish.Select = Garnish.Base.extend({
 		var axisProps = Garnish.Select.closestItemAxisProps[axis],
 			dirProps = Garnish.Select.closestItemDirectionProps[dir];
 
-		var $thisItem = $(this.$items[index]),
+		var $thisItem = this.$items.eq(index),
 			thisOffset = $thisItem.offset(),
 			thisMidpoint = thisOffset[axisProps.midpointOffset] + Math.round($thisItem[axisProps.midpointSizeFunc]()/2),
 			otherRowPos = null,
@@ -358,7 +358,7 @@ Garnish.Select = Garnish.Base.extend({
 
 		for (var i = index + step; (typeof this.$items[i] != 'undefined'); i += step)
 		{
-			var $otherItem = $(this.$items[i]),
+			var $otherItem = this.$items.eq(i),
 				otherOffset = $otherItem.offset();
 
 			// Are we on the next row yet?
