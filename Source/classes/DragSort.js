@@ -368,7 +368,7 @@ Garnish.DragSort = Garnish.Drag.extend({
 				// Is this the first time we've had to temporarily reposition the draggee since the last midpoint clearing?
 				if (!this._$prevItem)
 				{
-					this._$prevItem = (this.insertionVisible ? this.$insertion : this.$draggee).prev();
+					this._$prevItem = (this.insertionVisible ? this.$insertion : this.$draggee).first().prev();
 				}
 
 				this._moveDraggeeToItem(item);
