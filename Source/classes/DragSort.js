@@ -17,7 +17,6 @@ Garnish.DragSort = Garnish.Drag.extend({
 
 	_midpointVersion: 0,
 	_$prevItem: null,
-	_$nextItem: null,
 
 	// Public methods
 	// =========================================================================
@@ -350,7 +349,6 @@ Garnish.DragSort = Garnish.Drag.extend({
 	{
 		this._midpointVersion++;
 		this._$prevItem = null;
-		this._$nextItem = null;
 	},
 
 	_getItemMidpoint: function(item)
@@ -371,11 +369,6 @@ Garnish.DragSort = Garnish.Drag.extend({
 				if (!this._$prevItem)
 				{
 					this._$prevItem = (this.insertionVisible ? this.$insertion : this.$draggee).prev();
-
-					if (!this._$prevItem.length)
-					{
-						this._$nextItem = this.$draggee.last().next();
-					}
 				}
 
 				this._moveDraggeeToItem(item);
@@ -417,7 +410,7 @@ Garnish.DragSort = Garnish.Drag.extend({
 				}
 				else
 				{
-					this.$draggee.insertBefore(this._$nextItem);
+					this.$draggee.prependTo(this.$draggee.parent());
 				}
 
 				this._placeInsertionWithDraggee();
