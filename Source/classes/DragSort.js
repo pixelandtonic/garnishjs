@@ -116,6 +116,19 @@ Garnish.DragSort = Garnish.Drag.extend({
 	 */
 	onDragStart: function()
 	{
+		this.oldDraggeeIndex = this._getDraggeeIndex();
+
+		// Is the target item not the first item in the draggee?
+		if (
+			this.$draggee.length > 1 &&
+			this._getItemIndex(this.$draggee[0]) > this._getItemIndex(this.$draggee[1])
+		)
+		{
+			// Reposition the target item before the other draggee items in the DOM
+			this.$draggee.first().insertBefore(this.$draggee[1]);
+		}
+
+		// Create the insertion
 		this.$insertion = this.createInsertion();
 		this._placeInsertionWithDraggee();
 
@@ -132,8 +145,6 @@ Garnish.DragSort = Garnish.Drag.extend({
 				this.$heightedContainer = this.$heightedContainer.parent();
 			}
 		}
-
-		this.oldDraggeeIndex = this._getDraggeeIndex();
 
 		this.base();
 	},
@@ -216,9 +227,14 @@ Garnish.DragSort = Garnish.Drag.extend({
 	// Private methods
 	// =========================================================================
 
+	_getItemIndex: function(item)
+	{
+		return $.inArray(item, this.$items);
+	},
+
 	_getDraggeeIndex: function()
 	{
-		return $.inArray(this.$draggee[0], this.$items);
+		return this._getItemIndex(this.$draggee[0]);
 	},
 
 	/**
