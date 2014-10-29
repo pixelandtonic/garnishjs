@@ -101,7 +101,7 @@ Garnish.ContextMenu = Garnish.Base.extend({
 
 		this.currentTarget = ev.currentTarget;
 
-		if (! this.$menu)
+		if (!this.$menu)
 		{
 			this.buildMenu();
 		}

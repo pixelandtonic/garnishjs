@@ -668,7 +668,11 @@ Garnish.Select = Garnish.Base.extend({
 		var $item = $($.data(ev.currentTarget, 'select-item'));
 
 		// was this a click?
-		if (! (ev.metaKey || ev.ctrlKey) && ! ev.shiftKey && Garnish.getDist(this.mousedownX, this.mousedownY, ev.pageX, ev.pageY) < 1)
+		if (
+			!(ev.metaKey || ev.ctrlKey) &&
+			!ev.shiftKey &&
+			Garnish.getDist(this.mousedownX, this.mousedownY, ev.pageX, ev.pageY) < 1
+		)
 		{
 			// If this is already selected, wait a moment to see if this is a double click before making any rash decisions
 			if (this.isSelected($item))

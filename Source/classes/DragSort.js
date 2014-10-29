@@ -127,7 +127,7 @@ Garnish.DragSort = Garnish.Drag.extend({
 		{
 			this.$heightedContainer = $(this.settings.container);
 
-			while (! this.$heightedContainer.height())
+			while (!this.$heightedContainer.height())
 			{
 				this.$heightedContainer = this.$heightedContainer.parent();
 			}
