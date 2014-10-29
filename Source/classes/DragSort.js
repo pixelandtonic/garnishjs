@@ -423,21 +423,22 @@ Garnish.DragSort = Garnish.Drag.extend({
 	_testForClosestItem: function(item)
 	{
 		this._testForClosestItem._midpoint = this._getItemMidpoint(item);
+		this._testForClosestItem._mouseDistX = Math.abs(this._testForClosestItem._midpoint.x - this.draggeeVirtualMidpointX);
+		this._testForClosestItem._mouseDistY = Math.abs(this._testForClosestItem._midpoint.y - this.draggeeVirtualMidpointY);
 
-		this._testForClosestItem._mouseDist = Garnish.getDist(
-			this._testForClosestItem._midpoint.x,
-			this._testForClosestItem._midpoint.y,
-			this.draggeeVirtualMidpointX,
-			this.draggeeVirtualMidpointY
-		);
-
+		// Don't even consider items that are further away on the Y axis
 		if (
 			this._getClosestItem._closestItem === null ||
-			this._testForClosestItem._mouseDist < this._getClosestItem._closestItemMouseDist
+			this._testForClosestItem._mouseDistY < this._getClosestItem._closestItemMouseDistY ||
+			(
+				this._testForClosestItem._mouseDistY == this._getClosestItem._closestItemMouseDistY &&
+				this._testForClosestItem._mouseDistX <= this._getClosestItem._closestItemMouseDistX
+			)
 		)
 		{
 			this._getClosestItem._closestItem          = item;
-			this._getClosestItem._closestItemMouseDist = this._testForClosestItem._mouseDist;
+			this._getClosestItem._closestItemMouseDistX = this._testForClosestItem._mouseDistX;
+			this._getClosestItem._closestItemMouseDistY = this._testForClosestItem._mouseDistY;
 		}
 	},
 
