@@ -118,7 +118,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 		this.$draggee = $([ this.$targetItem[0] ].concat($draggee.not(this.$targetItem).toArray()));
 
 		// Create the helper(s)
-		if (this.settings.collapseDraggees)
+		if (this.settings.singleHelper)
 		{
 			this._createHelper(0);
 		}
@@ -414,6 +414,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 {
 	defaults: {
 		filter: null,
+		singleHelper: false,
 		collapseDraggees: false,
 		removeDraggee: false,
 		copyDraggeeInputValuesToHelper: false,
