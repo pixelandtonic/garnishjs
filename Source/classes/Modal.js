@@ -79,8 +79,8 @@ Garnish.Modal = Garnish.Base.extend({
 			var $resizeDragHandle = $('<div class="resizehandle"/>').appendTo(this.$container);
 
 			this.resizeDragger = new Garnish.BaseDrag($resizeDragHandle, {
-				onDragStart:   $.proxy(this, '_onResizeStart'),
-				onDrag:        $.proxy(this, '_onResize')
+				onDragStart:   $.proxy(this, '_handleResizeStart'),
+				onDrag:        $.proxy(this, '_handleResize')
 			});
 		}
 
@@ -290,13 +290,13 @@ Garnish.Modal = Garnish.Base.extend({
 		return this.getWidth._width;
 	},
 
-	_onResizeStart: function()
+	_handleResizeStart: function()
 	{
 		this.resizeStartWidth = this.getWidth();
 		this.resizeStartHeight = this.getHeight();
 	},
 
-	_onResize: function()
+	_handleResize: function()
 	{
 		if (Garnish.ltr)
 		{

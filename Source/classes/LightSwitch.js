@@ -34,15 +34,15 @@ Garnish.LightSwitch = Garnish.Base.extend({
 
 		this.on = this.$outerContainer.hasClass('on');
 
-		this.addListener(this.$outerContainer, 'mousedown', '_onMouseDown');
-		this.addListener(this.$outerContainer, 'keydown', '_onKeyDown');
+		this.addListener(this.$outerContainer, 'mousedown', '_handleMouseDown');
+		this.addListener(this.$outerContainer, 'keydown', '_handleKeyDown');
 
 		this.dragger = new Garnish.BaseDrag(this.$outerContainer, {
 			axis:                 Garnish.X_AXIS,
 			ignoreHandleSelector: null,
-			onDragStart:          $.proxy(this, '_onDragStart'),
-			onDrag:               $.proxy(this, '_onDrag'),
-			onDragStop:           $.proxy(this, '_onDragStop')
+			onDragStart:          $.proxy(this, '_handleDragStart'),
+			onDrag:               $.proxy(this, '_handleDrag'),
+			onDragStop:           $.proxy(this, '_handleDragStop')
 		});
 	},
 
@@ -91,12 +91,12 @@ Garnish.LightSwitch = Garnish.Base.extend({
 		this.$outerContainer.trigger('change');
 	},
 
-	_onMouseDown: function()
+	_handleMouseDown: function()
 	{
-		this.addListener(Garnish.$doc, 'mouseup', '_onMouseUp')
+		this.addListener(Garnish.$doc, 'mouseup', '_handleMouseUp')
 	},
 
-	_onMouseUp: function()
+	_handleMouseUp: function()
 	{
 		this.removeListener(Garnish.$doc, 'mouseup');
 
@@ -105,7 +105,7 @@ Garnish.LightSwitch = Garnish.Base.extend({
 			this.toggle();
 	},
 
-	_onKeyDown: function(ev)
+	_handleKeyDown: function(ev)
 	{
 		switch (ev.keyCode)
 		{
@@ -153,12 +153,12 @@ Garnish.LightSwitch = Garnish.Base.extend({
 		return parseInt(this.$innerContainer.css('marginLeft'))
 	},
 
-	_onDragStart: function()
+	_handleDragStart: function()
 	{
 		this.dragStartMargin = this._getMargin();
 	},
 
-	_onDrag: function()
+	_handleDrag: function()
 	{
 		var margin = this.dragStartMargin + this.dragger.mouseDistX;
 
@@ -174,7 +174,7 @@ Garnish.LightSwitch = Garnish.Base.extend({
 		this.$innerContainer.css('marginLeft', margin);
 	},
 
-	_onDragStop: function()
+	_handleDragStop: function()
 	{
 		var margin = this._getMargin();
 

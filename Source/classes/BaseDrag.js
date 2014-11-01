@@ -211,7 +211,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 			$.data(item, 'drag', this);
 
 			// Add the listener
-			this.addListener(item, 'mousedown', '_onMouseDown');
+			this.addListener(item, 'mousedown', '_handleMouseDown');
 		}
 
 		this.$items = $().add(this.$items.add(items));
@@ -305,9 +305,9 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	// =========================================================================
 
 	/**
-	 * On Mouse Down
+	 * Handle Mouse Down
 	 */
-	_onMouseDown: function(ev)
+	_handleMouseDown: function(ev)
 	{
 		// Ignore right clicks
 		if (ev.which != Garnish.PRIMARY_CLICK)
@@ -363,8 +363,8 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		this.mouseOffsetY = ev.pageY - offset.top;
 
 		// Listen for mousemove, mouseup
-		this.addListener(Garnish.$doc, 'mousemove', '_onMouseMove');
-		this.addListener(Garnish.$doc, 'mouseup', '_onMouseUp');
+		this.addListener(Garnish.$doc, 'mousemove', '_handleMouseMove');
+		this.addListener(Garnish.$doc, 'mouseup', '_handleMouseUp');
 	},
 
 	_getItemHandle: function(item)
@@ -391,9 +391,9 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	},
 
 	/**
-	 * On Mouse Move
+	 * Handle Mouse Move
 	 */
-	_onMouseMove: function(ev)
+	_handleMouseMove: function(ev)
 	{
 		ev.preventDefault();
 
@@ -416,9 +416,9 @@ Garnish.BaseDrag = Garnish.Base.extend({
 		if (!this.dragging)
 		{
 			// Has the mouse moved far enough to initiate dragging yet?
-			this._onMouseMove._mouseDist = Garnish.getDist(this.mousedownX, this.mousedownY, this.realMouseX, this.realMouseY);
+			this._handleMouseMove._mouseDist = Garnish.getDist(this.mousedownX, this.mousedownY, this.realMouseX, this.realMouseY);
 
-			if (this._onMouseMove._mouseDist >= Garnish.BaseDrag.minMouseDist)
+			if (this._handleMouseMove._mouseDist >= Garnish.BaseDrag.minMouseDist)
 			{
 				this.startDragging();
 			}
@@ -431,9 +431,9 @@ Garnish.BaseDrag = Garnish.Base.extend({
 	},
 
 	/**
-	 * On Moues Up
+	 * Handle Moues Up
 	 */
-	_onMouseUp: function(ev)
+	_handleMouseUp: function(ev)
 	{
 		// Unbind the document events
 		this.removeAllListeners(Garnish.$doc);
