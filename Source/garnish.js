@@ -655,7 +655,7 @@ Garnish.Base = Base.extend({
 
 	_formatEvents: function(events)
 	{
-		var events = this._splitEvents(events);
+		var events = this._splitEvents(events).slice(0);
 
 		for (var i = 0; i < events.length; i++)
 		{
