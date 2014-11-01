@@ -638,7 +638,7 @@ Garnish.Base = Base.extend({
 		return events;
 	},
 
-	_formatEvents: function(events)
+	_splitEvents: function(events)
 	{
 		if (typeof events == 'string')
 		{
@@ -649,6 +649,13 @@ Garnish.Base = Base.extend({
 				events[i] = $.trim(events[i]);
 			}
 		}
+
+		return events;
+	},
+
+	_formatEvents: function(events)
+	{
+		var events = this._splitEvents(events);
 
 		for (var i = 0; i < events.length; i++)
 		{
@@ -668,7 +675,7 @@ Garnish.Base = Base.extend({
 			return;
 		}
 
-		events = this._formatEvents(events);
+		events = this._splitEvents(events);
 
 		// Param mapping
 		if (typeof data != 'object')
@@ -687,7 +694,7 @@ Garnish.Base = Base.extend({
 			func = $.proxy(this, func);
 		}
 
-		$elem.on(events, data, $.proxy(function()
+		$elem.on(this._formatEvents(events), data, $.proxy(function()
 		{
 			if (!this._disabled)
 			{
@@ -699,7 +706,7 @@ Garnish.Base = Base.extend({
 		this._$listeners = this._$listeners.add(elem);
 
 		// Prep for activate event?
-		if (events.search(/\bactivate\b/) != -1 && !$elem.data('garnish-activatable'))
+		if ($.inArray('activate', events) != -1 && !$elem.data('garnish-activatable'))
 		{
 			var activateNamespace = this._namespace+'-activate';
 
@@ -761,7 +768,7 @@ Garnish.Base = Base.extend({
 		}
 
 		// Prep for chanegtext event?
-		if (events.search(/\btextchange\b/) != -1)
+		if ($.inArray('textchange', events) != -1)
 		{
 			// Store the initial values
 			for (var i = 0; i < $elem.length; i++)
@@ -795,7 +802,7 @@ Garnish.Base = Base.extend({
 		}
 
 		// Prep for resize event?
-		if (events.search(/\bresize\b/) != -1)
+		if ($.inArray('resize', events) != -1)
 		{
 			// Resize detection technique adapted from http://www.backalleycoder.com/2013/03/18/cross-browser-event-based-element-resize-detection/ -- thanks!
 			for (var i = 0; i < $elem.length; i++)
@@ -855,8 +862,7 @@ Garnish.Base = Base.extend({
 
 	removeListener: function(elem, events)
 	{
-		events = this._formatEvents(events);
-		$(elem).off(events);
+		$(elem).off(this._formatEvents(events));
 	},
 
 	removeAllListeners: function(elem)
