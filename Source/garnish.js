@@ -678,7 +678,7 @@ Garnish.Base = Base.extend({
 		events = this._splitEvents(events);
 
 		// Param mapping
-		if (typeof data != 'object')
+		if (typeof func == typeof undefined && typeof data != 'object')
 		{
 			// (elem, events, func)
 			func = data;

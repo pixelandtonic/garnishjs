@@ -30,7 +30,7 @@ Garnish.DragSort = Garnish.Drag.extend({
 	init: function(items, settings)
 	{
 		// Param mapping
-		if (!settings && $.isPlainObject(items))
+		if (typeof settings == typeof undefined && $.isPlainObject(items))
 		{
 			// (settings)
 			settings = items;

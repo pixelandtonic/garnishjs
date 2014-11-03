@@ -19,7 +19,7 @@ Garnish.Modal = Garnish.Base.extend({
 	init: function(container, settings)
 	{
 		// Param mapping
-		if (!settings && $.isPlainObject(container))
+		if (typeof settings == typeof undefined && $.isPlainObject(container))
 		{
 			// (settings)
 			settings = container;

@@ -32,7 +32,14 @@ Garnish.Select = Garnish.Base.extend({
 		this.$container = $(container);
 
 		// Param mapping
-		if (!settings && $.isPlainObject(items))
+		if (typeof items == typeof undefined && $.isPlainObject(container))
+		{
+			// (settings)
+			settings = container;
+			container = null;
+			items = null;
+		}
+		else if (typeof settings == typeof undefined && $.isPlainObject(items))
 		{
 			// (container, settings)
 			settings = items;
