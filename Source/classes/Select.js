@@ -970,7 +970,7 @@ Garnish.Select = Garnish.Base.extend({
 		allowEmpty: true,
 		vertical: false,
 		horizontal: false,
-		arrowsChangeSelection: true,
+		arrowsChangeSelection: false,
 		handle: null,
 		filter: null,
 		onSelectionChange: $.noop
