@@ -731,7 +731,7 @@ Garnish.Select = Garnish.Base.extend({
 	{
 		var metaKey = (ev.metaKey || ev.ctrlKey);
 
-		if (this.settings.arrowsChangeSelection || !this.$focusable.length)
+		if (!this.settings.checkboxMode || !this.$focusable.length)
 		{
 			var anchor = ev.shiftKey ? this.last : this.first;
 		}
@@ -921,7 +921,7 @@ Garnish.Select = Garnish.Base.extend({
 		// Is there an item queued up for focus/selection?
 		if ($item && $item.length)
 		{
-			if (this.settings.arrowsChangeSelection)
+			if (!this.settings.checkboxMode)
 			{
 				// select it
 				if (this.first !== null && ev.shiftKey)
@@ -1012,7 +1012,6 @@ Garnish.Select = Garnish.Base.extend({
 		allowEmpty: true,
 		vertical: false,
 		horizontal: false,
-		arrowsChangeSelection: false,
 		handle: null,
 		filter: null,
 		checkboxMode: false,
