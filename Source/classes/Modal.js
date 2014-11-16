@@ -135,6 +135,7 @@ Garnish.Modal = Garnish.Base.extend({
 			this.visible = true;
 			Garnish.Modal.visibleModal = this;
 
+			this.trigger('show');
 			this.settings.onShow();
 		}
 	},
@@ -184,6 +185,7 @@ Garnish.Modal = Garnish.Base.extend({
 			Garnish.escManager.unregister(this);
 		}
 
+		this.trigger('hide');
 		this.settings.onHide();
 	},
 
@@ -238,11 +240,13 @@ Garnish.Modal = Garnish.Base.extend({
 
 	onFadeIn: function()
 	{
+		this.trigger('fadeIn');
 		this.settings.onFadeIn();
 	},
 
 	onFadeOut: function()
 	{
+		this.trigger('fadeOut');
 		this.settings.onFadeOut();
 	},
 
