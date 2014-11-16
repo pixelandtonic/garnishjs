@@ -799,7 +799,15 @@ Garnish.Select = Garnish.Base.extend({
 				// Select the last item if none are selected
 				if (this.first === null)
 				{
-					var $item = this.getLastItem();
+					if (this.$focusable)
+					{
+						var $item = this.$focusable.prev();
+					}
+
+					if (!this.$focusable || !$item.length)
+					{
+						var $item = this.getLastItem();
+					}
 				}
 				else
 				{
@@ -828,7 +836,15 @@ Garnish.Select = Garnish.Base.extend({
 				// Select the first item if none are selected
 				if (this.first === null)
 				{
-					var $item = this.getFirstItem();
+					if (this.$focusable)
+					{
+						var $item = this.$focusable.next();
+					}
+
+					if (!this.$focusable || !$item.length)
+					{
+						var $item = this.getFirstItem();
+					}
 				}
 				else
 				{
