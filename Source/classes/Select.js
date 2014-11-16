@@ -64,7 +64,7 @@ Garnish.Select = Garnish.Base.extend({
 
 		// --------------------------------------------------------------------
 
-		if (this.settings.allowEmpty)
+		if (this.settings.allowEmpty && !this.settings.checkboxMode)
 		{
 			this.addListener(this.$container, 'click', function(ev)
 			{
@@ -506,11 +506,12 @@ Garnish.Select = Garnish.Base.extend({
 
 			this.addListener($handle, 'mousedown', 'onMouseDown');
 			this.addListener($handle, 'mouseup', 'onMouseUp');
-			this.addListener($handle, 'keydown', 'onKeyDown');
 			this.addListener($handle, 'click', function(ev)
 			{
 				this.ignoreClick = true;
 			});
+
+			this.addListener(item, 'keydown', 'onKeyDown');
 		}
 
 		this.updateIndexes();
@@ -681,19 +682,26 @@ Garnish.Select = Garnish.Base.extend({
 			Garnish.getDist(this.mousedownX, this.mousedownY, ev.pageX, ev.pageY) < 1
 		)
 		{
-			// If this is already selected, wait a moment to see if this is a double click before making any rash decisions
-			if (this.isSelected($item))
+			if (this.settings.checkboxMode)
 			{
-				this.clearMouseUpTimeout();
-
-				this.mouseUpTimeout = setTimeout($.proxy(function() {
-					this.deselectOthers($item);
-				}, this), 300);
+				this.toggleItem($item);
 			}
 			else
 			{
-				this.deselectAll();
-				this.selectItem($item);
+				// If this is already selected, wait a moment to see if this is a double click before making any rash decisions
+				if (this.isSelected($item))
+				{
+					this.clearMouseUpTimeout();
+
+					this.mouseUpTimeout = setTimeout($.proxy(function() {
+						this.deselectOthers($item);
+					}, this), 300);
+				}
+				else
+				{
+					this.deselectAll();
+					this.selectItem($item);
+				}
 			}
 		}
 	},
@@ -973,6 +981,7 @@ Garnish.Select = Garnish.Base.extend({
 		arrowsChangeSelection: false,
 		handle: null,
 		filter: null,
+		checkboxMode: false,
 		onSelectionChange: $.noop
 	},
 
