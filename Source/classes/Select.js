@@ -524,6 +524,9 @@ Garnish.Select = Garnish.Base.extend({
 	{
 		items = $.makeArray(items);
 
+		var itemsChanged = false,
+			selectionChanged = false;
+
 		for (var i = 0; i < items.length; i++)
 		{
 			var item = items[i];
@@ -534,11 +537,26 @@ Garnish.Select = Garnish.Base.extend({
 			{
 				this._deinitItem(item);
 				this.$items.splice(index, 1);
-				this.$selectedItems = this.$selectedItems.not(item);
+				itemsChanged = true;
+
+				var selectedIndex = $.inArray(item, this.$selectedItems);
+				if (selectedIndex != -1)
+				{
+					this.$selectedItems.splice(selectedIndex, 1);
+					selectionChanged = true;
+				}
 			}
 		}
 
-		this.updateIndexes();
+		if (itemsChanged)
+		{
+			this.updateIndexes();
+
+			if (selectionChanged)
+			{
+				this.onSelectionChange();
+			}
+		}
 	},
 
 	/**
