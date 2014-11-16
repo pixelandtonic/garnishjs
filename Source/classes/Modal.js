@@ -323,7 +323,7 @@ Garnish.Modal = Garnish.Base.extend({
 	{
 		if (this.$container)
 		{
-			this.$container.removeData('modal');
+			this.$container.removeData('modal').remove();
 		}
 
 		if (this.dragger)
