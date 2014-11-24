@@ -147,7 +147,10 @@ Garnish.Menu = Garnish.Base.extend({
 
 	hide: function()
 	{
-		this.$container.velocity('fadeOut', { duration: Garnish.FX_DURATION });
+		this.$container.velocity('fadeOut', { duration: Garnish.FX_DURATION }, $.proxy(function()
+		{
+			this.$container.detach();
+		}, this));
 
 		Garnish.escManager.unregister(this);
 
