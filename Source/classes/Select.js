@@ -112,7 +112,7 @@ Garnish.Select = Garnish.Base.extend({
 	/**
 	 * Select Item
 	 */
-	selectItem: function($item)
+	selectItem: function($item, focus)
 	{
 		if (!this.settings.multi)
 		{
@@ -122,8 +122,11 @@ Garnish.Select = Garnish.Base.extend({
 		this.$first = this.$last = $item;
 		this.first = this.last = this.getItemIndex($item);
 
-		this.setFocusableItem($item);
-		$item.focus();
+		if (focus)
+		{
+			this.setFocusableItem($item);
+			$item.focus();
+		}
 
 		this._selectItems($item);
 	},
@@ -150,7 +153,7 @@ Garnish.Select = Garnish.Base.extend({
 	{
 		if (!this.settings.multi)
 		{
-			return this.selectItem($item);
+			return this.selectItem($item, true);
 		}
 
 		this.deselectAll();
@@ -207,7 +210,7 @@ Garnish.Select = Garnish.Base.extend({
 	deselectOthers: function($item)
 	{
 		this.deselectAll();
-		this.selectItem($item);
+		this.selectItem($item, true);
 	},
 
 	/**
@@ -217,13 +220,13 @@ Garnish.Select = Garnish.Base.extend({
 	{
 		if (!this.isSelected($item))
 		{
-			this.selectItem($item);
+			this.selectItem($item, true);
 		}
 		else
 		{
 			if (this._canDeselect($item))
 			{
-				this.deselectItem($item);
+				this.deselectItem($item, true);
 			}
 		}
 	},
@@ -718,7 +721,7 @@ Garnish.Select = Garnish.Base.extend({
 				else
 				{
 					this.deselectAll();
-					this.selectItem($item);
+					this.selectItem($item, true);
 				}
 			}
 		}
@@ -899,7 +902,7 @@ Garnish.Select = Garnish.Base.extend({
 					}
 					else
 					{
-						this.selectItem(this.$focusable);
+						this.selectItem(this.$focusable, true);
 					}
 				}
 
@@ -931,7 +934,7 @@ Garnish.Select = Garnish.Base.extend({
 				else
 				{
 					this.deselectAll();
-					this.selectItem($item);
+					this.selectItem($item, true);
 				}
 			}
 			else
