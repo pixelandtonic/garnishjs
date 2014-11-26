@@ -217,8 +217,9 @@ Garnish.NiceText = Garnish.Base.extend({
 			val = val.replace(/ /g, '&nbsp;');
 
 			// Line breaks
-			val = val.replace(/[\n\r]$/g, '<br/>&nbsp;');
+			val = val.replace(/[\n\r]$/g, '');
 			val = val.replace(/[\n\r]/g, '<br/>');
+			val += '<br/>&nbsp;';
 		}
 
 		this.$stage.html(val);
