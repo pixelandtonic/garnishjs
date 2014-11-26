@@ -732,6 +732,11 @@ Garnish.Select = Garnish.Base.extend({
 	 */
 	onKeyDown: function(ev)
 	{
+		if ($(ev.target).is('input,textarea,button'))
+		{
+			return;
+		}
+
 		var metaKey = (ev.metaKey || ev.ctrlKey);
 
 		if (!this.settings.checkboxMode || !this.$focusable.length)
