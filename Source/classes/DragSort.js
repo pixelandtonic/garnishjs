@@ -11,8 +11,8 @@ Garnish.DragSort = Garnish.Drag.extend({
 	$heightedContainer: null,
 	$insertion: null,
 	insertionVisible: false,
-	oldDraggeeIndex: null,
-	newDraggeeIndex: null,
+	oldDraggeeIndexes: null,
+	newDraggeeIndexes: null,
 	closestItem: null,
 
 	_midpointVersion: 0,
@@ -115,7 +115,7 @@ Garnish.DragSort = Garnish.Drag.extend({
 	 */
 	onDragStart: function()
 	{
-		this.oldDraggeeIndex = this._getDraggeeIndex();
+		this.oldDraggeeIndexes = this._getDraggeeIndexes();
 
 		// Is the target item not the first item in the draggee?
 		if (
@@ -191,9 +191,9 @@ Garnish.DragSort = Garnish.Drag.extend({
 
 		// Has the item actually moved?
 		this.$items = $().add(this.$items);
-		this.newDraggeeIndex = this._getDraggeeIndex();
+		this.newDraggeeIndexes = this._getDraggeeIndexes();
 
-		if (this.newDraggeeIndex != this.oldDraggeeIndex)
+		if (this.newDraggeeIndexes.join(',') != this.oldDraggeeIndexes.join(','))
 		{
 			this.onSortChange();
 		}
@@ -231,9 +231,16 @@ Garnish.DragSort = Garnish.Drag.extend({
 		return $.inArray(item, this.$items);
 	},
 
-	_getDraggeeIndex: function()
+	_getDraggeeIndexes: function()
 	{
-		return this._getItemIndex(this.$draggee[0]);
+		var indexes = [];
+
+		for (var i = 0; i < this.$draggee.length; i++)
+		{
+			indexes.push(this._getItemIndex(this.$draggee[i]))
+		}
+
+		return indexes;
 	},
 
 	/**
