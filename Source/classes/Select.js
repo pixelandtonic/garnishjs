@@ -726,7 +726,8 @@ Garnish.Select = Garnish.Base.extend({
 	 */
 	onKeyDown: function(ev)
 	{
-		if ($(ev.target).is('input,textarea,button'))
+		// Ignore if the focus isn't on one of our items
+		if (ev.target != ev.currentTarget)
 		{
 			return;
 		}
