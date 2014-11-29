@@ -11,6 +11,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 
 	targetItemWidth: null,
 	targetItemHeight: null,
+	targetItemPositionInDraggee: null,
 
 	$draggee: null,
 
@@ -114,6 +115,9 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	 */
 	setDraggee: function($draggee)
 	{
+		// Record the target item's position in the draggee
+		this.targetItemPositionInDraggee = $.inArray(this.$targetItem[0], $draggee.add(this.$targetItem[0]));
+
 		// Keep the target item at the front of the list
 		this.$draggee = $([ this.$targetItem[0] ].concat($draggee.not(this.$targetItem).toArray()));
 
