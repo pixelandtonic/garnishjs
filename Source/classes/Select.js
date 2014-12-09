@@ -557,6 +557,7 @@ Garnish.Select = Garnish.Base.extend({
 
 			if (selectionChanged)
 			{
+				$(items).removeClass(this.settings.selectedClass);
 				this.onSelectionChange();
 			}
 		}
