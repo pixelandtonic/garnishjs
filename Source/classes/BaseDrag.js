@@ -214,7 +214,7 @@ Garnish.BaseDrag = Garnish.Base.extend({
 			this.addListener(item, 'mousedown', '_handleMouseDown');
 		}
 
-		this.$items = $().add(this.$items.add(items));
+		this.$items = this.$items.add(items);
 	},
 
 	/**
