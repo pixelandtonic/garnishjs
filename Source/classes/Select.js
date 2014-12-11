@@ -481,7 +481,6 @@ Garnish.Select = Garnish.Base.extend({
 
 			// Add the item
 			$.data(item, 'select', this);
-			this.$items = this.$items.add(item);
 
 			// Get the handle
 			if (this.settings.handle)
@@ -517,6 +516,7 @@ Garnish.Select = Garnish.Base.extend({
 			this.addListener(item, 'keydown', 'onKeyDown');
 		}
 
+		this.$items = this.$items.add($items);
 		this.updateIndexes();
 	},
 
