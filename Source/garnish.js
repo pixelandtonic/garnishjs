@@ -278,8 +278,21 @@ Garnish = $.extend(Garnish, {
 	 */
 	scrollContainerToElement: function(container, elem)
 	{
-		var $container = $(container),
-			$elem = $(elem);
+		if (typeof elem === typeof undefined)
+		{
+			var $elem = $(container);
+				$container = $elem.scrollParent();
+		}
+		else
+		{
+			var $container = $(container),
+				$elem = $(elem);
+		}
+
+		if ($container.prop('nodeName') === 'HTML')
+		{
+			$container = Garnish.$win;
+		}
 
 		var scrollTop = $container.scrollTop(),
 				elemOffset = $elem.offset().top;
