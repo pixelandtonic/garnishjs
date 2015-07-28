@@ -54,6 +54,15 @@ Garnish.HUD = Garnish.Base.extend({
 	},
 
 	/**
+	 * Update the body contents
+	 */
+	updateBody: function(bodyContents)
+	{
+		this.$body.html('');
+		this.$body.append(bodyContents);
+	},
+
+	/**
 	 * Show
 	 */
 	show: function(ev)
