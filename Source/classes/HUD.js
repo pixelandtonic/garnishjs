@@ -136,6 +136,30 @@ Garnish.HUD = Garnish.Base.extend({
 
 	determineBestPosition: function()
 	{
+		// See if the trigger is fixed
+		var $parent = this.$trigger,
+			fixedTrigger = false;
+
+		do {
+			if ($parent.css('position') == 'fixed')
+			{
+				fixedTrigger = true;
+				break;
+			}
+
+			$parent = $parent.offsetParent();
+		}
+		while ($parent.length && $parent.prop('nodeName') != 'HTML');
+
+		if (fixedTrigger)
+		{
+			this.$hud.css('position', 'fixed');
+		}
+		else
+		{
+			this.$hud.css('position', 'absolute');
+		}
+
 		// Get the window sizez and trigger offset
 		this.updateElementProperties();
 
