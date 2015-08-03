@@ -607,19 +607,19 @@ Garnish.Base = Base.extend({
 		}
 	},
 
-	off: function(events)
+	off: function(events, handler)
 	{
 		var events = this._normalizeEvents(events);
 
-		for (var i = 0; i < events; i++)
+		for (var i = 0; i < events.length; i++)
 		{
 			var ev = events[i];
 
-			for (var j = this._eventHandlers.length - 1; j >= 0; i--)
+			for (var j = this._eventHandlers.length - 1; j >= 0; j--)
 			{
-				var handler = this._eventHandlers[j];
+				var eventHandler = this._eventHandlers[j];
 
-				if (handler.type == ev[0] && (!ev[1] || handler.namespace == ev[1]))
+				if (eventHandler.type == ev[0] && (!ev[1] || eventHandler.namespace == ev[1]) && eventHandler.handler === handler)
 				{
 					this._eventHandlers.splice(j, 1);
 				}
