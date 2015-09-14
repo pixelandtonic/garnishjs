@@ -907,12 +907,6 @@ jQuery.each(['activate','textchange','resize'], function(i, name) {
   function objectLoad(e){
     this.contentDocument.defaultView.__resizeTrigger__ = this.__resizeElement__;
     this.contentDocument.defaultView.addEventListener('resize', resizeListener);
-    /* HACK */
-    this.contentDocument.defaultView.__lastOffsetWidth__ = this.__resizeElement__.__initialWidth__;
-	this.contentDocument.defaultView.__lastOffsetHeight__ = this.__resizeElement__.__initialHeight__;
-	delete this.__resizeElement__.__initialWidth__;
-	delete this.__resizeElement__.__initialHeight__;
-	/* END HACK */
   }
 
   window.addResizeListener = function(element, fn){
