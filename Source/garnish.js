@@ -289,7 +289,7 @@ Garnish = $.extend(Garnish, {
 				$elem = $(elem);
 		}
 
-		if ($container.prop('nodeName') === 'HTML')
+		if ($container.prop('nodeName') === 'HTML' || $container[0] == Garnish.$doc[0])
 		{
 			$container = Garnish.$win;
 		}
