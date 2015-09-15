@@ -910,7 +910,7 @@ jQuery.each(['activate','textchange','resize'], function(i, name) {
   }
 
   window.addResizeListener = function(element, fn){
-    if (!element.__resizeListeners__) {
+    if (!element.__resizeListeners__ || !element.__resizeTrigger__) {
       element.__resizeListeners__ = [];
       if (attachEvent) {
         element.__resizeTrigger__ = element;
@@ -939,7 +939,6 @@ jQuery.each(['activate','textchange','resize'], function(i, name) {
         element.__resizeTrigger__.contentDocument.defaultView.removeEventListener('resize', resizeListener);
         element.__resizeTrigger__ = !element.removeChild(element.__resizeTrigger__);
       }
-      delete element.__resizeListeners__;
     }
   }
 })();
