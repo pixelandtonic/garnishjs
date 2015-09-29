@@ -762,6 +762,7 @@ Garnish.Base = Base.extend({
 
 	destroy: function()
 	{
+		this.trigger('destroy');
 		this.removeAllListeners(this._listeners);
 	}
 });
