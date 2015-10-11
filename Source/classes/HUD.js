@@ -128,9 +128,6 @@ Garnish.HUD = Garnish.Base.extend({
 		this.windowWidth = Garnish.$win.width();
 		this.windowHeight = Garnish.$win.height();
 
-		this.windowScrollLeft = Garnish.$win.scrollLeft();
-		this.windowScrollTop = Garnish.$win.scrollTop();
-
 		// get the trigger's dimensions
 		this.triggerWidth = this.$trigger.outerWidth();
 		this.triggerHeight = this.$trigger.outerHeight();
@@ -143,6 +140,9 @@ Garnish.HUD = Garnish.Base.extend({
 		// is the trigger fixed?
 		if (this.$fixedTriggerParent)
 		{
+			this.windowScrollLeft = 0;
+			this.windowScrollTop = 0;
+
 			var fixedTriggerParentOffset = this.$fixedTriggerParent.offset(),
 				fixedTriggerParentPosition = this.$fixedTriggerParent.position();
 
@@ -155,6 +155,9 @@ Garnish.HUD = Garnish.Base.extend({
 		}
 		else
 		{
+			this.windowScrollLeft = Garnish.$win.scrollLeft();
+			this.windowScrollTop = Garnish.$win.scrollTop();
+
 			this.triggerFixedPosition = this.triggerOffset;
 		}
 
