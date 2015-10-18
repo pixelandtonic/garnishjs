@@ -305,10 +305,18 @@ Garnish.HUD = Garnish.Base.extend({
 			maxHudBodyHeight = this.settings.minBodyHeight;
 		}
 
-		if (hudBodyWidth > maxHudBodyWidth)
+		if (hudBodyWidth > maxHudBodyWidth || hudBodyWidth < this.settings.minBodyWidth)
 		{
-			this.$hud.width(maxHudBodyWidth);
-			hudBodyWidth = maxHudBodyWidth;
+			if (hudBodyWidth > maxHudBodyWidth)
+			{
+				hudBodyWidth = maxHudBodyWidth;
+			}
+			else
+			{
+				hudBodyWidth = this.settings.minBodyWidth;
+			}
+
+			this.$hud.width(hudBodyWidth);
 
 			// Is there any overflow now?
 			if (this.$main.outerWidth() > maxHudBodyWidth)
@@ -320,9 +328,18 @@ Garnish.HUD = Garnish.Base.extend({
 			hudBodyHeight = this.$body.height();
 		}
 
-		if (hudBodyHeight > maxHudBodyHeight)
+		if (hudBodyHeight > maxHudBodyHeight || hudBodyHeight < this.settings.minBodyHeight)
 		{
-			var mainHeight = maxHudBodyHeight;
+			if (hudBodyHeight > maxHudBodyHeight)
+			{
+				hudBodyHeight = maxHudBodyHeight;
+			}
+			else
+			{
+				hudBodyHeight = this.settings.minBodyHeight;
+			}
+
+			var mainHeight = hudBodyHeight;
 
 			if (this.$header)
 			{
@@ -335,7 +352,6 @@ Garnish.HUD = Garnish.Base.extend({
 			}
 
 			this.$mainContainer.height(mainHeight);
-			hudBodyHeight = maxHudBodyHeight;
 
 			// Is there any overflow now?
 			if (this.$main.outerHeight() > mainHeight)
