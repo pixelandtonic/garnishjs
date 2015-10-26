@@ -148,6 +148,22 @@ Garnish = $.extend(Garnish, {
 	},
 
 	/**
+	 * Returns the offset of an element within the scroll container, whether that's the window or something else
+	 */
+	getOffset: function(elem)
+	{
+		this.getOffset._offset = $(elem).offset();
+
+		if (Garnish.$scrollContainer[0] != Garnish.$win[0])
+		{
+			this.getOffset._offset.top += Garnish.$scrollContainer.scrollTop();
+			this.getOffset._offset.left += Garnish.$scrollContainer.scrollLeft();
+		}
+
+		return this.getOffset._offset;
+	},
+
+	/**
 	 * Returns the distance between two coordinates.
 	 *
 	 * @param int x1 The first coordinate's X position.
