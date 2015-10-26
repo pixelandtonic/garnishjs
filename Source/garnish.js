@@ -23,6 +23,8 @@ Garnish.ltr = !Garnish.rtl;
 
 Garnish = $.extend(Garnish, {
 
+	$scrollContainer: Garnish.$win,
+
 	// Key code constants
 	DELETE_KEY:  8,
 	SHIFT_KEY:  16,
