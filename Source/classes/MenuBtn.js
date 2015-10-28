@@ -34,7 +34,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 		this.setSettings(settings, Garnish.MenuBtn.defaults);
 
 		this.menu = new Garnish.Menu($menu, {
-			attachToElement: this.$btn,
+			anchor: (this.settings.menuAnchor || this.$btn),
 			onOptionSelect: $.proxy(this, 'onOptionSelect')
 		});
 
@@ -119,6 +119,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 },
 {
 	defaults: {
+		menuAnchor: null,
 		onOptionSelect: $.noop
 	}
 });
