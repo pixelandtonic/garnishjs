@@ -46,7 +46,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 	onMouseDown: function(ev)
 	{
-		if (ev.which != Garnish.PRIMARY_CLICK || ev.metaKey)
+		if (ev.which != Garnish.PRIMARY_CLICK || Garnish.isCtrlKeyPressed(ev))
 		{
 			return;
 		}

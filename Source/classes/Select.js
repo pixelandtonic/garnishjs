@@ -751,7 +751,7 @@ Garnish.Select = Garnish.Base.extend({
 			return;
 		}
 
-		var metaKey = (ev.metaKey || ev.ctrlKey);
+		var ctrlKey = Garnish.isCtrlKeyPressed(ev);
 
 		if (!this.settings.checkboxMode || !this.$focusable.length)
 		{
@@ -788,7 +788,7 @@ Garnish.Select = Garnish.Base.extend({
 				}
 				else
 				{
-					if (metaKey)
+					if (ctrlKey)
 					{
 						var $item = this.getFurthestItemToTheLeft(anchor);
 					}
@@ -819,7 +819,7 @@ Garnish.Select = Garnish.Base.extend({
 				}
 				else
 				{
-					if (metaKey)
+					if (ctrlKey)
 					{
 						var $item = this.getFurthestItemToTheRight(anchor);
 					}
@@ -851,7 +851,7 @@ Garnish.Select = Garnish.Base.extend({
 				}
 				else
 				{
-					if (metaKey)
+					if (ctrlKey)
 					{
 						var $item = this.getFurthestItemAbove(anchor);
 					}
@@ -888,7 +888,7 @@ Garnish.Select = Garnish.Base.extend({
 				}
 				else
 				{
-					if (metaKey)
+					if (ctrlKey)
 					{
 						var $item = this.getFurthestItemBelow(anchor);
 					}
@@ -908,7 +908,7 @@ Garnish.Select = Garnish.Base.extend({
 
 			case Garnish.SPACE_KEY:
 			{
-				if (!metaKey)
+				if (!ctrlKey)
 				{
 					ev.preventDefault();
 
@@ -930,7 +930,7 @@ Garnish.Select = Garnish.Base.extend({
 
 			case Garnish.A_KEY:
 			{
-				if (metaKey)
+				if (ctrlKey)
 				{
 					ev.preventDefault();
 					this.selectAll();
@@ -989,7 +989,7 @@ Garnish.Select = Garnish.Base.extend({
 
 	_actAsCheckbox: function(ev)
 	{
-		if (ev.metaKey || ev.ctrlKey)
+		if (Garnish.isCtrlKeyPressed(ev))
 		{
 			return !this.settings.checkboxMode;
 		}
