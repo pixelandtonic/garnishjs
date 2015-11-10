@@ -125,6 +125,8 @@ Garnish.Modal = Garnish.Base.extend({
 			this.addListener(Garnish.$win, 'resize', 'updateSizeAndPosition');
 		}
 
+		this.enable();
+
 		if (this.settings.hideOnEsc)
 		{
 			Garnish.escManager.register(this, 'hide');
@@ -156,6 +158,8 @@ Garnish.Modal = Garnish.Base.extend({
 
 	hide: function(ev)
 	{
+		this.disable();
+
 		if (ev)
 		{
 			ev.stopPropagation();

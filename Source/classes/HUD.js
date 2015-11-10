@@ -70,7 +70,6 @@ Garnish.HUD = Garnish.Base.extend({
 
 		this.addListener(this.$body, 'submit', '_handleSubmit');
 		this.addListener(this.$shade, 'click', 'hide');
-		this.addListener(Garnish.$win, 'resize', 'updateSizeAndPosition');
 
 		if (!this.$fixedTriggerParent && Garnish.$scrollContainer[0] != Garnish.$win[0])
 		{
@@ -173,6 +172,8 @@ Garnish.HUD = Garnish.Base.extend({
 
 		// Reposition one last time just in case
 		Garnish.requestAnimationFrame($.proxy(this, 'updateSizeAndPosition'));
+
+		this.enable();
 	},
 
 	onShow: function()
@@ -441,7 +442,9 @@ Garnish.HUD = Garnish.Base.extend({
 			}
 		}
 
-		this.addListener(this.$main, 'resize', 'updateSizeAndPosition');
+		Garnish.requestAnimationFrame($.proxy(function() {
+			this.addListener(this.$main, 'resize', 'updateSizeAndPosition');
+		}, this));
 	},
 
 	/**
@@ -449,6 +452,8 @@ Garnish.HUD = Garnish.Base.extend({
 	 */
 	hide: function()
 	{
+		this.disable();
+
 		this.$hud.hide();
 		this.$shade.hide();
 		this.showing = false;
