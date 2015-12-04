@@ -124,8 +124,6 @@ Garnish.HUD = Garnish.Base.extend({
 			this.$footer = $footer.insertAfter(this.$mainContainer);
 			this.$hud.addClass('has-footer');
 		}
-
-		this.updateSizeAndPosition();
 	},
 
 	/**
