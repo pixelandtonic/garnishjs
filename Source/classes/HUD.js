@@ -513,7 +513,7 @@ Garnish.HUD = Garnish.Base.extend({
 		windowSpacing: 10,
 		tipWidth: 30,
 		minBodyWidth: 200,
-		minBodyHeight: 200,
+		minBodyHeight: 0,
 		onShow: $.noop,
 		onHide: $.noop,
 		onSubmit: $.noop,
