@@ -3,3 +3,5 @@
 Source/.idea/
 
 /.idea
+
+node_modules/*
