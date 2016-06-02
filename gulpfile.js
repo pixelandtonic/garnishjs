@@ -4,6 +4,7 @@ var gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	insert = require('gulp-insert'),
 	uglify = require('gulp-uglify');
+	watch = require('gulp-watch');
 
 var srcDir = './src/';
 var outDir = './dist/';
@@ -23,8 +24,9 @@ var footer = "\n" +
     "})(jQuery);\n";
 
 gulp.task('build', buildTask);
+gulp.task('watch', watchTask);
 
-gulp.task('default', ['build']);
+gulp.task('default', ['build', 'watch']);
 
 function buildTask()
 {
@@ -40,4 +42,8 @@ function buildTask()
 		.pipe(concat('garnish-'+version+'.min.js'))
 		.pipe(gulp.dest(outDir));
 
+}
+
+function watchTask() {
+	return gulp.watch(srcDir+'**', ['build']);
 }
