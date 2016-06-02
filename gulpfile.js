@@ -25,7 +25,7 @@ var footer = "\n" +
 gulp.task('build', buildTask);
 gulp.task('watch', watchTask);
 
-gulp.task('default', ['build', 'watch']);
+gulp.task('default', ['build']);
 
 function buildTask()
 {
@@ -41,9 +41,4 @@ function buildTask()
 		.pipe(concat('garnish-'+version+'.min.js'))
 		.pipe(gulp.dest(outDir));
 
-}
-
-function watchTask()
-{
-	console.log('watch task');
 }
