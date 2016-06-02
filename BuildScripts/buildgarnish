@@ -1,1 +1,0 @@
-${GARNISH_PHP_PATH} ${GITREPO_PATH}/Garnish/BuildScripts/buildgarnish.php $*
