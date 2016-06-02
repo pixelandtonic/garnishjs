@@ -31,8 +31,8 @@ gulp.task('default', ['build', 'watch']);
 function buildTask()
 {
 	return gulp.src([
-			srcDir+'/*.js',
-			srcDir+'/classes/*.js',
+			srcDir+'*.js',
+			srcDir+'classes/*.js',
 		])
 		.pipe(concat('garnish-'+version+'.js'))
 		.pipe(insert.prepend(header))
