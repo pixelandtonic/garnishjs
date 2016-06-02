@@ -5,7 +5,7 @@ var gulp = require('gulp'),
 	insert = require('gulp-insert'),
 	uglify = require('gulp-uglify');
 
-var srcDir = './Source/';
+var srcDir = './src/';
 var outDir = './dist/';
 
 var header = "/**\n" +
