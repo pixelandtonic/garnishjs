@@ -23,7 +23,6 @@ var footer = "\n" +
     "})(jQuery);\n";
 
 gulp.task('build', buildTask);
-gulp.task('watch', watchTask);
 
 gulp.task('default', ['build']);
 
