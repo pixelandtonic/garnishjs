@@ -3,11 +3,20 @@ var version = '0.1';
 var gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	insert = require('gulp-insert'),
-	uglify = require('gulp-uglify');
-	watch = require('gulp-watch');
+	uglify = require('gulp-uglify'),
+	watch = require('gulp-watch'),
+	argv = require('yargs').argv;
 
 var srcDir = './src/';
-var outDir = './dist/';
+
+if (typeof(argv.dest) != 'undefined')
+{
+	var outDir = argv.dest;
+}
+else
+{
+	var outDir = './dist/';
+}
 
 var header = "/**\n" +
 	" * Garnish UI toolkit\n" +
