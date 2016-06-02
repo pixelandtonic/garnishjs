@@ -6,6 +6,7 @@ var gulp = require('gulp'),
 	uglify = require('gulp-uglify'),
 	watch = require('gulp-watch'),
 	argv = require('yargs').argv;
+	sourcemaps = require('gulp-sourcemaps');
 
 var srcDir = './src/';
 
@@ -43,12 +44,14 @@ function buildTask()
 			srcDir+'*.js',
 			srcDir+'classes/*.js',
 		])
+		.pipe(sourcemaps.init())
 		.pipe(concat('garnish-'+version+'.js'))
 		.pipe(insert.prepend(header))
 		.pipe(insert.append(footer))
 		.pipe(gulp.dest(outDir))
 		.pipe(uglify())
 		.pipe(concat('garnish-'+version+'.min.js'))
+		.pipe(sourcemaps.write('../'+outDir))
 		.pipe(gulp.dest(outDir));
 
 }
