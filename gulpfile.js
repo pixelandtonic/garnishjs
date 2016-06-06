@@ -5,19 +5,10 @@ var gulp = require('gulp'),
 	insert = require('gulp-insert'),
 	uglify = require('gulp-uglify'),
 	watch = require('gulp-watch'),
-	argv = require('yargs').argv;
 	sourcemaps = require('gulp-sourcemaps');
 
 var srcDir = './src/';
-
-if (typeof(argv.dest) != 'undefined')
-{
-	var outDir = argv.dest;
-}
-else
-{
-	var outDir = './dist/';
-}
+var outDir = './dist/';
 
 var header = "/**\n" +
 	" * Garnish UI toolkit\n" +
