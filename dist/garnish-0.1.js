@@ -4034,7 +4034,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 					this.showMenu();
 
 					this.menu.$options.removeClass('hover');
-					
+
 					if(this.menu.$options.filter('.sel').length > 0)
 					{
 						this.menu.$options.filter('.sel:first').addClass('hover');
@@ -4114,7 +4114,17 @@ Garnish.MenuBtn = Garnish.Base.extend({
 				else
 				{
 					this.showMenu();
-					this.menu.$options.last().addClass('hover');
+
+					this.menu.$options.removeClass('hover');
+
+					if(this.menu.$options.filter('.sel').length > 0)
+					{
+						this.menu.$options.filter('.sel:first').addClass('hover');
+					}
+					else
+					{
+						this.menu.$options.last().addClass('hover');
+					}
 				}
 
 				break;
