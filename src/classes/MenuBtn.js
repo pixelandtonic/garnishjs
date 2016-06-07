@@ -30,6 +30,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 		}
 
 		this.$btn.data('menubtn', this);
+		this.$btn.attr('tabindex', '0');
 
 		this.setSettings(settings, Garnish.MenuBtn.defaults);
 
@@ -39,9 +40,128 @@ Garnish.MenuBtn = Garnish.Base.extend({
 		});
 
 		this.menu.on('hide', $.proxy(this, 'onMenuHide'));
-
 		this.addListener(this.$btn, 'mousedown', 'onMouseDown');
+		this.addListener(this.$btn, 'keydown', 'onKeyDown');
+		this.addListener(this.$btn, 'blur', 'onBlur');
 		this.enable();
+	},
+
+	onBlur: function(ev)
+	{
+		this.hideMenu();
+	},
+
+	onKeyDown: function(ev)
+	{
+		switch (ev.keyCode)
+		{
+			case Garnish.RETURN_KEY:
+			{
+				ev.preventDefault();
+
+				if(this.menu.$options.filter('.hover').length > 0)
+				{
+					this.menu.$options.filter('.hover').trigger('click');
+				}
+
+				break;
+			}
+
+			case Garnish.SPACE_KEY:
+			{
+				ev.preventDefault();
+
+				if(!this.showingMenu)
+				{
+					this.showMenu();
+
+					this.menu.$options.removeClass('hover');
+					
+					if(this.menu.$options.filter('.sel').length > 0)
+					{
+						this.menu.$options.filter('.sel:first').addClass('hover');
+					}
+					else
+					{
+						this.menu.$options.first().addClass('hover');
+					}
+				}
+
+				break;
+			}
+
+			case Garnish.DOWN_KEY:
+			{
+				ev.preventDefault();
+
+				if(this.showingMenu)
+				{
+					var next = this.menu.$options.filter('.hover').parent().next();
+					var nextChild;
+
+					if(next.length > 0)
+					{
+						nextChild = next.find('a');
+					}
+					else
+					{
+						nextChild = this.menu.$options.first();
+					}
+
+					this.menu.$options.removeClass('hover');
+
+					nextChild.addClass('hover');
+				}
+				else
+				{
+					this.showMenu();
+
+					this.menu.$options.removeClass('hover');
+
+					if(this.menu.$options.filter('.sel').length > 0)
+					{
+						this.menu.$options.filter('.sel:first').addClass('hover');
+					}
+					else
+					{
+						this.menu.$options.first().addClass('hover');
+					}
+				}
+
+				break;
+			}
+
+			case Garnish.UP_KEY:
+			{
+				ev.preventDefault();
+
+				if(this.showingMenu)
+				{
+					var previous = this.menu.$options.filter('.hover').parent().prev();
+					var previousChild;
+
+					if(previous.length > 0)
+					{
+						previousChild = previous.find('a');
+					}
+					else
+					{
+						previousChild = this.menu.$options.last();
+					}
+
+					this.menu.$options.removeClass('hover');
+
+					previousChild.addClass('hover');
+				}
+				else
+				{
+					this.showMenu();
+					this.menu.$options.last().addClass('hover');
+				}
+
+				break;
+			}
+		}
 	},
 
 	onMouseDown: function(ev)
