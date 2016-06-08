@@ -96,21 +96,30 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 				if(this.showingMenu)
 				{
-					var next = this.menu.$options.filter('.hover').parent().next();
-					var nextChild;
+					var $nextOption = null;
 
-					if(next.length > 0)
+					$.each(this.menu.$options, $.proxy(function(index, value)
 					{
-						nextChild = next.find('a');
-					}
-					else
+						if(!$nextOption)
+						{
+							if($(value).hasClass('hover'))
+							{
+								if((index + 1) < this.menu.$options.length)
+								{
+									$nextOption = $(this.menu.$options[(index + 1)]);
+								}
+							}
+						}
+					}, this));
+
+					if(!$nextOption)
 					{
-						nextChild = this.menu.$options.first();
+						$nextOption = $(this.menu.$options[0]);
 					}
 
 					this.menu.$options.removeClass('hover');
 
-					nextChild.addClass('hover');
+					$nextOption.addClass('hover');
 				}
 				else
 				{
@@ -137,21 +146,30 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 				if(this.showingMenu)
 				{
-					var previous = this.menu.$options.filter('.hover').parent().prev();
-					var previousChild;
+					var $previousOption = null;
 
-					if(previous.length > 0)
+					$.each(this.menu.$options, $.proxy(function(index, value)
 					{
-						previousChild = previous.find('a');
-					}
-					else
+						if(!$previousOption)
+						{
+							if($(value).hasClass('hover'))
+							{
+								if((index - 1) >= 0)
+								{
+									$previousOption = $(this.menu.$options[(index - 1)]);
+								}
+							}
+						}
+					}, this));
+
+					if(!$previousOption)
 					{
-						previousChild = this.menu.$options.last();
+						$previousOption = $(this.menu.$options[(this.menu.$options.length - 1)]);
 					}
 
 					this.menu.$options.removeClass('hover');
 
-					previousChild.addClass('hover');
+					$previousOption.addClass('hover');
 				}
 				else
 				{
