@@ -59,9 +59,11 @@ Garnish.MenuBtn = Garnish.Base.extend({
 			{
 				ev.preventDefault();
 
-				if(this.menu.$options.filter('.hover').length > 0)
+				var $currentOption = this.menu.$options.filter('.hover');
+
+				if($currentOption.length > 0)
 				{
-					this.menu.$options.filter('.hover').trigger('click');
+					$currentOption.trigger('click');
 				}
 
 				break;
@@ -76,10 +78,12 @@ Garnish.MenuBtn = Garnish.Base.extend({
 					this.showMenu();
 
 					this.menu.$options.removeClass('hover');
-					
-					if(this.menu.$options.filter('.sel').length > 0)
+
+					var $selectedOption = this.menu.$options.filter('.sel:first');
+
+					if($selectedOption.length > 0)
 					{
-						this.menu.$options.filter('.sel:first').addClass('hover');
+						$selectedOption.addClass('hover');
 					}
 					else
 					{
@@ -127,9 +131,11 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 					this.menu.$options.removeClass('hover');
 
-					if(this.menu.$options.filter('.sel').length > 0)
+					var $selectedOption = this.menu.$options.filter('.sel:first');
+
+					if($selectedOption.length > 0)
 					{
-						this.menu.$options.filter('.sel:first').addClass('hover');
+						$selectedOption.addClass('hover');
 					}
 					else
 					{
@@ -177,9 +183,11 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 					this.menu.$options.removeClass('hover');
 
-					if(this.menu.$options.filter('.sel').length > 0)
+					var $selectedOption = this.menu.$options.filter('.sel:first');
+
+					if($selectedOption.length > 0)
 					{
-						this.menu.$options.filter('.sel:first').addClass('hover');
+						$selectedOption.addClass('hover');
 					}
 					else
 					{
