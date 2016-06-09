@@ -228,6 +228,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 		this.menu.show();
 		this.$btn.addClass('active');
+		this.$btn.trigger('focus');
 		this.showingMenu = true;
 
 		setTimeout($.proxy(function() {

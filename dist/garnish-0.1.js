@@ -4038,7 +4038,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 					this.menu.$options.removeClass('hover');
 
 					var $selectedOption = this.menu.$options.filter('.sel:first');
-					
+
 					if($selectedOption.length > 0)
 					{
 						$selectedOption.addClass('hover');
@@ -4186,6 +4186,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 		this.menu.show();
 		this.$btn.addClass('active');
+		this.$btn.trigger('focus');
 		this.showingMenu = true;
 
 		setTimeout($.proxy(function() {
@@ -4208,6 +4209,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 	onOptionSelect: function(option)
 	{
+		console.log('onOptionSelect');
 		this.settings.onOptionSelect(option);
 		this.trigger('optionSelect', { option: option });
 	},
