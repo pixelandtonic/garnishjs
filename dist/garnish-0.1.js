@@ -4209,7 +4209,6 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 	onOptionSelect: function(option)
 	{
-		console.log('onOptionSelect');
 		this.settings.onOptionSelect(option);
 		this.trigger('optionSelect', { option: option });
 	},
