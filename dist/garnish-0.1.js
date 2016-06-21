@@ -4021,7 +4021,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 				if($currentOption.length > 0)
 				{
-					$currentOption.trigger('click');
+					$currentOption.get(0).click();
 				}
 
 				break;
