@@ -4,6 +4,7 @@
 Garnish.MenuBtn = Garnish.Base.extend({
 
 	$btn: null,
+	$menuList: null,
 	menu: null,
 	showingMenu: false,
 	disabled: true,
@@ -13,6 +14,8 @@ Garnish.MenuBtn = Garnish.Base.extend({
 	 */
 	init: function(btn, settings)
 	{
+		var menuId = 'menu' + this._namespace;
+
 		this.$btn = $(btn);
 
 		// Is this already a menu button?
@@ -30,13 +33,37 @@ Garnish.MenuBtn = Garnish.Base.extend({
 		}
 
 		this.$btn.data('menubtn', this);
-		this.$btn.attr('tabindex', '0');
 
 		this.setSettings(settings, Garnish.MenuBtn.defaults);
 
 		this.menu = new Garnish.Menu($menu, {
 			anchor: (this.settings.menuAnchor || this.$btn),
 			onOptionSelect: $.proxy(this, 'onOptionSelect')
+		});
+
+		this.$menuList = $('ul', this.menu.$container);
+
+		this.$btn.attr({
+			'tabindex': 0,
+			'role': 'combobox',
+			'aria-owns': menuId,
+			'aria-haspopup': 'true',
+			'aria-expanded': 'false',
+		});
+
+		this.$menuList.attr({
+			'role': 'listbox',
+			'id': menuId,
+			'aria-hidden': 'true'
+		});
+
+		this.menu.$options.attr({
+			'role':'option',
+			'tabindex':'-1'
+		});
+
+		this.menu.$options.each(function(key, value) {
+			$(this).attr('id', menuId+'-option-'+key);
 		});
 
 		this.menu.on('hide', $.proxy(this, 'onMenuHide'));
@@ -48,7 +75,10 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 	onBlur: function(ev)
 	{
-		this.hideMenu();
+		if (this.showingMenu)
+		{
+			this.hideMenu();
+		}
 	},
 
 	onKeyDown: function(ev)
@@ -76,19 +106,19 @@ Garnish.MenuBtn = Garnish.Base.extend({
 				if(!this.showingMenu)
 				{
 					this.showMenu();
+					
+					var $option = this.menu.$options.filter('.sel:first');
 
-					this.menu.$options.removeClass('hover');
-
-					var $selectedOption = this.menu.$options.filter('.sel:first');
-
-					if($selectedOption.length > 0)
+					if($option.length > 0)
 					{
-						$selectedOption.addClass('hover');
+						$option;
 					}
 					else
 					{
-						this.menu.$options.first().addClass('hover');
+						$option = this.menu.$options.first();
 					}
+
+					this.focusOption($option);
 				}
 
 				break;
@@ -98,50 +128,42 @@ Garnish.MenuBtn = Garnish.Base.extend({
 			{
 				ev.preventDefault();
 
+				var $option;
+
 				if(this.showingMenu)
 				{
-					var $nextOption = null;
-
 					$.each(this.menu.$options, $.proxy(function(index, value)
 					{
-						if(!$nextOption)
+						if(!$option)
 						{
 							if($(value).hasClass('hover'))
 							{
 								if((index + 1) < this.menu.$options.length)
 								{
-									$nextOption = $(this.menu.$options[(index + 1)]);
+									$option = $(this.menu.$options[(index + 1)]);
 								}
 							}
 						}
 					}, this));
 
-					if(!$nextOption)
+					if(!$option)
 					{
-						$nextOption = $(this.menu.$options[0]);
+						$option = $(this.menu.$options[0]);
 					}
-
-					this.menu.$options.removeClass('hover');
-
-					$nextOption.addClass('hover');
 				}
 				else
 				{
 					this.showMenu();
 
-					this.menu.$options.removeClass('hover');
+					$option = this.menu.$options.filter('.sel:first');
 
-					var $selectedOption = this.menu.$options.filter('.sel:first');
-
-					if($selectedOption.length > 0)
+					if($option.length == 0)
 					{
-						$selectedOption.addClass('hover');
-					}
-					else
-					{
-						this.menu.$options.first().addClass('hover');
+						$option = this.menu.$options.first();
 					}
 				}
+
+				this.focusOption($option);
 
 				break;
 			}
@@ -150,54 +172,56 @@ Garnish.MenuBtn = Garnish.Base.extend({
 			{
 				ev.preventDefault();
 
+				var $option;
+
 				if(this.showingMenu)
 				{
-					var $previousOption = null;
-
 					$.each(this.menu.$options, $.proxy(function(index, value)
 					{
-						if(!$previousOption)
+						if(!$option)
 						{
 							if($(value).hasClass('hover'))
 							{
 								if((index - 1) >= 0)
 								{
-									$previousOption = $(this.menu.$options[(index - 1)]);
+									$option = $(this.menu.$options[(index - 1)]);
 								}
 							}
 						}
 					}, this));
 
-					if(!$previousOption)
+					if(!$option)
 					{
-						$previousOption = $(this.menu.$options[(this.menu.$options.length - 1)]);
+						$option = $(this.menu.$options[(this.menu.$options.length - 1)]);
 					}
-
-					this.menu.$options.removeClass('hover');
-
-					$previousOption.addClass('hover');
 				}
 				else
 				{
 					this.showMenu();
 
-					this.menu.$options.removeClass('hover');
+					$option = this.menu.$options.filter('.sel:first');
 
-					var $selectedOption = this.menu.$options.filter('.sel:first');
-
-					if($selectedOption.length > 0)
+					if($option.length == 0)
 					{
-						$selectedOption.addClass('hover');
-					}
-					else
-					{
-						this.menu.$options.last().addClass('hover');
+						$option = this.menu.$options.last();
 					}
 				}
+
+				this.focusOption($option);
 
 				break;
 			}
 		}
+	},
+
+	focusOption: function($option)
+	{
+		this.menu.$options.removeClass('hover');
+
+		$option.addClass('hover');
+
+		this.$menuList.attr('aria-activedescendant', $option.attr('id'));
+		this.$btn.attr('aria-activedescendant', $option.attr('id'));
 	},
 
 	onMouseDown: function(ev)
@@ -229,6 +253,8 @@ Garnish.MenuBtn = Garnish.Base.extend({
 		this.menu.show();
 		this.$btn.addClass('active');
 		this.$btn.trigger('focus');
+		this.$btn.attr('aria-expanded', 'true');
+		this.$menuList.attr('aria-hidden', 'false');
 		this.showingMenu = true;
 
 		setTimeout($.proxy(function() {
@@ -239,6 +265,8 @@ Garnish.MenuBtn = Garnish.Base.extend({
 	hideMenu: function()
 	{
 		this.menu.hide();
+		this.$btn.attr('aria-expanded', 'false');
+		this.$menuList.attr('aria-hidden', 'true');
 	},
 
 	onMenuHide: function()
