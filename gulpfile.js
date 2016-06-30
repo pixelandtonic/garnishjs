@@ -43,7 +43,7 @@ var plumberErrorHandler = function(err) {
 gulp.task('build', buildTask);
 gulp.task('watch', watchTask);
 
-gulp.task('default', ['build', 'watch']);
+gulp.task('default', ['build']);
 
 function buildTask()
 {
@@ -64,6 +64,7 @@ function buildTask()
 
 }
 
-function watchTask() {
+function watchTask()
+{
 	return gulp.watch(srcDir+'**', ['build']);
 }
