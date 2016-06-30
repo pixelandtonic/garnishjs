@@ -59,7 +59,12 @@ function buildTask()
 		.pipe(gulp.dest(outDir))
 		.pipe(uglify())
 		.pipe(concat('garnish-'+version+'.min.js'))
-		.pipe(sourcemaps.write('../'+outDir))
+		.pipe(sourcemaps.write('../'+outDir, {
+			mapFile: function(mapFilePath) {
+				// source map files are named *.map instead of *.js.map
+				return mapFilePath.replace('.js.map', '.map');
+			}
+		}))
 		.pipe(gulp.dest(outDir));
 
 }
