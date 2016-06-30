@@ -6,15 +6,14 @@ Install npm dependencies:
 
     npm install
 
-Run default tasks (build, watch):
+Default (same as build):
 
     gulp
 
-Customize the destination folder of the build process:
+Build:
 
-    gulp --dest=../Craft/Source/craft/app/resources/lib/
+	gulp build
 
-Available Gulp tasks:
+Watch:
 
-    gulp build
     gulp watch
