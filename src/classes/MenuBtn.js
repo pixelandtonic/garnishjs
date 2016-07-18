@@ -4,7 +4,6 @@
 Garnish.MenuBtn = Garnish.Base.extend({
 
 	$btn: null,
-	$menuList: null,
 	menu: null,
 	showingMenu: false,
 	disabled: true,
@@ -14,8 +13,6 @@ Garnish.MenuBtn = Garnish.Base.extend({
 	 */
 	init: function(btn, settings)
 	{
-		var menuId = 'menu' + this._namespace;
-
 		this.$btn = $(btn);
 
 		// Is this already a menu button?
@@ -41,29 +38,12 @@ Garnish.MenuBtn = Garnish.Base.extend({
 			onOptionSelect: $.proxy(this, 'onOptionSelect')
 		});
 
-		this.$menuList = $('ul', this.menu.$container);
-
 		this.$btn.attr({
 			'tabindex': 0,
 			'role': 'combobox',
-			'aria-owns': menuId,
+			'aria-owns': this.menu.menuId,
 			'aria-haspopup': 'true',
 			'aria-expanded': 'false',
-		});
-
-		this.$menuList.attr({
-			'role': 'listbox',
-			'id': menuId,
-			'aria-hidden': 'true'
-		});
-
-		this.menu.$options.attr({
-			'role':'option',
-			'tabindex':'-1'
-		});
-
-		this.menu.$options.each(function(key, value) {
-			$(this).attr('id', menuId+'-option-'+key);
 		});
 
 		this.menu.on('hide', $.proxy(this, 'onMenuHide'));
@@ -220,7 +200,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 
 		$option.addClass('hover');
 
-		this.$menuList.attr('aria-activedescendant', $option.attr('id'));
+		this.menu.$menuList.attr('aria-activedescendant', $option.attr('id'));
 		this.$btn.attr('aria-activedescendant', $option.attr('id'));
 	},
 
@@ -254,7 +234,7 @@ Garnish.MenuBtn = Garnish.Base.extend({
 		this.$btn.addClass('active');
 		this.$btn.trigger('focus');
 		this.$btn.attr('aria-expanded', 'true');
-		this.$menuList.attr('aria-hidden', 'false');
+
 		this.showingMenu = true;
 
 		setTimeout($.proxy(function() {
@@ -266,7 +246,6 @@ Garnish.MenuBtn = Garnish.Base.extend({
 	{
 		this.menu.hide();
 		this.$btn.attr('aria-expanded', 'false');
-		this.$menuList.attr('aria-hidden', 'true');
 	},
 
 	onMenuHide: function()
