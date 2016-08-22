@@ -1,0 +1,22 @@
+{
+  "name": "Garnish",
+  "description": "Garnish UI toolkit",
+  "main": "gulpfile.js",
+  "authors": [
+    "Brandon Kelly"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "garnish",
+    "ui",
+    "toolkit"
+  ],
+  "homepage": "https://github.com/pixelandtonic/Garnish",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
