@@ -1,5 +1,5 @@
 {
-  "name": "Garnish",
+  "name": "garnishjs",
   "description": "Garnish UI toolkit",
   "main": "gulpfile.js",
   "authors": [
@@ -8,6 +8,7 @@
   "license": "MIT",
   "keywords": [
     "garnish",
+    "garnishjs",
     "ui",
     "toolkit"
   ],
