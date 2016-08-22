@@ -12,7 +12,7 @@
     "ui",
     "toolkit"
   ],
-  "homepage": "https://github.com/pixelandtonic/Garnish",
+  "homepage": "https://github.com/pixelandtonic/garnishjs",
   "ignore": [
     "**/.*",
     "node_modules",
