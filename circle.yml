@@ -1,3 +1,6 @@
+general:
+  artifacts:
+    - "coverage"
 dependencies:
   override:
     - npm install
