@@ -1,19 +1,13 @@
 # Garnish
 
-## Building
+## Building & Testing
 
-Install npm dependencies:
+To build, run `gulp build`
 
-    npm install
+To watch, run `gulp watch`
 
-Default (same as build):
+To test, run `gulp test`
 
-    gulp
+## License
 
-Build:
-
-	gulp build
-
-Watch:
-
-    gulp watch
+Garnish is available under the [MIT license](LICENSE)

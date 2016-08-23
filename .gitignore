@@ -1,7 +1,5 @@
 .DS_Store
-
 Source/.idea/
-
 /.idea
-
 node_modules/*
+/coverage

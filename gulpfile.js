@@ -9,6 +9,8 @@ var gulp = require('gulp'),
 	notify = require('gulp-notify'),
 	plumber = require('gulp-plumber');
 
+var Server = require('karma').Server;
+
 var srcDir = './src/';
 var outDir = './dist/';
 
@@ -42,6 +44,9 @@ var plumberErrorHandler = function(err) {
 
 gulp.task('build', buildTask);
 gulp.task('watch', watchTask);
+gulp.task('coverage', coverageTask);
+gulp.task('test', ['unittest']);
+gulp.task('unittest', unittestTask);
 
 gulp.task('default', ['build']);
 
@@ -72,4 +77,20 @@ function buildTask()
 function watchTask()
 {
 	return gulp.watch(srcDir+'**', ['build']);
+}
+
+function coverageTask(done)
+{
+	new Server({
+		configFile: __dirname + '/karma.coverage.conf.js',
+		singleRun: true
+	}, done).start();
+}
+
+function unittestTask(done)
+{
+	new Server({
+		configFile: __dirname + '/karma.conf.js',
+		singleRun: true
+	}, done).start();
 }
