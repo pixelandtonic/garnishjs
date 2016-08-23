@@ -1,5 +1,7 @@
 # Garnish
 
+[![CircleCI](https://img.shields.io/circleci/project/pixelandtonic/garnishjs.svg?maxAge=2592000)](https://circleci.com/gh/pixelandtonic/garnishjs)
+
 ## Installing Dependencies
 
 To install dependencies, run `npm install`.
