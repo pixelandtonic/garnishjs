@@ -1,0 +1,8 @@
+dependencies:
+  override:
+    - npm install
+test:
+  override:
+    - gulp build
+    - gulp test
+    - gulp coverage
