@@ -3,6 +3,6 @@ dependencies:
     - npm install
 test:
   override:
-    - gulp build
-    - gulp test
-    - gulp coverage
+    - ./node_modules/.bin/gulp build
+    - ./node_modules/.bin/gulp test
+    - ./node_modules/.bin/gulp coverage
