@@ -1,6 +1,5 @@
 describe("Garnish tests", function() {
 
-
 	it("Checks whether a variable is an array.", function() {
 
 		var mockArray = ['row 1', 'row 2'];
