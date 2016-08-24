@@ -2,7 +2,7 @@
 
 [![GitHub release](https://img.shields.io/github/release/pixelandtonic/garnishjs.svg?maxAge=2592000)](https://github.com/pixelandtonic/garnishjs/releases)
 [![CircleCI](https://img.shields.io/circleci/project/pixelandtonic/garnishjs.svg?maxAge=2592000)](https://circleci.com/gh/pixelandtonic/garnishjs)
-[![Coverage Status](https://coveralls.io/repos/github/pixelandtonic/garnishjs/badge.svg?branch=feature%2Ftesting)](https://coveralls.io/github/pixelandtonic/garnishjs?branch=feature%2Ftesting)
+[![Coverage Status](https://coveralls.io/repos/github/pixelandtonic/garnishjs/badge.svg)](https://coveralls.io/github/pixelandtonic/garnishjs)
 [![license](https://img.shields.io/github/license/pixelandtonic/garnishjs.svg?maxAge=2592000)](LICENSE)
 
 *Garnish UI Toolkit*
