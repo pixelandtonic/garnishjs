@@ -7,11 +7,13 @@ var gulp = require('gulp'),
 	watch = require('gulp-watch'),
 	sourcemaps = require('gulp-sourcemaps'),
 	notify = require('gulp-notify'),
-	plumber = require('gulp-plumber');
+	plumber = require('gulp-plumber'),
+	util = require('gulp-util');
 
 var Server = require('karma').Server;
 
 var srcDir = './src/';
+var testDir = './test/';
 var outDir = './dist/';
 
 var jsHeader = "/**\n" +
@@ -48,7 +50,7 @@ gulp.task('coverage', coverageTask);
 gulp.task('test', ['unittest']);
 gulp.task('unittest', unittestTask);
 
-gulp.task('default', ['build']);
+gulp.task('default', ['build', 'watch']);
 
 function buildTask()
 {
@@ -76,6 +78,10 @@ function buildTask()
 
 function watchTask()
 {
+	if (util.env.test) {
+		return gulp.watch([srcDir+'**', testDir+'**'], ['build', 'unittest']);
+	}
+
 	return gulp.watch(srcDir+'**', ['build']);
 }
 

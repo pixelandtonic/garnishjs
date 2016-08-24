@@ -31,6 +31,7 @@
     "gulp-plumber": "^1.1.0",
     "gulp-sourcemaps": "^2.0.0-alpha",
     "gulp-uglify": "^1.5.3",
+    "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.6",
     "jasmine-core": "^2.4.1",
     "karma": "^1.2.0",
