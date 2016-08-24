@@ -14,6 +14,18 @@ describe("Garnish.Menu tests", function() {
 
 		expect(menu.$container.css('opacity')).toEqual('1');
 		expect(menu.$container.css('display')).toEqual('block');
+		expect(menu.$menuList.attr('aria-hidden')).toEqual('false');
+	});
+
+	it("Should hide the Menu.", function() {
+		menu.hide();
+
+		setTimeout(function() {
+			expect(menu.$container.css('opacity')).toEqual('0');
+			expect(menu.$container.css('display')).toEqual('none');
+		}, Garnish.FX_DURATION);
+
+		expect(menu.$menuList.attr('aria-hidden')).toEqual('true');
 	});
 
 });
