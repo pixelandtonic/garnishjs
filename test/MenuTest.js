@@ -3,7 +3,11 @@ describe("Garnish.Menu tests", function() {
 	var $menu = $('<div class="menu tagmenu"/>').appendTo(Garnish.$bod),
 		$ul = $('<ul/>').appendTo($menu);
 
-	var menu = new Garnish.Menu($menu);
+	var $anchor = $('<div class="anchor"></div>').appendTo(Garnish.$bod);
+	
+	var menu = new Garnish.Menu($menu, {
+		anchor: $anchor,
+	});
 
 	it("Should instantiate the Menu.", function() {
 		expect(menu.menuId).toEqual('menu' + menu._namespace);
