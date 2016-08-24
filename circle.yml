@@ -9,3 +9,4 @@ test:
     - ./node_modules/.bin/gulp build
     - ./node_modules/.bin/gulp test
     - ./node_modules/.bin/gulp coverage
+    - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
