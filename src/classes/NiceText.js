@@ -247,13 +247,19 @@ Garnish.NiceText = Garnish.Base.extend({
 			val = val.replace(/</g, '&lt;');
 			val = val.replace(/>/g, '&gt;');
 
-			// Spaces
-			val = val.replace(/ /g, '&nbsp;');
+			// Multiple spaces
+			val = val.replace(/ {2,}/g, function(spaces) {
+				// TODO: replace with String.repeat() when more broadly available?
+				var replace = '';
+				for (var i = 0; i < spaces.length - 1; i++) {
+					replace += '&nbsp;';
+				}
+				return replace+' ';
+			});
 
 			// Line breaks
 			val = val.replace(/[\n\r]$/g, '');
 			val = val.replace(/[\n\r]/g, '<br/>');
-			val += '<br/>&nbsp;';
 		}
 
 		this.$stage.html(val);
