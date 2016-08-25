@@ -1,6 +1,5 @@
 {
   "name": "garnishjs",
-  "version": "0.1.0",
   "description": "Garnish UI toolkit",
   "main": "gulpfile.js",
   "scripts": {
