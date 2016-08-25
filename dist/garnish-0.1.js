@@ -5161,7 +5161,7 @@ Garnish.NiceText = Garnish.Base.extend({
 
 	updateHeightIfWidthChanged: function()
 	{
-		if (this.width !== (this.width = this.$input.width()) && this.width)
+		if (this.isVisible() && this.width !== (this.width = this.$input.width()) && this.width)
 		{
 			this.updateHeight();
 		}
