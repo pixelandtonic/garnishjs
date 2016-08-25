@@ -1,4 +1,4 @@
-var version = '0.1';
+var version = '0.1.1';
 
 var gulp = require('gulp'),
 	concat = require('gulp-concat'),
@@ -22,7 +22,7 @@ var jsHeader = "/**\n" +
 	" * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.\n" +
 	" * @author    Brandon Kelly <brandon@pixelandtonic.com>\n" +
 	" * @version   " + version + "\n" +
-	" * @license   THIS IS NO F.O.S.S!\n" +
+	" * @license   MIT\n" +
 	" */\n" +
 	"(function($){\n" +
 	"\n";
