@@ -69,12 +69,12 @@ function buildTask()
 	return gulp.src([srcDir+'*.js', srcDir+'classes/*.js'], { base: dest })
 		.pipe(plumber({ errorHandler: plumberErrorHandler }))
 		.pipe(sourcemaps.init())
-		.pipe(concat('garnish-'+version+'.js'))
+		.pipe(concat('garnish.js'))
 		.pipe(insert.prepend(jsHeader))
 		.pipe(insert.append(jsFooter))
 		.pipe(gulp.dest(dest))
 		.pipe(uglify())
-		.pipe(concat('garnish-'+version+'.min.js'))
+		.pipe(concat('garnish.min.js'))
 		.pipe(sourcemaps.write('.', {
 			mapFile: function(mapFilePath) {
 				// source map files are named *.map instead of *.js.map
