@@ -44,8 +44,7 @@ function buildTask()
 	// Allow overriding the dest directory
 	// > gulp build --dest /path/to/dest
 	// > gulp build -d /path/to/dest
-	// > gulp build /path/to/dest
-	var dest = yargs.argv.dest || yargs.argv.d || yargs.argv._[1] || defaultDest;
+	var dest = yargs.argv.dest || yargs.argv.d || defaultDest;
 
 	// Allow overriding the version
 	// > gulp build --version 1.0.0
