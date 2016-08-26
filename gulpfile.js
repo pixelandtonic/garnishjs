@@ -1,5 +1,3 @@
-var version = '0.1.1';
-
 var gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	insert = require('gulp-insert'),
@@ -8,27 +6,16 @@ var gulp = require('gulp'),
 	sourcemaps = require('gulp-sourcemaps'),
 	notify = require('gulp-notify'),
 	plumber = require('gulp-plumber'),
-	util = require('gulp-util');
+	util = require('gulp-util'),
+	yargs = require('yargs');
 
 var Server = require('karma').Server;
 
 var srcDir = './src/';
 var testDir = './test/';
-var outDir = './dist/';
+var defaultDest = './dist/';
 
-var jsHeader = "/**\n" +
-	" * Garnish UI toolkit\n" +
-	" *\n" +
-	" * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.\n" +
-	" * @author    Brandon Kelly <brandon@pixelandtonic.com>\n" +
-	" * @version   " + version + "\n" +
-	" * @license   MIT\n" +
-	" */\n" +
-	"(function($){\n" +
-	"\n";
-
-var jsFooter = "\n" +
-    "})(jQuery);\n";
+var defaultVersion = '0.1';
 
 //error notification settings for plumber
 var plumberErrorHandler = function(err) {
@@ -54,26 +41,47 @@ gulp.task('default', ['build', 'watch']);
 
 function buildTask()
 {
-	return gulp.src([
-			srcDir+'*.js',
-			srcDir+'classes/*.js',
-		])
+	// Allow overriding the dest directory
+	// > gulp build --dest /path/to/dest
+	// > gulp build -d /path/to/dest
+	// > gulp build /path/to/dest
+	var dest = yargs.argv.dest || yargs.argv.d || yargs.argv._[1] || defaultDest;
+
+	// Allow overriding the version
+	// > gulp build --version 1.0.0
+	// > gulp build -v 1.0.0
+	var version = yargs.argv.version || yargs.argv.v || defaultVersion;
+
+	var jsHeader = "/**\n" +
+		" * Garnish UI toolkit\n" +
+		" *\n" +
+		" * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.\n" +
+		" * @author    Brandon Kelly <brandon@pixelandtonic.com>\n" +
+		" * @version   " + version + "\n" +
+		" * @license   MIT\n" +
+		" */\n" +
+		"(function($){\n" +
+		"\n";
+
+	var jsFooter = "\n" +
+	    "})(jQuery);\n";
+
+	return gulp.src([srcDir+'*.js', srcDir+'classes/*.js'], { base: dest })
 		.pipe(plumber({ errorHandler: plumberErrorHandler }))
 		.pipe(sourcemaps.init())
 		.pipe(concat('garnish-'+version+'.js'))
 		.pipe(insert.prepend(jsHeader))
 		.pipe(insert.append(jsFooter))
-		.pipe(gulp.dest(outDir))
+		.pipe(gulp.dest(dest))
 		.pipe(uglify())
 		.pipe(concat('garnish-'+version+'.min.js'))
-		.pipe(sourcemaps.write('../'+outDir, {
+		.pipe(sourcemaps.write('.', {
 			mapFile: function(mapFilePath) {
 				// source map files are named *.map instead of *.js.map
 				return mapFilePath.replace('.js.map', '.map');
 			}
 		}))
-		.pipe(gulp.dest(outDir));
-
+		.pipe(gulp.dest(dest));
 }
 
 function watchTask()

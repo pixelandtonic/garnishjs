@@ -42,7 +42,8 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-requirejs": "^1.0.0",
     "requirejs": "^2.2.0",
-    "watchify": "^3.7.0"
+    "watchify": "^3.7.0",
+    "yargs": "^4.2.0"
   },
   "dependencies": {}
 }
