@@ -62,6 +62,9 @@ Garnish.Menu = Garnish.Base.extend({
 		this.addListener(this.$container, 'mousedown', function(ev)
 		{
 			ev.stopPropagation();
+
+			// Prevent this from causing the menu button to blur
+			ev.preventDefault();
 		});
 	},
 
