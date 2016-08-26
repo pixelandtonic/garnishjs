@@ -11,10 +11,10 @@
 
 You can download the latest version of [garnishjs on GitHub](https://github.com/pixelandtonic/garnishjs/releases/latest).
 
-To install via npm:
+To install via bower:
 
 ```bash
-npm install garnishjs --save
+bower install garnishjs
 ```
 
 ## Building & Testing
