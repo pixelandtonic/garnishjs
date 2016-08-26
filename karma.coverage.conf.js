@@ -4,13 +4,13 @@ module.exports = function(config) {
     browsers: ['Firefox'],
     frameworks: ['browserify', 'jasmine'],
     preprocessors: {
-      'dist/garnish-0.1.js': ['browserify']
+      'dist/garnish.js': ['browserify']
     },
 
     files: [
       'https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.js',
-      'dist/garnish-0.1.js',
+      'dist/garnish.js',
       'test/**/*.js'
     ],
 
