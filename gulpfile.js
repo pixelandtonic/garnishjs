@@ -7,13 +7,15 @@ var gulp = require('gulp'),
 	notify = require('gulp-notify'),
 	plumber = require('gulp-plumber'),
 	util = require('gulp-util'),
-	yargs = require('yargs');
+	yargs = require('yargs'),
+	docco = require("gulp-docco");
 
 var Server = require('karma').Server;
 
 var srcDir = './src/';
 var testDir = './test/';
 var defaultDest = './dist/';
+var docsDest = './docs/';
 
 var defaultVersion = '0.1';
 
@@ -38,6 +40,8 @@ gulp.task('test', ['unittest']);
 gulp.task('unittest', unittestTask);
 
 gulp.task('default', ['build', 'watch']);
+
+gulp.task('docs', docsTask);
 
 function buildTask()
 {
@@ -106,4 +110,13 @@ function unittestTask(done)
 		configFile: __dirname + '/karma.conf.js',
 		singleRun: true
 	}, done).start();
+}
+
+function docsTask()
+{
+	var dest = yargs.argv.dest || yargs.argv.d || docsDest;
+
+	gulp.src([srcDir+'*.js', srcDir+'classes/*.js'])
+		.pipe(docco())
+		.pipe(gulp.dest(dest))
 }
