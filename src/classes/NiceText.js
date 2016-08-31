@@ -258,7 +258,7 @@ Garnish.NiceText = Garnish.Base.extend({
 			});
 
 			// Line breaks
-			val = val.replace(/[\n\r]$/g, '');
+			val = val.replace(/[\n\r]$/g, '<br/>&nbps;');
 			val = val.replace(/[\n\r]/g, '<br/>');
 		}
 
