@@ -69,7 +69,7 @@ Garnish.HUD = Garnish.Base.extend({
 		this.show();
 
 		this.addListener(this.$body, 'submit', '_handleSubmit');
-		this.addListener(this.$shade, 'click', 'hide');
+		this.addListener(this.$shade, 'tap', 'hide');
 
 		if (!this.$fixedTriggerParent && Garnish.$scrollContainer[0] != Garnish.$win[0])
 		{
