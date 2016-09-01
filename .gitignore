@@ -3,3 +3,4 @@ Source/.idea/
 /.idea
 node_modules/*
 /coverage
+bower_components/*

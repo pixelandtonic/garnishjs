@@ -8,6 +8,7 @@ var gulp = require('gulp'),
 	plumber = require('gulp-plumber'),
 	util = require('gulp-util'),
 	yargs = require('yargs'),
+	bower = require('gulp-bower'),
 	docco = require("gulp-docco");
 
 var Server = require('karma').Server;
@@ -18,6 +19,16 @@ var defaultDest = './dist/';
 var docsDest = './docs/';
 
 var defaultVersion = '0.1';
+
+var buildGlob = [
+	srcDir+'*.js',
+	srcDir+'classes/*.js',
+	srcDir+'libs/*.js'
+];
+
+var libsGlob = [
+	'bower_components/jquery-touch-events/src/jquery.mobile-events.js'
+];
 
 //error notification settings for plumber
 var plumberErrorHandler = function(err) {
@@ -33,7 +44,8 @@ var plumberErrorHandler = function(err) {
 	this.emit('end');
 };
 
-gulp.task('build', buildTask);
+gulp.task('build', ['buildLibs'], buildTask);
+gulp.task('buildLibs', ['bower'], buildLibsTask);
 gulp.task('watch', watchTask);
 gulp.task('coverage', coverageTask);
 gulp.task('test', ['unittest']);
@@ -41,7 +53,15 @@ gulp.task('unittest', unittestTask);
 
 gulp.task('default', ['build', 'watch']);
 
+gulp.task('bower', bowerTask);
 gulp.task('docs', docsTask);
+
+function buildLibsTask(cb)
+{
+	return gulp.src(libsGlob)
+		.pipe(gulp.dest(srcDir + 'libs/'));
+
+}
 
 function buildTask()
 {
@@ -69,7 +89,7 @@ function buildTask()
 	var jsFooter = "\n" +
 	    "})(jQuery);\n";
 
-	return gulp.src([srcDir+'*.js', srcDir+'classes/*.js'], { base: dest })
+	return gulp.src(buildGlob, { base: dest })
 		.pipe(plumber({ errorHandler: plumberErrorHandler }))
 		.pipe(sourcemaps.init())
 		.pipe(concat('garnish.js'))
@@ -110,6 +130,13 @@ function unittestTask(done)
 		configFile: __dirname + '/karma.conf.js',
 		singleRun: true
 	}, done).start();
+}
+
+function bowerTask()
+{
+	gulp.task('bower', function() {
+		return bower();
+	});
 }
 
 function docsTask()
