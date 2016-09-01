@@ -4,3 +4,4 @@ Source/.idea/
 node_modules/*
 /coverage
 bower_components/*
+docs/*

@@ -9,7 +9,7 @@ var gulp = require('gulp'),
 	util = require('gulp-util'),
 	yargs = require('yargs'),
 	bower = require('gulp-bower'),
-	docco = require("gulp-docco");
+	jsdoc = require('gulp-jsdoc3');
 
 var Server = require('karma').Server;
 
@@ -139,11 +139,13 @@ function bowerTask()
 	});
 }
 
-function docsTask()
+function docsTask(cb)
 {
 	var dest = yargs.argv.dest || yargs.argv.d || docsDest;
 
-	gulp.src([srcDir+'*.js', srcDir+'classes/*.js'])
-		.pipe(docco())
-		.pipe(gulp.dest(dest))
+	gulp.src([
+		srcDir+'*.js',
+		srcDir+'classes/*.js'
+	], {read: false})
+		.pipe(jsdoc(cb));
 }
