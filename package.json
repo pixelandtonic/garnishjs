@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/pixelandtonic/Garnish",
   "devDependencies": {
+    "bower": "^1.7.9",
     "browserify": "^13.1.0",
     "browserify-istanbul": "^0.2.1",
     "coveralls": "^2.11.12",
