@@ -21,10 +21,15 @@ bower install garnishjs
 
 To build, run `gulp build`.
 
-Use the `-d` or `--dest` options to customize the destination:
+Use `-d` or `--dest` options to customize the destination:
 
 	gulp build --dest /path/to/dest
 	gulp build -d /path/to/dest
+	
+Use `-v` or `--version` options to customize the version:
+
+	gulp build --version 1.0.0
+	gulp build -v 1.0.0
 
 To watch, run `gulp watch`.
 
