@@ -1,5 +1,5 @@
-/*!
- * Garnish
+/**
+ * @namespace Garnish
  */
 
 // Bail if Garnish is already defined
