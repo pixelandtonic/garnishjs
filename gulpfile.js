@@ -59,29 +59,32 @@ function buildTask()
 	// > gulp build -v 1.0.0
 	var version = yargs.argv.version || yargs.argv.v || defaultVersion;
 
-	var jsHeader = "/**\n" +
+	var docBlock = "/**\n" +
 		" * Garnish UI toolkit\n" +
 		" *\n" +
 		" * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.\n" +
 		" * @author    Brandon Kelly <brandon@pixelandtonic.com>\n" +
 		" * @version   " + version + "\n" +
 		" * @license   MIT\n" +
-		" */\n" +
-		"(function($){\n" +
+		" */\n";
+
+	var jqueryOpen = "(function($){\n" +
 		"\n";
 
-	var jsFooter = "\n" +
+	var jqueryClose = "\n" +
 	    "})(jQuery);\n";
 
 	return gulp.src(buildGlob, { base: dest })
 		.pipe(plumber({ errorHandler: plumberErrorHandler }))
 		.pipe(sourcemaps.init())
 		.pipe(concat('garnish.js'))
-		.pipe(insert.prepend(jsHeader))
-		.pipe(insert.append(jsFooter))
+		.pipe(insert.prepend(jqueryOpen))
+		.pipe(insert.append(jqueryClose))
+		.pipe(insert.prepend(docBlock))
 		.pipe(gulp.dest(dest))
 		.pipe(uglify())
 		.pipe(concat('garnish.min.js'))
+		.pipe(insert.prepend(docBlock))
 		.pipe(sourcemaps.write('.', {
 			mapFile: function(mapFilePath) {
 				// source map files are named *.map instead of *.js.map
