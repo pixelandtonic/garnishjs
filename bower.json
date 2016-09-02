@@ -23,6 +23,7 @@
   "dependencies": {
     "jquery-touch-events": "^1.0.5"
     "velocity": "1.2.3",
+    "element-resize-detector": "1.1.7",
     "jquery": "2.2.1"
   }
 }

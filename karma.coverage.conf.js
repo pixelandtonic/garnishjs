@@ -10,6 +10,7 @@ module.exports = function(config) {
     files: [
       'bower_components/jquery/dist/jquery.js',
       'bower_components/velocity/velocity.js',
+      'bower_components/element-resize-detector/dist/element-resize-detector.js',
       'dist/garnish.js',
       'test/**/*.js'
     ],
