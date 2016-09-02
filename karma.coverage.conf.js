@@ -8,7 +8,7 @@ module.exports = function(config) {
     },
 
     files: [
-      'https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js',
+      'bower_components/jquery/dist/jquery.js',
       'bower_components/velocity/velocity.js',
       'dist/garnish.js',
       'test/**/*.js'
