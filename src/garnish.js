@@ -1,3 +1,7 @@
+/*!
+ * Garnish
+ */
+
 /**
  * @namespace Garnish
  */
