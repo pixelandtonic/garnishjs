@@ -80,6 +80,8 @@ Garnish.HUD = Garnish.Base.extend({
 		{
 			this.addListener(this.settings.closeBtn, 'activate', 'hide');
 		}
+
+		this.addListener(Garnish.$win, 'resize', 'updateSizeAndPosition');
 	},
 
 	/**
