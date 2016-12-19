@@ -50,13 +50,13 @@ gulp.task('default', ['build', 'watch']);
 function buildTask()
 {
 	// Allow overriding the dest directory
-	// > gulp build --dest /path/to/dest
-	// > gulp build -d /path/to/dest
+	// > gulp build --dest=/path/to/dest
+	// > gulp build -d=/path/to/dest
 	var dest = yargs.argv.dest || yargs.argv.d || defaultDest;
 
 	// Allow overriding the version
-	// > gulp build --version 1.0.0
-	// > gulp build -v 1.0.0
+	// > gulp build --version=1.0.0
+	// > gulp build -v=1.0.0
 	var version = yargs.argv.version || yargs.argv.v || defaultVersion;
 
 	var docBlock = "/**\n" +
