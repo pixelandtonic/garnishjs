@@ -1,7 +1,7 @@
 Garnish Changelog
 =================
 
-## [Unreleased] 
+## [v0.1.9] - 2016-12-19 
 
 ### Fixed
 - Fixed a bug where HUDs weren’t factoring in window/trigger padding when calculating the max size of the HUD alongside the trigger element
