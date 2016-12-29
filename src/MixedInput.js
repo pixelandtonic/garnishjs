@@ -57,7 +57,7 @@ Garnish.MixedInput = Garnish.Base.extend({
 	addElement: function($elem, index)
 	{
 		// Was a target index passed, and is it valid?
-		if (typeof index == 'undefined')
+		if (index === undefined)
 		{
 			if (this.focussedElement)
 			{
@@ -109,7 +109,7 @@ Garnish.MixedInput = Garnish.Base.extend({
 		}
 
 		// Add the element
-		if (typeof this.elements[index] != 'undefined')
+		if (this.elements[index] !== undefined)
 		{
 			$elem.insertBefore(this.elements[index]);
 			this.elements.splice(index, 0, $elem);

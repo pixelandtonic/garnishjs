@@ -42,7 +42,7 @@ Garnish.Drag = Garnish.BaseDrag.extend({
 	init: function(items, settings)
 	{
 		// Param mapping
-		if (typeof settings == typeof undefined && $.isPlainObject(items))
+		if (settings === undefined && $.isPlainObject(items))
 		{
 			// (settings)
 			settings = items;

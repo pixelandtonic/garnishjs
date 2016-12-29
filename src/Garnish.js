@@ -3,7 +3,7 @@
  */
 
 // Bail if Garnish is already defined
-if (typeof Garnish != 'undefined')
+if (Garnish !== undefined)
 {
 	throw 'Garnish is already defined!';
 }
@@ -61,7 +61,7 @@ Garnish = $.extend(Garnish, {
 	 */
 	log: function(msg)
 	{
-		if (typeof console != 'undefined' && typeof console.log == 'function')
+		if (console !== undefined && typeof console.log == 'function')
 		{
 			console.log(msg);
 		}
@@ -133,7 +133,7 @@ Garnish = $.extend(Garnish, {
 	hasAttr: function(elem, attr)
 	{
 		var val = $(elem).attr(attr);
-		return (typeof val != 'undefined' && val !== false);
+		return (val !== undefined && val !== false);
 	},
 
 	/**
@@ -296,7 +296,7 @@ Garnish = $.extend(Garnish, {
 	 */
 	scrollContainerToElement: function(container, elem)
 	{
-		if (typeof elem === typeof undefined)
+		if (elem === undefined)
 		{
 			var $elem = $(container);
 				$container = $elem.scrollParent();
@@ -528,7 +528,7 @@ Garnish = $.extend(Garnish, {
 				var croppedName = inputName.substring(0, inputName.length-2);
 
 				// Prep the input counter
-				if (typeof arrayInputCounters[croppedName] == 'undefined')
+				if (arrayInputCounters[croppedName] === undefined)
 				{
 					arrayInputCounters[croppedName] = 0;
 				}
@@ -561,7 +561,7 @@ Garnish = $.extend(Garnish, {
 
 		for (var i = 0; i < $sourceInputs.length; i++)
 		{
-			if (typeof $targetInputs[i] == typeof undefined)
+			if ($targetInputs[i] === undefined)
 			{
 				break;
 			}
@@ -620,7 +620,7 @@ Garnish.Base = Base.extend({
 
 	setSettings: function(settings, defaults)
 	{
-		var baseSettings = (typeof this.settings == 'undefined' ? {} : this.settings);
+		var baseSettings = (this.settings === undefined ? {} : this.settings);
 		this.settings = $.extend({}, baseSettings, defaults, settings);
 	},
 
@@ -674,7 +674,7 @@ Garnish.Base = Base.extend({
 			target: this
 		};
 
-		if (typeof params == 'undefined')
+		if (params === undefined)
 		{
 			params = [];
 		}
@@ -749,7 +749,7 @@ Garnish.Base = Base.extend({
 		events = this._splitEvents(events);
 
 		// Param mapping
-		if (typeof func == typeof undefined && typeof data != 'object')
+		if (func === undefined && typeof data != 'object')
 		{
 			// (elem, events, func)
 			func = data;
@@ -814,7 +814,7 @@ var erd;
 
 function getErd()
 {
-	if (typeof erd == typeof undefined)
+	if (erd === undefined)
 	{
 		erd = elementResizeDetectorMaker();
 	}
@@ -902,7 +902,7 @@ $.extend(jQuery.event.special, {
 		handle: function(ev, data) {
 			var el = this;
 			var args = arguments;
-			var delay = data && typeof data.delay != typeof undefined ? data.delay : (ev.data && typeof ev.data.delay != typeof undefined ? ev.data.delay : null);
+			var delay = data && data.delay !== undefined ? data.delay : (ev.data && ev.data.delay !== undefined ? ev.data.delay : null);
 			var handleObj = ev.handleObj;
 			var targetData = $.data(ev.target);
 

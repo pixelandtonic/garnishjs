@@ -29,7 +29,7 @@ Garnish.HUD = Garnish.Base.extend({
 		this.on('hide', this.settings.onHide);
 		this.on('submit', this.settings.onSubmit);
 
-		if (typeof Garnish.HUD.activeHUDs == "undefined")
+		if (Garnish.HUD.activeHUDs === undefined)
 		{
 			Garnish.HUD.activeHUDs = {};
 		}

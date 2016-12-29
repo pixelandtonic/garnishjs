@@ -31,14 +31,14 @@ Garnish.Select = Garnish.Base.extend({
 		this.$container = $(container);
 
 		// Param mapping
-		if (typeof items == typeof undefined && $.isPlainObject(container))
+		if (items === undefined && $.isPlainObject(container))
 		{
 			// (settings)
 			settings = container;
 			container = null;
 			items = null;
 		}
-		else if (typeof settings == typeof undefined && $.isPlainObject(items))
+		else if (settings === undefined && $.isPlainObject(items))
 		{
 			// (container, settings)
 			settings = items;
@@ -365,7 +365,7 @@ Garnish.Select = Garnish.Base.extend({
 			var step = dirProps.step;
 		}
 
-		for (var i = index + step; (typeof this.$items[i] != 'undefined'); i += step)
+		for (var i = index + step; (this.$items[i] !== undefined); i += step)
 		{
 			var $otherItem = this.$items.eq(i),
 				otherOffset = $otherItem.offset();
