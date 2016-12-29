@@ -1,86 +1,80 @@
 /**
  * Select Menu
  */
-Garnish.SelectMenu = Garnish.Menu.extend({
+Garnish.SelectMenu = Garnish.Menu.extend(
+    {
+        /**
+         * Constructor
+         */
+        init: function(btn, options, settings, callback) {
+            // argument mapping
+            if (typeof settings == 'function') {
+                // (btn, options, callback)
+                callback = settings;
+                settings = {};
+            }
 
-	/**
-	 * Constructor
-	 */
-	init: function(btn, options, settings, callback)
-	{
-		// argument mapping
-		if (typeof settings == 'function')
-		{
-			// (btn, options, callback)
-			callback = settings;
-			settings = {};
-		}
+            settings = $.extend({}, Garnish.SelectMenu.defaults, settings);
 
-		settings = $.extend({}, Garnish.SelectMenu.defaults, settings);
+            this.base(btn, options, settings, callback);
 
-		this.base(btn, options, settings, callback);
+            this.selected = -1;
+        },
 
-		this.selected = -1;
-	},
+        /**
+         * Build
+         */
+        build: function() {
+            this.base();
 
-	/**
-	 * Build
-	 */
-	build: function()
-	{
-		this.base();
+            if (this.selected != -1) {
+                this._addSelectedOptionClass(this.selected);
+            }
+        },
 
-		if (this.selected != -1)
-		{
-			this._addSelectedOptionClass(this.selected);
-		}
-	},
+        /**
+         * Select
+         */
+        select: function(option) {
+            // ignore if it's already selected
+            if (option == this.selected) {
+                return;
+            }
 
-	/**
-	 * Select
-	 */
-	select: function(option)
-	{
-		// ignore if it's already selected
-		if (option == this.selected) return;
+            if (this.dom.ul) {
+                if (this.selected != -1) {
+                    this.dom.options[this.selected].className = '';
+                }
 
-		if (this.dom.ul)
-		{
-			if (this.selected != -1)
-			{
-				this.dom.options[this.selected].className = '';
-			}
+                this._addSelectedOptionClass(option);
+            }
 
-			this._addSelectedOptionClass(option);
-		}
+            this.selected = option;
 
-		this.selected = option;
+            // set the button text to the selected option
+            this.setBtnText($(this.options[option].label).text());
 
-		// set the button text to the selected option
-		this.setBtnText($(this.options[option].label).text());
+            this.base(option);
+        },
 
-		this.base(option);
-	},
+        /**
+         * Add Selected Option Class
+         */
+        _addSelectedOptionClass: function(option) {
+            this.dom.options[option].className = 'sel';
+        },
 
-	/**
-	 * Add Selected Option Class
-	 */
-	_addSelectedOptionClass: function(option)
-	{
-		this.dom.options[option].className = 'sel';
-	},
+        /**
+         * Set Button Text
+         */
+        setBtnText: function(text) {
+            this.dom.$btnLabel.text(text);
+        }
 
-	/**
-	 * Set Button Text
-	 */
-	setBtnText: function(text)
-	{
-		this.dom.$btnLabel.text(text);
-	}
-
-},
-{
-	defaults: {
-		ulClass: 'menu select'
-	}
-});
+    },
+    {
+        defaults: {
+            ulClass: 'menu select'
+        }
+    }
+);
