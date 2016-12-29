@@ -1,3 +1,4 @@
+/** global: Garnish */
 /**
  * ESC key manager class
  */

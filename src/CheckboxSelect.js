@@ -1,3 +1,4 @@
+/** global: Garnish */
 /**
  * Checkbox select class
  */

@@ -1,3 +1,4 @@
+/** global: Garnish */
 /**
  * Drag-to-sort class
  *

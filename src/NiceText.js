@@ -1,3 +1,4 @@
+/** global: Garnish */
 /**
  * Nice Text
  */
