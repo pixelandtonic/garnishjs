@@ -85,12 +85,7 @@ function buildTask()
         .pipe(uglify())
         .pipe(concat('garnish.min.js'))
         .pipe(insert.prepend(docBlock))
-        .pipe(sourcemaps.write('.', {
-            mapFile: function(mapFilePath) {
-                // source map files are named *.map instead of *.js.map
-                return mapFilePath.replace('.js.map', '.map');
-            }
-        }))
+        .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(dest));
 }
 
