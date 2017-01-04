@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.9
+ * @version   1.0.0-alpha.1
  * @license   MIT
  */
 (function($){
@@ -1000,6 +1000,7 @@ jQuery.each(['activate', 'textchange', 'resize'], function(i, name) {
     };
 });
 
+/** global: Garnish */
 /**
  * Base drag class
  *
@@ -1439,6 +1440,7 @@ Garnish.BaseDrag = Garnish.Base.extend(
     }
 );
 
+/** global: Garnish */
 /**
  * Checkbox select class
  */
@@ -1485,6 +1487,7 @@ Garnish.CheckboxSelect = Garnish.Base.extend(
     }
 );
 
+/** global: Garnish */
 /**
  * Context Menu
  */
@@ -1629,6 +1632,7 @@ Garnish.ContextMenu = Garnish.Base.extend(
     }
 );
 
+/** global: Garnish */
 /**
  * Drag class
  *
@@ -2011,6 +2015,7 @@ Garnish.Drag = Garnish.BaseDrag.extend(
     }
 );
 
+/** global: Garnish */
 /**
  * Drag-and-drop class
  *
@@ -2132,6 +2137,7 @@ Garnish.DragDrop = Garnish.Drag.extend({
         }
     });
 
+/** global: Garnish */
 /**
  * Drag-to-move clas
  *
@@ -2148,6 +2154,7 @@ Garnish.DragMove = Garnish.BaseDrag.extend(
     }
 );
 
+/** global: Garnish */
 /**
  * Drag-to-sort class
  *
@@ -2617,6 +2624,7 @@ Garnish.DragSort = Garnish.Drag.extend(
     }
 );
 
+/** global: Garnish */
 /**
  * ESC key manager class
  */
@@ -2672,6 +2680,7 @@ Garnish.EscManager = Garnish.Base.extend(
 
 Garnish.escManager = new Garnish.EscManager();
 
+/** global: Garnish */
 /**
  * HUD
  */
@@ -3150,6 +3159,7 @@ Garnish.HUD = Garnish.Base.extend(
     }
 );
 
+/** global: Garnish */
 /**
  * Menu
  */
@@ -3366,6 +3376,7 @@ Garnish.Menu = Garnish.Base.extend(
     }
 );
 
+/** global: Garnish */
 /**
  * Menu Button
  */
@@ -3613,6 +3624,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
     }
 );
 
+/** global: Garnish */
 /**
  * Mixed input
  *
@@ -3984,6 +3996,7 @@ var TextElement = Garnish.Base.extend({
     }
 );
 
+/** global: Garnish */
 /**
  * Modal
  */
@@ -4306,6 +4319,7 @@ Garnish.Modal = Garnish.Base.extend(
     }
 );
 
+/** global: Garnish */
 /**
  * Nice Text
  */
@@ -4615,6 +4629,7 @@ Garnish.NiceText = Garnish.Base.extend(
     }
 );
 
+/** global: Garnish */
 /**
  * Pill
  */
@@ -4732,6 +4747,7 @@ Garnish.Pill = Garnish.Base.extend(
     }
 );
 
+/** global: Garnish */
 /**
  * Select
  */
@@ -5636,6 +5652,7 @@ Garnish.Select = Garnish.Base.extend(
     }
 );
 
+/** global: Garnish */
 /**
  * Select Menu
  */
