@@ -1,6 +1,11 @@
 Garnish Changelog
 =================
 
+## 0.1.11 - 2017-01-04
+
+### Fixed
+- Fixed a “Garnish is not defined” error.
+
 ## 0.1.10 - 2017-01-04
 
 ### Changed
