@@ -596,10 +596,6 @@ Garnish.Base = Base.extend({
             target: this
         };
 
-        if (params === undefined) {
-            params = [];
-        }
-
         for (var i = 0; i < this._eventHandlers.length; i++) {
             var handler = this._eventHandlers[i];
 
