@@ -1,7 +1,7 @@
 Garnish Changelog
 =================
 
-## Unreleased
+## 0.1.10 - 2017-01-04
 
 ### Changed
 - Garnish no longer has jQuery as a Bower dependency.
