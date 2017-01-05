@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.10
+ * @version   0.1.11
  * @license   MIT
  */
 (function($){
@@ -161,7 +161,7 @@ Base = Base.extend({
  */
 
 // Bail if Garnish is already defined
-if (Garnish !== undefined) {
+if (typeof Garnish !== 'undefined') {
     throw 'Garnish is already defined!';
 }
 
@@ -216,7 +216,7 @@ Garnish = $.extend(Garnish, {
      * @param string msg
      */
     log: function(msg) {
-        if (console !== undefined && typeof console.log == 'function') {
+        if (typeof console !== 'undefined' && typeof console.log == 'function') {
             console.log(msg);
         }
     },
@@ -753,10 +753,6 @@ Garnish.Base = Base.extend({
             type: type,
             target: this
         };
-
-        if (params === undefined) {
-            params = [];
-        }
 
         for (var i = 0; i < this._eventHandlers.length; i++) {
             var handler = this._eventHandlers[i];
