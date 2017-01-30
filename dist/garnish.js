@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.11
+ * @version   0.1.12
  * @license   MIT
  */
 (function($){
@@ -865,7 +865,9 @@ var erd;
 
 function getErd() {
     if (erd === undefined) {
-        erd = elementResizeDetectorMaker();
+        erd = elementResizeDetectorMaker({
+            callOnAdd: false
+        });
     }
 
     return erd;
