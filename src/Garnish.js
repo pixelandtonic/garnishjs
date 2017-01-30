@@ -707,7 +707,9 @@ var erd;
 
 function getErd() {
     if (erd === undefined) {
-        erd = elementResizeDetectorMaker();
+        erd = elementResizeDetectorMaker({
+            callOnAdd: false
+        });
     }
 
     return erd;
