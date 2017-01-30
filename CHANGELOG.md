@@ -1,6 +1,10 @@
 Garnish Changelog
 =================
 
+## 0.1.12 - 2017-01-30
+
+- Fixed a bug where an infinite event loop could be caused when opening an HUD.  
+
 ## 0.1.11 - 2017-01-04
 
 ### Fixed
