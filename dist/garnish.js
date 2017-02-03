@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.12
+ * @version   0.1.13
  * @license   MIT
  */
 (function($){
@@ -4544,7 +4544,7 @@ Garnish.NiceText = Garnish.Base.extend(
                 });
 
                 // Line breaks
-                val = val.replace(/[\n\r]$/g, '<br/>&nbps;');
+                val = val.replace(/[\n\r]$/g, '<br/>&nbsp;');
                 val = val.replace(/[\n\r]/g, '<br/>');
             }
 
