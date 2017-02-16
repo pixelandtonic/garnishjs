@@ -108,6 +108,7 @@ Garnish.Modal = Garnish.Base.extend(
                     this.addListener(this.$shade, 'click', 'hide');
                 }
 
+                this.addListener(this.$container, 'resize', 'updateSizeAndPosition');
                 this.addListener(Garnish.$win, 'resize', 'updateSizeAndPosition');
             }
 
@@ -156,6 +157,7 @@ Garnish.Modal = Garnish.Base.extend(
                     this.removeListener(this.$shade, 'click');
                 }
 
+                this.removeListener(this.$container, 'resize');
                 this.removeListener(Garnish.$win, 'resize');
             }
 
