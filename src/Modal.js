@@ -215,6 +215,8 @@ Garnish.Modal = Garnish.Base.extend(
                 'min-height': this.updateSizeAndPosition._height,
                 'top': Math.round((this.updateSizeAndPosition._windowHeight - this.updateSizeAndPosition._height) / 2)
             });
+
+            this.trigger('updateSizeAndPosition');
         },
 
         onFadeIn: function() {

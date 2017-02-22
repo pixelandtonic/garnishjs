@@ -405,6 +405,8 @@ Garnish.HUD = Garnish.Base.extend(
             Garnish.requestAnimationFrame($.proxy(function() {
                 this.addListener(this.$main, 'resize', 'updateSizeAndPosition');
             }, this));
+
+            this.trigger('updateSizeAndPosition');
         },
 
         /**
