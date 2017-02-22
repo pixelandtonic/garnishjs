@@ -1,7 +1,7 @@
 Garnish Changelog
 =================
 
-## Unreleased
+## 0.1.15 - 2017-02-22
 
 ### Changed
 - Modals no longer automatically update their position when they change size.
