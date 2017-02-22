@@ -99,16 +99,22 @@ Garnish.Modal = Garnish.Base.extend(
                 this.$container.show();
                 this.updateSizeAndPosition();
 
-                this.$shade.velocity('fadeIn', {duration: 50});
-                this.$container.delay(50).velocity('fadeIn', {
-                    complete: $.proxy(this, 'onFadeIn')
+                this.$shade.velocity('fadeIn', {
+                    duration: 50,
+                    complete: $.proxy(function() {
+                        this.$container.velocity('fadeIn', {
+                            complete: $.proxy(function() {
+                                this.updateSizeAndPosition();
+                                this.onFadeIn();
+                            }, this)
+                        });
+                    }, this)
                 });
 
                 if (this.settings.hideOnShadeClick) {
                     this.addListener(this.$shade, 'click', 'hide');
                 }
 
-                this.addListener(this.$container, 'resize', 'updateSizeAndPosition');
                 this.addListener(Garnish.$win, 'resize', 'updateSizeAndPosition');
             }
 
@@ -157,7 +163,6 @@ Garnish.Modal = Garnish.Base.extend(
                     this.removeListener(this.$shade, 'click');
                 }
 
-                this.removeListener(this.$container, 'resize');
                 this.removeListener(Garnish.$win, 'resize');
             }
 
