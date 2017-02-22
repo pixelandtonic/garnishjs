@@ -1,7 +1,7 @@
 Garnish Changelog
 =================
 
-## Unreleased
+## 0.1.14 - 2017-02-22
 
 ### Changed
 - Modals and HUDs now trigger `updateSizeAndPosition` events when their size/position changes.

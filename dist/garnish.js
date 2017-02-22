@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.13
+ * @version   0.1.14
  * @license   MIT
  */
 (function($){
@@ -3085,6 +3085,8 @@ Garnish.HUD = Garnish.Base.extend(
             Garnish.requestAnimationFrame($.proxy(function() {
                 this.addListener(this.$main, 'resize', 'updateSizeAndPosition');
             }, this));
+
+            this.trigger('updateSizeAndPosition');
         },
 
         /**
@@ -4211,6 +4213,8 @@ Garnish.Modal = Garnish.Base.extend(
                 'min-height': this.updateSizeAndPosition._height,
                 'top': Math.round((this.updateSizeAndPosition._windowHeight - this.updateSizeAndPosition._height) / 2)
             });
+
+            this.trigger('updateSizeAndPosition');
         },
 
         onFadeIn: function() {
