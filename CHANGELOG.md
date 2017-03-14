@@ -1,6 +1,11 @@
 Garnish Changelog
 =================
 
+## 0.1.16 - 2017-03-14
+
+### Fixed
+- Fixed a bug where NiceText objects’ staging areas were getting a `&nbps;` entity appended rather than `&nbsp;`. (AugustMiller)
+
 ## 0.1.15 - 2017-02-22
 
 ### Changed
