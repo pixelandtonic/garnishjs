@@ -99,9 +99,16 @@ Garnish.Modal = Garnish.Base.extend(
                 this.$container.show();
                 this.updateSizeAndPosition();
 
-                this.$shade.velocity('fadeIn', {duration: 50});
-                this.$container.delay(50).velocity('fadeIn', {
-                    complete: $.proxy(this, 'onFadeIn')
+                this.$shade.velocity('fadeIn', {
+                    duration: 50,
+                    complete: $.proxy(function() {
+                        this.$container.velocity('fadeIn', {
+                            complete: $.proxy(function() {
+                                this.updateSizeAndPosition();
+                                this.onFadeIn();
+                            }, this)
+                        });
+                    }, this)
                 });
 
                 if (this.settings.hideOnShadeClick) {
@@ -213,6 +220,8 @@ Garnish.Modal = Garnish.Base.extend(
                 'min-height': this.updateSizeAndPosition._height,
                 'top': Math.round((this.updateSizeAndPosition._windowHeight - this.updateSizeAndPosition._height) / 2)
             });
+
+            this.trigger('updateSizeAndPosition');
         },
 
         onFadeIn: function() {

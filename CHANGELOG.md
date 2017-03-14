@@ -1,6 +1,25 @@
 Garnish Changelog
 =================
 
+## 0.1.15 - 2017-02-22
+
+### Changed
+- Modals no longer automatically update their position when they change size.
+
+### Fixed
+- Fixed a bug where modals would get caught in infinite resize handling loops.
+- Fixed a bug where modals could be initialized with the wrong size when fading in.
+
+## 0.1.14 - 2017-02-22
+
+### Changed
+- Modals and HUDs now trigger `updateSizeAndPosition` events when their size/position changes.
+
+## 0.1.13 - 2017-02-16
+
+### Changed
+- Modals now automatically update their position when they change size. 
+
 ## 0.1.12 - 2017-01-30
 
 ### Fixed
