@@ -1,6 +1,11 @@
 Garnish Changelog
 =================
 
+## 0.1.17 - 2017-03-21
+
+### Fixed
+- Fixed a potential infinite HUD resize loop in IE11.
+
 ## 0.1.16 - 2017-03-14
 
 ### Fixed
