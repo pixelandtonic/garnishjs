@@ -65,6 +65,13 @@ Garnish.HUD = Garnish.Base.extend(
                 this.$hud.css('position', 'absolute');
             }
 
+            // Hide the HUD until it gets positioned
+			var windowWidth = Garnish.$win.width();
+
+			this.$hud.css({
+                left: '-' + windowWidth + 'px',
+			});
+
             this.show();
 
             this.addListener(this.$body, 'submit', '_handleSubmit');

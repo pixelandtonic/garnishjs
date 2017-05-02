@@ -1,6 +1,10 @@
 Garnish Changelog
 =================
 
+## 0.1.18 - 2017-05-02
+
+- Fixed a bug where HUDs where briefly showing up in the top left corner of the window before getting repositioned 
+
 ## 0.1.17 - 2017-03-21
 
 ### Fixed
