@@ -27,10 +27,10 @@ Garnish.MixedInput = Garnish.Base.extend(
         },
 
         isText: function($elem) {
-            return ($elem.prop('nodeName') == 'INPUT');
+            return ($elem.prop('nodeName') === 'INPUT');
         },
 
-        onFocus: function(ev) {
+        onFocus: function() {
             // Set focus to the first element
             if (this.elements.length) {
                 var $elem = this.elements[0];
@@ -50,7 +50,7 @@ Garnish.MixedInput = Garnish.Base.extend(
 
         addElement: function($elem, index) {
             // Was a target index passed, and is it valid?
-            if (index === undefined) {
+            if (typeof index === 'undefined') {
                 if (this.focussedElement) {
                     var focussedElement = this.focussedElement,
                         focussedElementIndex = this.getElementIndex(focussedElement);
@@ -94,7 +94,7 @@ Garnish.MixedInput = Garnish.Base.extend(
             }
 
             // Add the element
-            if (this.elements[index] !== undefined) {
+            if (typeof this.elements[index] !== 'undefined') {
                 $elem.insertBefore(this.elements[index]);
                 this.elements.splice(index, 0, $elem);
             }
@@ -109,13 +109,13 @@ Garnish.MixedInput = Garnish.Base.extend(
             // Make sure that there are text elements surrounding all non-text elements
             if (!this.isText($elem)) {
                 // Add a text element before?
-                if (index == 0 || !this.isText(this.elements[index - 1])) {
+                if (index === 0 || !this.isText(this.elements[index - 1])) {
                     this.addTextElement(index);
                     index++;
                 }
 
                 // Add a text element after?
-                if (index == this.elements.length - 1 || !this.isText(this.elements[index + 1])) {
+                if (index === this.elements.length - 1 || !this.isText(this.elements[index + 1])) {
                     this.addTextElement(index + 1);
                 }
             }
@@ -133,7 +133,7 @@ Garnish.MixedInput = Garnish.Base.extend(
 
         removeElement: function($elem) {
             var index = this.getElementIndex($elem);
-            if (index != -1) {
+            if (index !== -1) {
                 this.elements.splice(index, 1);
 
                 if (!this.isText($elem)) {
@@ -174,7 +174,7 @@ Garnish.MixedInput = Garnish.Base.extend(
 
             this.addListener($elem, 'blur', function() {
                 this.blurTimeout = setTimeout($.proxy(function() {
-                    if (this.focussedElement == $elem) {
+                    if (this.focussedElement === $elem) {
                         this.blurFocussedElement();
                         this.focussedElement = null;
                         this.$container.removeClass('focus');
@@ -308,7 +308,7 @@ var TextElement = Garnish.Base.extend({
 
             switch (ev.keyCode) {
                 case Garnish.LEFT_KEY: {
-                    if (this.$input.prop('selectionStart') == 0 && this.$input.prop('selectionEnd') == 0) {
+                    if (this.$input.prop('selectionStart') === 0 && this.$input.prop('selectionEnd') === 0) {
                         // Set focus to the previous element
                         this.parentInput.focusPreviousElement(this.$input);
                     }
@@ -316,7 +316,7 @@ var TextElement = Garnish.Base.extend({
                 }
 
                 case Garnish.RIGHT_KEY: {
-                    if (this.$input.prop('selectionStart') == this.val.length && this.$input.prop('selectionEnd') == this.val.length) {
+                    if (this.$input.prop('selectionStart') === this.val.length && this.$input.prop('selectionEnd') === this.val.length) {
                         // Set focus to the next element
                         this.parentInput.focusNextElement(this.$input);
                     }
@@ -324,7 +324,7 @@ var TextElement = Garnish.Base.extend({
                 }
 
                 case Garnish.DELETE_KEY: {
-                    if (this.$input.prop('selectionStart') == 0 && this.$input.prop('selectionEnd') == 0) {
+                    if (this.$input.prop('selectionStart') === 0 && this.$input.prop('selectionEnd') === 0) {
                         // Set focus to the previous element
                         this.parentInput.focusPreviousElement(this.$input);
                         ev.preventDefault();

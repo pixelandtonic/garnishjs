@@ -10,7 +10,7 @@ Garnish.EscManager = Garnish.Base.extend(
             this.handlers = [];
 
             this.addListener(Garnish.$bod, 'keyup', function(ev) {
-                if (ev.keyCode == Garnish.ESC_KEY) {
+                if (ev.keyCode === Garnish.ESC_KEY) {
                     this.escapeLatest(ev);
                 }
             });
@@ -25,7 +25,7 @@ Garnish.EscManager = Garnish.Base.extend(
 
         unregister: function(obj) {
             for (var i = this.handlers.length - 1; i >= 0; i--) {
-                if (this.handlers[i].obj == obj) {
+                if (this.handlers[i].obj === obj) {
                     this.handlers.splice(i, 1);
                 }
             }
@@ -35,16 +35,18 @@ Garnish.EscManager = Garnish.Base.extend(
             if (this.handlers.length) {
                 var handler = this.handlers.pop();
 
-                if (typeof handler.func == 'function') {
-                    var func = handler.func;
+                var func;
+
+                if (typeof handler.func === 'function') {
+                    func = handler.func;
                 }
                 else {
-                    var func = handler.obj[handler.func];
+                    func = handler.obj[handler.func];
                 }
 
                 func.call(handler.obj, ev);
 
-                if (typeof handler.obj.trigger == 'function') {
+                if (typeof handler.obj.trigger === 'function') {
                     handler.obj.trigger('escape');
                 }
             }

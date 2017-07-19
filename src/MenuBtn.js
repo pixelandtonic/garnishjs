@@ -41,7 +41,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
                 'role': 'combobox',
                 'aria-owns': this.menu.menuId,
                 'aria-haspopup': 'true',
-                'aria-expanded': 'false',
+                'aria-expanded': 'false'
             });
 
             this.menu.on('hide', $.proxy(this, 'onMenuHide'));
@@ -58,6 +58,8 @@ Garnish.MenuBtn = Garnish.Base.extend(
         },
 
         onKeyDown: function(ev) {
+            var $option;
+
             switch (ev.keyCode) {
                 case Garnish.RETURN_KEY: {
                     ev.preventDefault();
@@ -77,12 +79,9 @@ Garnish.MenuBtn = Garnish.Base.extend(
                     if (!this.showingMenu) {
                         this.showMenu();
 
-                        var $option = this.menu.$options.filter('.sel:first');
+                        $option = this.menu.$options.filter('.sel:first');
 
-                        if ($option.length > 0) {
-                            $option;
-                        }
-                        else {
+                        if ($option.length === 0) {
                             $option = this.menu.$options.first();
                         }
 
@@ -94,8 +93,6 @@ Garnish.MenuBtn = Garnish.Base.extend(
 
                 case Garnish.DOWN_KEY: {
                     ev.preventDefault();
-
-                    var $option;
 
                     if (this.showingMenu) {
                         $.each(this.menu.$options, $.proxy(function(index, value) {
@@ -117,7 +114,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
 
                         $option = this.menu.$options.filter('.sel:first');
 
-                        if ($option.length == 0) {
+                        if ($option.length === 0) {
                             $option = this.menu.$options.first();
                         }
                     }
@@ -129,8 +126,6 @@ Garnish.MenuBtn = Garnish.Base.extend(
 
                 case Garnish.UP_KEY: {
                     ev.preventDefault();
-
-                    var $option;
 
                     if (this.showingMenu) {
                         $.each(this.menu.$options, $.proxy(function(index, value) {
@@ -152,7 +147,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
 
                         $option = this.menu.$options.filter('.sel:first');
 
-                        if ($option.length == 0) {
+                        if ($option.length === 0) {
                             $option = this.menu.$options.last();
                         }
                     }
@@ -174,7 +169,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
         },
 
         onMouseDown: function(ev) {
-            if (ev.which != Garnish.PRIMARY_CLICK || Garnish.isCtrlKeyPressed(ev)) {
+            if (ev.which !== Garnish.PRIMARY_CLICK || Garnish.isCtrlKeyPressed(ev)) {
                 return;
             }
 

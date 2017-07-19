@@ -9,7 +9,7 @@ Garnish.SelectMenu = Garnish.Menu.extend(
          */
         init: function(btn, options, settings, callback) {
             // argument mapping
-            if (typeof settings == 'function') {
+            if (typeof settings === 'function') {
                 // (btn, options, callback)
                 callback = settings;
                 settings = {};
@@ -28,7 +28,7 @@ Garnish.SelectMenu = Garnish.Menu.extend(
         build: function() {
             this.base();
 
-            if (this.selected != -1) {
+            if (this.selected !== -1) {
                 this._addSelectedOptionClass(this.selected);
             }
         },
@@ -38,12 +38,12 @@ Garnish.SelectMenu = Garnish.Menu.extend(
          */
         select: function(option) {
             // ignore if it's already selected
-            if (option == this.selected) {
+            if (option === this.selected) {
                 return;
             }
 
             if (this.dom.ul) {
-                if (this.selected != -1) {
+                if (this.selected !== -1) {
                     this.dom.options[this.selected].className = '';
                 }
 

@@ -55,10 +55,10 @@ Garnish = $.extend(Garnish, {
     /**
      * Logs a message to the browser's console, if the browser has one.
      *
-     * @param string msg
+     * @param {string} msg
      */
     log: function(msg) {
-        if (typeof console !== 'undefined' && typeof console.log == 'function') {
+        if (typeof console !== 'undefined' && typeof console.log === 'function') {
             console.log(msg);
         }
     },
@@ -72,8 +72,8 @@ Garnish = $.extend(Garnish, {
      *
      * Last updated: 2014-11-24
      *
-     * @param bool detectTablets
-     * @return bool
+     * @param {boolean} detectTablets
+     * @return {boolean}
      */
     isMobileBrowser: function(detectTablets) {
         var key = detectTablets ? '_isMobileOrTabletBrowser' : '_isMobileBrowser';
@@ -89,8 +89,8 @@ Garnish = $.extend(Garnish, {
     /**
      * Returns whether a variable is an array.
      *
-     * @param mixed val
-     * @return bool
+     * @param {object} val
+     * @return {boolean}
      */
     isArray: function(val) {
         return (val instanceof Array);
@@ -99,8 +99,8 @@ Garnish = $.extend(Garnish, {
     /**
      * Returns whether a variable is a jQuery collection.
      *
-     * @param mixed val
-     * @return bool
+     * @param {object} val
+     * @return {boolean}
      */
     isJquery: function(val) {
         return (val instanceof jQuery);
@@ -109,11 +109,11 @@ Garnish = $.extend(Garnish, {
     /**
      * Returns whether a variable is a string.
      *
-     * @param mixed val
-     * @return bool
+     * @param {object} val
+     * @return {boolean}
      */
     isString: function(val) {
-        return (typeof val == 'string');
+        return (typeof val === 'string');
     },
 
     /**
@@ -123,17 +123,17 @@ Garnish = $.extend(Garnish, {
      */
     hasAttr: function(elem, attr) {
         var val = $(elem).attr(attr);
-        return (val !== undefined && val !== false);
+        return (typeof val !== 'undefined' && val !== false);
     },
 
     /**
      * Returns whether something is a text node.
      *
-     * @param object elem
-     * @return bool
+     * @param {object} elem
+     * @return {boolean}
      */
     isTextNode: function(elem) {
-        return (elem.nodeType == Garnish.TEXT_NODE);
+        return (elem.nodeType === Garnish.TEXT_NODE);
     },
 
     /**
@@ -142,7 +142,7 @@ Garnish = $.extend(Garnish, {
     getOffset: function(elem) {
         this.getOffset._offset = $(elem).offset();
 
-        if (Garnish.$scrollContainer[0] != Garnish.$win[0]) {
+        if (Garnish.$scrollContainer[0] !== Garnish.$win[0]) {
             this.getOffset._offset.top += Garnish.$scrollContainer.scrollTop();
             this.getOffset._offset.left += Garnish.$scrollContainer.scrollLeft();
         }
@@ -153,11 +153,11 @@ Garnish = $.extend(Garnish, {
     /**
      * Returns the distance between two coordinates.
      *
-     * @param int x1 The first coordinate's X position.
-     * @param int y1 The first coordinate's Y position.
-     * @param int x2 The second coordinate's X position.
-     * @param int y2 The second coordinate's Y position.
-     * @return float
+     * @param {number} x1 The first coordinate's X position.
+     * @param {number} y1 The first coordinate's Y position.
+     * @param {number} x2 The second coordinate's X position.
+     * @param {number} y2 The second coordinate's Y position.
+     * @return {number}
      */
     getDist: function(x1, y1, x2, y2) {
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
@@ -166,10 +166,10 @@ Garnish = $.extend(Garnish, {
     /**
      * Returns whether an element is touching an x/y coordinate.
      *
-     * @param int    x    The coordinate's X position.
-     * @param int    y    The coordinate's Y position.
-     * @param object elem Either an actual element or a jQuery collection.
-     * @return bool
+     * @param {number}    x    The coordinate's X position.
+     * @param {number}    y    The coordinate's Y position.
+     * @param {object} elem Either an actual element or a jQuery collection.
+     * @return {boolean}
      */
     hitTest: function(x, y, elem) {
         Garnish.hitTest._$elem = $(elem);
@@ -185,9 +185,9 @@ Garnish = $.extend(Garnish, {
     /**
      * Returns whether the cursor is touching an element.
      *
-     * @param object ev   The mouse event object containing pageX and pageY properties.
-     * @param object elem Either an actual element or a jQuery collection.
-     * @return bool
+     * @param {object} ev   The mouse event object containing pageX and pageY properties.
+     * @param {object} elem Either an actual element or a jQuery collection.
+     * @return {boolean}
      */
     isCursorOver: function(ev, elem) {
         return Garnish.hitTest(ev.pageX, ev.pageY, elem);
@@ -196,8 +196,8 @@ Garnish = $.extend(Garnish, {
     /**
      * Copies text styles from one element to another.
      *
-     * @param object source The source element. Can be either an actual element or a jQuery collection.
-     * @param object target The target element. Can be either an actual element or a jQuery collection.
+     * @param {object} source The source element. Can be either an actual element or a jQuery collection.
+     * @param {object} target The target element. Can be either an actual element or a jQuery collection.
      */
     copyTextStyles: function(source, target) {
         var $source = $(source),
@@ -220,7 +220,7 @@ Garnish = $.extend(Garnish, {
     /**
      * Returns the body's real scrollTop, discarding any window banding in Safari.
      *
-     * @return int
+     * @return {number}
      */
     getBodyScrollTop: function() {
         Garnish.getBodyScrollTop._scrollTop = document.body.scrollTop;
@@ -270,31 +270,35 @@ Garnish = $.extend(Garnish, {
     /**
      * Scrolls a container element to an element within it.
      *
-     * @param object container Either an actual element or a jQuery collection.
-     * @param object elem      Either an actual element or a jQuery collection.
+     * @param {object} container Either an actual element or a jQuery collection.
+     * @param {object} elem      Either an actual element or a jQuery collection.
      */
     scrollContainerToElement: function(container, elem) {
-        if (elem === undefined) {
-            var $elem = $(container);
+        var $elem;
+
+        if (typeof elem === 'undefined') {
+            $elem = $(container);
             $container = $elem.scrollParent();
         }
         else {
-            var $container = $(container),
-                $elem = $(elem);
+            var $container = $(container);
+            $elem = $(elem);
         }
 
-        if ($container.prop('nodeName') === 'HTML' || $container[0] == Garnish.$doc[0]) {
+        if ($container.prop('nodeName') === 'HTML' || $container[0] === Garnish.$doc[0]) {
             $container = Garnish.$win;
         }
 
         var scrollTop = $container.scrollTop(),
             elemOffset = $elem.offset().top;
 
-        if ($container[0] == window) {
-            var elemScrollOffset = elemOffset - scrollTop;
+        var elemScrollOffset;
+
+        if ($container[0] === window) {
+            elemScrollOffset = elemOffset - scrollTop;
         }
         else {
-            var elemScrollOffset = elemOffset - $container.offset().top;
+            elemScrollOffset = elemOffset - $container.offset().top;
         }
 
         var targetScrollTop = false;
@@ -305,7 +309,7 @@ Garnish = $.extend(Garnish, {
         }
         else {
             var elemHeight = $elem.outerHeight(),
-                containerHeight = ($container[0] == window ? window.innerHeight : $container[0].clientHeight);
+                containerHeight = ($container[0] === window ? window.innerHeight : $container[0].clientHeight);
 
             // Is it below the fold?
             if (elemScrollOffset + elemHeight > containerHeight) {
@@ -315,7 +319,7 @@ Garnish = $.extend(Garnish, {
 
         if (targetScrollTop !== false) {
             // Velocity only allows you to scroll to an arbitrary position if you're scrolling the main window
-            if ($container[0] == window) {
+            if ($container[0] === window) {
                 $('html').velocity('scroll', {
                     offset: targetScrollTop + 'px',
                     mobileHA: false
@@ -333,8 +337,8 @@ Garnish = $.extend(Garnish, {
     /**
      * Shakes an element.
      *
-     * @param mixed  elem Either an actual element or a jQuery collection.
-     * @param string prop The property that should be adjusted (default is 'margin-left').
+     * @param {object}  elem Either an actual element or a jQuery collection.
+     * @param {string} prop The property that should be adjusted (default is 'margin-left').
      */
     shake: function(elem, prop) {
         var $elem = $(elem);
@@ -362,7 +366,7 @@ Garnish = $.extend(Garnish, {
     /**
      * Returns the first element in an array or jQuery collection.
      *
-     * @param mixed elem
+     * @param {object} elem
      * @return mixed
      */
     getElement: function(elem) {
@@ -372,7 +376,7 @@ Garnish = $.extend(Garnish, {
     /**
      * Returns the beginning of an input's name= attribute value with any [bracktes] stripped out.
      *
-     * @param object elem
+     * @param {object} elem
      * @return string|null
      */
     getInputBasename: function(elem) {
@@ -391,15 +395,15 @@ Garnish = $.extend(Garnish, {
      * So unchecked checkboxes and radio buttons return null,
      * and multi-selects whose name don't end in "[]" only return the last selection
      *
-     * @param jQuery $input
-     * @return mixed
+     * @param {object} $input
+     * @return {(string|string[])}
      */
     getInputPostVal: function($input) {
         var type = $input.attr('type'),
             val = $input.val();
 
         // Is this an unchecked checkbox or radio button?
-        if ((type == 'checkbox' || type == 'radio')) {
+        if ((type === 'checkbox' || type === 'radio')) {
             if ($input.prop('checked')) {
                 return val;
             }
@@ -410,7 +414,7 @@ Garnish = $.extend(Garnish, {
 
         // Flatten any array values whose input name doesn't end in "[]"
         //  - e.g. a multi-select
-        else if (Garnish.isArray(val) && $input.attr('name').substr(-2) != '[]') {
+        else if (Garnish.isArray(val) && $input.attr('name').substr(-2) !== '[]') {
             if (val.length) {
                 return val[val.length - 1];
             }
@@ -428,8 +432,8 @@ Garnish = $.extend(Garnish, {
     /**
      * Returns the inputs within a container
      *
-     * @param mixed container The container element. Can be either an actual element or a jQuery collection.
-     * @return jQuery
+     * @param {object} container The container element. Can be either an actual element or a jQuery collection.
+     * @return {object}
      */
     findInputs: function(container) {
         return $(container).find('input,text,textarea,select,button');
@@ -438,13 +442,15 @@ Garnish = $.extend(Garnish, {
     /**
      * Returns the post data within a container.
      *
-     * @param mixed container
-     * @return array
+     * @param {object} container
+     * @return {array}
      */
     getPostData: function(container) {
         var postData = {},
             arrayInputCounters = {},
             $inputs = Garnish.findInputs(container);
+
+        var inputName;
 
         for (var i = 0; i < $inputs.length; i++) {
             var $input = $inputs.eq(i);
@@ -453,7 +459,7 @@ Garnish = $.extend(Garnish, {
                 continue;
             }
 
-            var inputName = $input.attr('name');
+            inputName = $input.attr('name');
             if (!inputName) {
                 continue;
             }
@@ -463,14 +469,14 @@ Garnish = $.extend(Garnish, {
                 continue;
             }
 
-            var isArrayInput = (inputName.substr(-2) == '[]');
+            var isArrayInput = (inputName.substr(-2) === '[]');
 
             if (isArrayInput) {
                 // Get the cropped input name
                 var croppedName = inputName.substring(0, inputName.length - 2);
 
                 // Prep the input counter
-                if (arrayInputCounters[croppedName] === undefined) {
+                if (typeof arrayInputCounters[croppedName] === 'undefined') {
                     arrayInputCounters[croppedName] = 0;
                 }
             }
@@ -481,7 +487,7 @@ Garnish = $.extend(Garnish, {
 
             for (var j = 0; j < inputVal.length; j++) {
                 if (isArrayInput) {
-                    var inputName = croppedName + '[' + arrayInputCounters[croppedName] + ']';
+                    inputName = croppedName + '[' + arrayInputCounters[croppedName] + ']';
                     arrayInputCounters[croppedName]++;
                 }
 
@@ -497,7 +503,7 @@ Garnish = $.extend(Garnish, {
             $targetInputs = Garnish.findInputs(target);
 
         for (var i = 0; i < $sourceInputs.length; i++) {
-            if ($targetInputs[i] === undefined) {
+            if (typeof $targetInputs[i] === 'undefined') {
                 break;
             }
 
@@ -512,7 +518,7 @@ Garnish = $.extend(Garnish, {
      *
      * @param ev The keyboard event
      *
-     * @return boolean Whether the "Ctrl" key is pressed
+     * @return {boolean} Whether the "Ctrl" key is pressed
      */
     isCtrlKeyPressed: function(ev) {
         if (window.navigator.platform.match(/Mac/)) {
@@ -550,17 +556,17 @@ Garnish.Base = Base.extend({
     init: $.noop,
 
     setSettings: function(settings, defaults) {
-        var baseSettings = (this.settings === undefined ? {} : this.settings);
+        var baseSettings = (typeof this.settings === 'undefined' ? {} : this.settings);
         this.settings = $.extend({}, baseSettings, defaults, settings);
     },
 
     on: function(events, data, handler) {
-        if (typeof data == 'function') {
+        if (typeof data === 'function') {
             handler = data;
             data = {};
         }
 
-        var events = this._normalizeEvents(events);
+        events = this._normalizeEvents(events);
 
         for (var i = 0; i < events.length; i++) {
             var ev = events[i];
@@ -575,7 +581,7 @@ Garnish.Base = Base.extend({
     },
 
     off: function(events, handler) {
-        var events = this._normalizeEvents(events);
+        events = this._normalizeEvents(events);
 
         for (var i = 0; i < events.length; i++) {
             var ev = events[i];
@@ -583,7 +589,7 @@ Garnish.Base = Base.extend({
             for (var j = this._eventHandlers.length - 1; j >= 0; j--) {
                 var eventHandler = this._eventHandlers[j];
 
-                if (eventHandler.type == ev[0] && (!ev[1] || eventHandler.namespace == ev[1]) && eventHandler.handler === handler) {
+                if (eventHandler.type === ev[0] && (!ev[1] || eventHandler.namespace === ev[1]) && eventHandler.handler === handler) {
                     this._eventHandlers.splice(j, 1);
                 }
             }
@@ -599,7 +605,7 @@ Garnish.Base = Base.extend({
         for (var i = 0; i < this._eventHandlers.length; i++) {
             var handler = this._eventHandlers[i];
 
-            if (handler.type == type) {
+            if (handler.type === type) {
                 var _ev = $.extend({data: handler.data}, data, ev);
                 handler.handler(_ev)
             }
@@ -607,12 +613,12 @@ Garnish.Base = Base.extend({
     },
 
     _normalizeEvents: function(events) {
-        if (typeof events == 'string') {
+        if (typeof events === 'string') {
             events = events.split(' ');
         }
 
         for (var i = 0; i < events.length; i++) {
-            if (typeof events[i] == 'string') {
+            if (typeof events[i] === 'string') {
                 events[i] = events[i].split('.');
             }
         }
@@ -621,7 +627,7 @@ Garnish.Base = Base.extend({
     },
 
     _splitEvents: function(events) {
-        if (typeof events == 'string') {
+        if (typeof events === 'string') {
             events = events.split(',');
 
             for (var i = 0; i < events.length; i++) {
@@ -633,7 +639,7 @@ Garnish.Base = Base.extend({
     },
 
     _formatEvents: function(events) {
-        var events = this._splitEvents(events).slice(0);
+        events = this._splitEvents(events).slice(0);
 
         for (var i = 0; i < events.length; i++) {
             events[i] += this._namespace;
@@ -653,13 +659,13 @@ Garnish.Base = Base.extend({
         events = this._splitEvents(events);
 
         // Param mapping
-        if (func === undefined && typeof data != 'object') {
+        if (typeof func === 'undefined' && typeof data !== 'object') {
             // (elem, events, func)
             func = data;
             data = {};
         }
 
-        if (typeof func == 'function') {
+        if (typeof func === 'function') {
             func = $.proxy(func, this);
         }
         else {
@@ -673,7 +679,7 @@ Garnish.Base = Base.extend({
         }, this));
 
         // Remember that we're listening to this element
-        if ($.inArray(elem, this._listeners) == -1) {
+        if ($.inArray(elem, this._listeners) === -1) {
             this._listeners.push(elem);
         }
     },
@@ -706,7 +712,7 @@ Garnish.Base = Base.extend({
 var erd;
 
 function getErd() {
-    if (erd === undefined) {
+    if (typeof erd === 'undefined') {
         erd = elementResizeDetectorMaker({
             callOnAdd: false
         });
@@ -717,7 +723,7 @@ function getErd() {
 
 function triggerResizeEvent(elem) {
     $(elem).trigger('resize');
-};
+}
 
 // Work them into jQuery's event system
 $.extend(jQuery.event.special, {
@@ -740,7 +746,7 @@ $.extend(jQuery.event.special, {
                 },
                 'keydown.garnish-activate': function(e) {
                     // Ignore if the event was bubbled up, or if it wasn't the space key
-                    if (this != $elem[0] || e.keyCode != Garnish.SPACE_KEY) {
+                    if (this !== $elem[0] || e.keyCode !== Garnish.SPACE_KEY) {
                         return;
                     }
 
@@ -752,7 +758,7 @@ $.extend(jQuery.event.special, {
                         Garnish.$doc.on('keyup.garnish-activate', function(e) {
                             $elem.removeClass('active');
 
-                            if (e.keyCode == Garnish.SPACE_KEY) {
+                            if (e.keyCode === Garnish.SPACE_KEY) {
                                 e.preventDefault();
                                 $elem.trigger('activate');
                             }
@@ -780,7 +786,7 @@ $.extend(jQuery.event.special, {
             $elem.data('garnish-textchange-value', $elem.val());
             $elem.on('keypress.garnish-textchange keyup.garnish-textchange change.garnish-textchange blur.garnish-textchange', function(e) {
                 var val = $elem.val();
-                if (val != $elem.data('garnish-textchange-value')) {
+                if (val !== $elem.data('garnish-textchange-value')) {
                     $elem.data('garnish-textchange-value', val);
                     $elem.trigger('textchange');
                 }
@@ -792,7 +798,7 @@ $.extend(jQuery.event.special, {
         handle: function(ev, data) {
             var el = this;
             var args = arguments;
-            var delay = data && data.delay !== undefined ? data.delay : (ev.data && ev.data.delay !== undefined ? ev.data.delay : null);
+            var delay = data && typeof data.delay !== 'undefined' ? data.delay : (ev.data && ev.data.delay !== undefined ? ev.data.delay : null);
             var handleObj = ev.handleObj;
             var targetData = $.data(ev.target);
 
@@ -814,7 +820,7 @@ $.extend(jQuery.event.special, {
     resize: {
         setup: function(data, namespaces, eventHandle) {
             // window is the only element that natively supports a resize event
-            if (this == window) {
+            if (this === window) {
                 return false;
             }
 
@@ -822,7 +828,7 @@ $.extend(jQuery.event.special, {
             getErd().listenTo(this, triggerResizeEvent)
         },
         teardown: function() {
-            if (this == window) {
+            if (this === window) {
                 return false;
             }
 

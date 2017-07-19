@@ -20,7 +20,7 @@ Garnish.DragDrop = Garnish.Drag.extend({
 
         updateDropTargets: function() {
             if (this.settings.dropTargets) {
-                if (typeof this.settings.dropTargets == 'function') {
+                if (typeof this.settings.dropTargets === 'function') {
                     this.$dropTargets = $(this.settings.dropTargets());
                 }
                 else {
@@ -62,7 +62,7 @@ Garnish.DragDrop = Garnish.Drag.extend({
 
                 // has the drop target changed?
                 if (
-                    (this.$activeDropTarget && this.onDrag._activeDropTarget != this.$activeDropTarget[0]) ||
+                    (this.$activeDropTarget && this.onDrag._activeDropTarget !== this.$activeDropTarget[0]) ||
                     (!this.$activeDropTarget && this.onDrag._activeDropTarget !== null)
                 ) {
                     // was there a previous one?
