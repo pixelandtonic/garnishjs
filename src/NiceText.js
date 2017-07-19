@@ -66,7 +66,7 @@ Garnish.NiceText = Garnish.Base.extend(
 
             this.getVal();
 
-            this.autoHeight = (this.settings.autoHeight && this.$input.prop('nodeName') == 'TEXTAREA');
+            this.autoHeight = (this.settings.autoHeight && this.$input.prop('nodeName') === 'TEXTAREA');
 
             if (this.autoHeight) {
                 this.minHeight = this.getHeightForValue('');
@@ -169,7 +169,7 @@ Garnish.NiceText = Garnish.Base.extend(
 
             this.inputBoxSizing = this.$input.css('box-sizing');
 
-            if (this.inputBoxSizing == 'border-box') {
+            if (this.inputBoxSizing === 'border-box') {
                 this.$stage.css({
                     'border-top': this.$input.css('border-top'),
                     'border-right': this.$input.css('border-right'),
@@ -193,7 +193,7 @@ Garnish.NiceText = Garnish.Base.extend(
                 this.buildStage();
             }
 
-            if (this.inputBoxSizing == 'border-box') {
+            if (this.inputBoxSizing === 'border-box') {
                 this.$stage.css('width', this.$input.outerWidth());
             }
             else {
@@ -231,7 +231,7 @@ Garnish.NiceText = Garnish.Base.extend(
 
             this.$stage.html(val);
 
-            if (this.inputBoxSizing == 'border-box') {
+            if (this.inputBoxSizing === 'border-box') {
                 this.getHeightForValue._height = this.$stage.outerHeight();
             }
             else {

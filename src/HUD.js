@@ -32,7 +32,7 @@ Garnish.HUD = Garnish.Base.extend(
             this.on('hide', this.settings.onHide);
             this.on('submit', this.settings.onSubmit);
 
-            if (Garnish.HUD.activeHUDs === undefined) {
+            if (typeof Garnish.HUD.activeHUDs === 'undefined') {
                 Garnish.HUD.activeHUDs = {};
             }
 
@@ -49,14 +49,14 @@ Garnish.HUD = Garnish.Base.extend(
             var $parent = this.$trigger;
 
             do {
-                if ($parent.css('position') == 'fixed') {
+                if ($parent.css('position') === 'fixed') {
                     this.$fixedTriggerParent = $parent;
                     break;
                 }
 
                 $parent = $parent.offsetParent();
             }
-            while ($parent.length && $parent.prop('nodeName') != 'HTML');
+            while ($parent.length && $parent.prop('nodeName') !== 'HTML');
 
             if (this.$fixedTriggerParent) {
                 this.$hud.css('position', 'fixed');
@@ -135,6 +135,9 @@ Garnish.HUD = Garnish.Base.extend(
 
             if (this.settings.closeOtherHUDs) {
                 for (var hudID in Garnish.HUD.activeHUDs) {
+                    if (!Garnish.HUD.activeHUDs.hasOwnProperty(hudID)) {
+                        continue;
+                    }
                     Garnish.HUD.activeHUDs[hudID].hide();
                 }
             }
@@ -250,7 +253,7 @@ Garnish.HUD = Garnish.Base.extend(
 
             for (var i = 0; i < this.settings.orientations.length; i++) {
                 var orientation = this.settings.orientations[i],
-                    relevantSize = (orientation == 'top' || orientation == 'bottom' ? hudBodyHeight : hudBodyWidth);
+                    relevantSize = (orientation === 'top' || orientation === 'bottom' ? hudBodyHeight : hudBodyWidth);
 
                 if (clearances[orientation] - (this.settings.windowSpacing + this.settings.triggerSpacing) >= relevantSize) {
                     // This is the first orientation that has enough room in order of preference, so we'll go with this
@@ -265,7 +268,7 @@ Garnish.HUD = Garnish.Base.extend(
             }
 
             // Just in case...
-            if (!this.orientation || $.inArray(this.orientation, ['bottom', 'top', 'right', 'left']) == -1) {
+            if (!this.orientation || $.inArray(this.orientation, ['bottom', 'top', 'right', 'left']) === -1) {
                 this.orientation = 'bottom'
             }
 
@@ -282,7 +285,7 @@ Garnish.HUD = Garnish.Base.extend(
             var maxHudBodyWidth,
                 maxHudBodyHeight;
 
-            if (this.orientation == 'top' || this.orientation == 'bottom') {
+            if (this.orientation === 'top' || this.orientation === 'bottom') {
                 maxHudBodyWidth = windowWidth - this.settings.windowSpacing * 2;
                 maxHudBodyHeight = clearances[this.orientation] - this.settings.windowSpacing - this.settings.triggerSpacing;
             }
@@ -345,13 +348,14 @@ Garnish.HUD = Garnish.Base.extend(
             }
 
             // Set the HUD/tip positions
+            var triggerCenter, left, top;
 
-            if (this.orientation == 'top' || this.orientation == 'bottom') {
+            if (this.orientation === 'top' || this.orientation === 'bottom') {
                 // Center the HUD horizontally
-                var maxLeft = (windowWidth + windowScrollLeft) - (hudBodyWidth + this.settings.windowSpacing),
-                    minLeft = (windowScrollLeft + this.settings.windowSpacing),
-                    triggerCenter = triggerOffset.left + Math.round(triggerWidth / 2),
-                    left = triggerCenter - Math.round(hudBodyWidth / 2);
+                var maxLeft = (windowWidth + windowScrollLeft) - (hudBodyWidth + this.settings.windowSpacing);
+                var minLeft = (windowScrollLeft + this.settings.windowSpacing);
+                triggerCenter = triggerOffset.left + Math.round(triggerWidth / 2);
+                left = triggerCenter - Math.round(hudBodyWidth / 2);
 
                 if (left > maxLeft) {
                     left = maxLeft;
@@ -365,21 +369,21 @@ Garnish.HUD = Garnish.Base.extend(
                 var tipLeft = (triggerCenter - left) - (this.settings.tipWidth / 2);
                 this.$tip.css({left: tipLeft, top: ''});
 
-                if (this.orientation == 'top') {
-                    var top = triggerOffset.top - (hudBodyHeight + this.settings.triggerSpacing);
+                if (this.orientation === 'top') {
+                    top = triggerOffset.top - (hudBodyHeight + this.settings.triggerSpacing);
                     this.$hud.css('top', top);
                 }
                 else {
-                    var top = triggerOffset.bottom + this.settings.triggerSpacing;
+                    top = triggerOffset.bottom + this.settings.triggerSpacing;
                     this.$hud.css('top', top);
                 }
             }
             else {
                 // Center the HUD vertically
-                var maxTop = (windowHeight + windowScrollTop) - (hudBodyHeight + this.settings.windowSpacing),
-                    minTop = (windowScrollTop + this.settings.windowSpacing),
-                    triggerCenter = triggerOffset.top + Math.round(triggerHeight / 2),
-                    top = triggerCenter - Math.round(hudBodyHeight / 2);
+                var maxTop = (windowHeight + windowScrollTop) - (hudBodyHeight + this.settings.windowSpacing);
+                var minTop = (windowScrollTop + this.settings.windowSpacing);
+                triggerCenter = triggerOffset.top + Math.round(triggerHeight / 2);
+                top = triggerCenter - Math.round(hudBodyHeight / 2);
 
                 if (top > maxTop) {
                     top = maxTop;
@@ -394,12 +398,12 @@ Garnish.HUD = Garnish.Base.extend(
                 this.$tip.css({top: tipTop, left: ''});
 
 
-                if (this.orientation == 'left') {
-                    var left = triggerOffset.left - (hudBodyWidth + this.settings.triggerSpacing);
+                if (this.orientation === 'left') {
+                    left = triggerOffset.left - (hudBodyWidth + this.settings.triggerSpacing);
                     this.$hud.css('left', left);
                 }
                 else {
-                    var left = triggerOffset.right + this.settings.triggerSpacing;
+                    left = triggerOffset.right + this.settings.triggerSpacing;
                     this.$hud.css('left', left);
                 }
             }
@@ -427,7 +431,7 @@ Garnish.HUD = Garnish.Base.extend(
 
             this.addListener(Garnish.$win, 'resize', 'queueUpdateSizeAndPosition');
             this.addListener(this.$main, 'resize', 'queueUpdateSizeAndPosition');
-            if (!this.$fixedTriggerParent && Garnish.$scrollContainer[0] != Garnish.$win[0]) {
+            if (!this.$fixedTriggerParent && Garnish.$scrollContainer[0] !== Garnish.$win[0]) {
                 this.addListener(Garnish.$scrollContainer, 'scroll', 'queueUpdateSizeAndPosition');
             }
 
@@ -441,7 +445,7 @@ Garnish.HUD = Garnish.Base.extend(
 
             this.removeListener(Garnish.$win, 'resize');
             this.removeListener(this.$main, 'resize');
-            if (!this.$fixedTriggerParent && Garnish.$scrollContainer[0] != Garnish.$win[0]) {
+            if (!this.$fixedTriggerParent && Garnish.$scrollContainer[0] !== Garnish.$win[0]) {
                 this.removeListener(Garnish.$scrollContainer, 'scroll');
             }
 

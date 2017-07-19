@@ -35,12 +35,12 @@ Garnish.BaseDrag = Garnish.Base.extend(
         /**
          * Constructor
          *
-         * @param mixed  items    Elements that should be draggable right away. (Can be skipped.)
-         * @param object settings Any settings that should override the defaults.
+         * @param {object} items    Elements that should be draggable right away. (Can be skipped.)
+         * @param {object} settings Any settings that should override the defaults.
          */
         init: function(items, settings) {
             // Param mapping
-            if (settings === undefined && $.isPlainObject(items)) {
+            if (typeof settings === 'undefined' && $.isPlainObject(items)) {
                 // (settings)
                 settings = items;
                 items = null;
@@ -79,7 +79,7 @@ Garnish.BaseDrag = Garnish.Base.extend(
                 // Is the mouse up against one of the window edges?
                 this.drag._scrollProperty = null;
 
-                if (this.settings.axis != Garnish.X_AXIS) {
+                if (this.settings.axis !== Garnish.X_AXIS) {
                     // Scrolling up?
                     this.drag._winScrollTop = Garnish.$win.scrollTop();
                     this.drag._minMouseScrollY = this.drag._winScrollTop + Garnish.BaseDrag.windowScrollTargetSize;
@@ -101,7 +101,7 @@ Garnish.BaseDrag = Garnish.Base.extend(
                     }
                 }
 
-                if (!this.drag._scrollProperty && this.settings.axis != Garnish.Y_AXIS) {
+                if (!this.drag._scrollProperty && this.settings.axis !== Garnish.Y_AXIS) {
                     // Scrolling left?
                     this.drag._winScrollLeft = Garnish.$win.scrollLeft();
                     this.drag._minMouseScrollX = this.drag._winScrollLeft + Garnish.BaseDrag.windowScrollTargetSize;
@@ -164,7 +164,7 @@ Garnish.BaseDrag = Garnish.Base.extend(
         /**
          * Add Items
          *
-         * @param mixed items Elements that should be draggable.
+         * @param {object} items Elements that should be draggable.
          */
         addItems: function(items) {
             items = $.makeArray(items);
@@ -191,7 +191,7 @@ Garnish.BaseDrag = Garnish.Base.extend(
         /**
          * Remove Items
          *
-         * @param mixed items Elements that should no longer be draggable.
+         * @param {object} items Elements that should no longer be draggable.
          */
         removeItems: function(items) {
             items = $.makeArray(items);
@@ -201,7 +201,7 @@ Garnish.BaseDrag = Garnish.Base.extend(
 
                 // Make sure we actually know about this item
                 var index = $.inArray(item, this.$items);
-                if (index != -1) {
+                if (index !== -1) {
                     this._deinitItem(item);
                     this.$items.splice(index, 1);
                 }
@@ -268,7 +268,7 @@ Garnish.BaseDrag = Garnish.Base.extend(
          */
         _handleMouseDown: function(ev) {
             // Ignore right clicks
-            if (ev.which != Garnish.PRIMARY_CLICK) {
+            if (ev.which !== Garnish.PRIMARY_CLICK) {
                 return;
             }
 
@@ -286,7 +286,7 @@ Garnish.BaseDrag = Garnish.Base.extend(
             }
 
             // Make sure the target isn't a button (unless the button is the handle)
-            if (ev.currentTarget != ev.target && this.settings.ignoreHandleSelector) {
+            if (ev.currentTarget !== ev.target && this.settings.ignoreHandleSelector) {
                 if (
                     $target.is(this.settings.ignoreHandleSelector) ||
                     $target.closest(this.settings.ignoreHandleSelector).length
@@ -321,15 +321,15 @@ Garnish.BaseDrag = Garnish.Base.extend(
 
         _getItemHandle: function(item) {
             if (this.settings.handle) {
-                if (typeof this.settings.handle == 'object') {
+                if (typeof this.settings.handle === 'object') {
                     return $(this.settings.handle);
                 }
 
-                if (typeof this.settings.handle == 'string') {
+                if (typeof this.settings.handle === 'string') {
                     return $(this.settings.handle, item);
                 }
 
-                if (typeof this.settings.handle == 'function') {
+                if (typeof this.settings.handle === 'function') {
                     return $(this.settings.handle(item));
                 }
             }
@@ -346,11 +346,11 @@ Garnish.BaseDrag = Garnish.Base.extend(
             this.realMouseX = ev.pageX;
             this.realMouseY = ev.pageY;
 
-            if (this.settings.axis != Garnish.Y_AXIS) {
+            if (this.settings.axis !== Garnish.Y_AXIS) {
                 this.mouseX = ev.pageX;
             }
 
-            if (this.settings.axis != Garnish.X_AXIS) {
+            if (this.settings.axis !== Garnish.X_AXIS) {
                 this.mouseY = ev.pageY;
             }
 

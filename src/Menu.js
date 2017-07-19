@@ -112,11 +112,11 @@ Garnish.Menu = Garnish.Base.extend(
             // Figure out how we're aliging it
             var align = this.$container.data('align');
 
-            if (align != 'left' && align != 'center' && align != 'right') {
+            if (align !== 'left' && align !== 'center' && align !== 'right') {
                 align = 'left';
             }
 
-            if (align == 'center') {
+            if (align === 'center') {
                 this._alignCenter();
             }
             else {
@@ -124,7 +124,7 @@ Garnish.Menu = Garnish.Base.extend(
                 var rightClearance = this._windowWidth + this._windowScrollLeft - (this._anchorOffset.left + this._menuWidth),
                     leftClearance = this._anchorOffsetRight - this._menuWidth;
 
-                if (align == 'right' && leftClearance >= 0 || rightClearance < 0) {
+                if (align === 'right' && leftClearance >= 0 || rightClearance < 0) {
                     this._alignRight();
                 }
                 else {
@@ -147,7 +147,7 @@ Garnish.Menu = Garnish.Base.extend(
 
         show: function() {
             // Move the menu to the end of the DOM
-            this.$container.appendTo(Garnish.$bod)
+            this.$container.appendTo(Garnish.$bod);
 
             if (this.$anchor) {
                 this.setPositionRelativeToAnchor();

@@ -46,7 +46,7 @@ Garnish.Pill = Garnish.Base.extend(
             else {
                 var nextIndex = this._getSelectedBtnIndex() + 1;
 
-                if (this.$btns[nextIndex] !== undefined) {
+                if (typeof this.$btns[nextIndex] !== 'undefined') {
                     this.select(this.$btns[nextIndex]);
                 }
             }
@@ -59,7 +59,7 @@ Garnish.Pill = Garnish.Base.extend(
             else {
                 var prevIndex = this._getSelectedBtnIndex() - 1;
 
-                if (this.$btns[prevIndex] !== undefined) {
+                if (typeof this.$btns[prevIndex] !== 'undefined') {
                     this.select(this.$btns[prevIndex]);
                 }
             }
@@ -70,7 +70,7 @@ Garnish.Pill = Garnish.Base.extend(
         },
 
         _getSelectedBtnIndex: function() {
-            if (this.$selectedBtn[0] !== undefined) {
+            if (typeof this.$selectedBtn[0] !== 'undefined') {
                 return $.inArray(this.$selectedBtn[0], this.$btns);
             }
             else {

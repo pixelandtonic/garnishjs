@@ -40,9 +40,13 @@ Garnish.ContextMenu = Garnish.Base.extend(
             var $ul = $('<ul/>').appendTo(this.$menu);
 
             for (var i in this.options) {
+                if (!this.options.hasOwnProperty(i)) {
+                    continue;
+                }
+
                 var option = this.options[i];
 
-                if (option == '-') {
+                if (option === '-') {
                     // Create a new <ul>
                     $('<hr/>').appendTo(this.$menu);
                     $ul = $('<ul/>').appendTo(this.$menu);
@@ -51,7 +55,7 @@ Garnish.ContextMenu = Garnish.Base.extend(
                     var $li = $('<li></li>').appendTo($ul),
                         $a = $('<a>' + option.label + '</a>').appendTo($li);
 
-                    if (typeof option.onClick == 'function') {
+                    if (typeof option.onClick === 'function') {
                         // maintain the current $a and options.onClick variables
                         (function($a, onClick) {
                             setTimeout($.proxy(function() {
@@ -73,17 +77,17 @@ Garnish.ContextMenu = Garnish.Base.extend(
          */
         showMenu: function(ev) {
             // Ignore left mouse clicks
-            if (ev.type == 'mousedown' && ev.which != Garnish.SECONDARY_CLICK) {
+            if (ev.type === 'mousedown' && ev.which !== Garnish.SECONDARY_CLICK) {
                 return;
             }
 
-            if (ev.type == 'contextmenu') {
+            if (ev.type === 'contextmenu') {
                 // Prevent the real context menu from showing
                 ev.preventDefault();
             }
 
             // Ignore if already showing
-            if (this.showing && ev.currentTarget == this.currentTarget) {
+            if (this.showing && ev.currentTarget === this.currentTarget) {
                 return;
             }
 

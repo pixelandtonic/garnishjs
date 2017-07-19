@@ -19,7 +19,7 @@ Garnish.Modal = Garnish.Base.extend(
 
         init: function(container, settings) {
             // Param mapping
-            if (settings === undefined && $.isPlainObject(container)) {
+            if (typeof settings === 'undefined' && $.isPlainObject(container)) {
                 // (settings)
                 settings = container;
                 container = null;
@@ -87,7 +87,7 @@ Garnish.Modal = Garnish.Base.extend(
 
         show: function() {
             // Close other modals as needed
-            if (this.settings.closeOtherModals && Garnish.Modal.visibleModal && Garnish.Modal.visibleModal != this) {
+            if (this.settings.closeOtherModals && Garnish.Modal.visibleModal && Garnish.Modal.visibleModal !== this) {
                 Garnish.Modal.visibleModal.hide();
             }
 

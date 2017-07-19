@@ -31,12 +31,12 @@ Garnish.Drag = Garnish.BaseDrag.extend(
         /**
          * Constructor
          *
-         * @param mixed  items    Elements that should be draggable right away. (Can be skipped.)
-         * @param object settings Any settings that should override the defaults.
+         * @param {object} items    Elements that should be draggable right away. (Can be skipped.)
+         * @param {object} settings Any settings that should override the defaults.
          */
         init: function(items, settings) {
             // Param mapping
-            if (settings === undefined && $.isPlainObject(items)) {
+            if (typeof settings === 'undefined' && $.isPlainObject(items)) {
                 // (settings)
                 settings = items;
                 items = null;
@@ -80,11 +80,10 @@ Garnish.Drag = Garnish.BaseDrag.extend(
             for (var i = 0; i < this.$items.length; i++) {
                 var item = this.$items[i];
 
-                if ($.inArray(item, this.$draggee) == -1) {
+                if ($.inArray(item, this.$draggee) === -1) {
                     this.otherItems.push(item);
                 }
             }
-            ;
 
             this.totalOtherItems = this.otherItems.length;
 
@@ -93,7 +92,7 @@ Garnish.Drag = Garnish.BaseDrag.extend(
                 this.updateHelperPosProxy = $.proxy(this, '_updateHelperPos');
             }
 
-            this.helperLagIncrement = this.helpers.length == 1 ? 0 : this.settings.helperLagIncrementDividend / (this.helpers.length - 1);
+            this.helperLagIncrement = this.helpers.length === 1 ? 0 : this.settings.helperLagIncrementDividend / (this.helpers.length - 1);
             this.updateHelperPosFrame = Garnish.requestAnimationFrame(this.updateHelperPosProxy);
 
             this.base();
@@ -232,12 +231,13 @@ Garnish.Drag = Garnish.BaseDrag.extend(
                 });
 
                 var draggeeOffset = $draggee.offset();
+                var callback;
 
-                if (i == 0) {
-                    var callback = $.proxy(this, '_showDraggee');
+                if (i === 0) {
+                    callback = $.proxy(this, '_showDraggee');
                 }
                 else {
-                    var callback = null;
+                    callback = null;
                 }
 
                 $helper.velocity({left: draggeeOffset.left, top: draggeeOffset.top}, Garnish.FX_DURATION, callback);
@@ -278,7 +278,7 @@ Garnish.Drag = Garnish.BaseDrag.extend(
             });
 
             if (this.settings.helper) {
-                if (typeof this.settings.helper == 'function') {
+                if (typeof this.settings.helper === 'function') {
                     $draggeeHelper = this.settings.helper($draggeeHelper);
                 }
                 else {

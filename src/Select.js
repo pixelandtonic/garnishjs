@@ -25,13 +25,13 @@ Garnish.Select = Garnish.Base.extend(
             this.$container = $(container);
 
             // Param mapping
-            if (items === undefined && $.isPlainObject(container)) {
+            if (typeof items === 'undefined' && $.isPlainObject(container)) {
                 // (settings)
                 settings = container;
                 container = null;
                 items = null;
             }
-            else if (settings === undefined && $.isPlainObject(items)) {
+            else if (typeof settings === 'undefined' && $.isPlainObject(items)) {
                 // (container, settings)
                 settings = items;
                 items = null;
@@ -55,7 +55,7 @@ Garnish.Select = Garnish.Base.extend(
             // --------------------------------------------------------------------
 
             if (this.settings.allowEmpty && !this.settings.checkboxMode) {
-                this.addListener(this.$container, 'click', function(ev) {
+                this.addListener(this.$container, 'click', function() {
                     if (this.ignoreClick) {
                         this.ignoreClick = false;
                     }
@@ -86,7 +86,7 @@ Garnish.Select = Garnish.Base.extend(
                 item = item[0];
             }
 
-            return ($.inArray(item, this.$selectedItems) != -1);
+            return ($.inArray(item, this.$selectedItems) !== -1);
         },
 
         /**
@@ -138,13 +138,15 @@ Garnish.Select = Garnish.Base.extend(
             this.focusItem($item, preventScroll);
 
             // prepare params for $.slice()
+            var sliceFrom, sliceTo;
+
             if (this.first < this.last) {
-                var sliceFrom = this.first,
-                    sliceTo = this.last + 1;
+                sliceFrom = this.first;
+                sliceTo = this.last + 1;
             }
             else {
-                var sliceFrom = this.last,
-                    sliceTo = this.first + 1;
+                sliceFrom = this.last;
+                sliceTo = this.first + 1;
             }
 
             this._selectItems(this.$items.slice(sliceFrom, sliceTo));
@@ -294,14 +296,16 @@ Garnish.Select = Garnish.Base.extend(
                 $closestItem = null;
 
             // Go the other way if this is the X axis and a RTL page
-            if (Garnish.rtl && axis == Garnish.X_AXIS) {
-                var step = dirProps.step * -1;
+            var step;
+
+            if (Garnish.rtl && axis === Garnish.X_AXIS) {
+                step = dirProps.step * -1;
             }
             else {
-                var step = dirProps.step;
+                step = dirProps.step;
             }
 
-            for (var i = index + step; (this.$items[i] !== undefined); i += step) {
+            for (var i = index + step; (typeof this.$items[i] !== 'undefined'); i += step) {
                 var $otherItem = this.$items.eq(i),
                     otherOffset = $otherItem.offset();
 
@@ -312,7 +316,7 @@ Garnish.Select = Garnish.Base.extend(
                         otherRowPos = otherOffset[axisProps.rowOffset];
                     }
                     // Have we gone too far?
-                    else if (otherOffset[axisProps.rowOffset] != otherRowPos) {
+                    else if (otherOffset[axisProps.rowOffset] !== otherRowPos) {
                         break;
                     }
 
@@ -398,19 +402,21 @@ Garnish.Select = Garnish.Base.extend(
                 $.data(item, 'select', this);
 
                 // Get the handle
+                var $handle;
+
                 if (this.settings.handle) {
-                    if (typeof this.settings.handle == 'object') {
-                        var $handle = $(this.settings.handle);
+                    if (typeof this.settings.handle === 'object') {
+                        $handle = $(this.settings.handle);
                     }
-                    else if (typeof this.settings.handle == 'string') {
-                        var $handle = $(item).find(this.settings.handle);
+                    else if (typeof this.settings.handle === 'string') {
+                        $handle = $(item).find(this.settings.handle);
                     }
-                    else if (typeof this.settings.handle == 'function') {
-                        var $handle = $(this.settings.handle(item));
+                    else if (typeof this.settings.handle === 'function') {
+                        $handle = $(this.settings.handle(item));
                     }
                 }
                 else {
-                    var $handle = $(item);
+                    $handle = $(item);
                 }
 
                 $.data(item, 'select-handle', $handle);
@@ -418,7 +424,7 @@ Garnish.Select = Garnish.Base.extend(
 
                 this.addListener($handle, 'mousedown', 'onMouseDown');
                 this.addListener($handle, 'mouseup', 'onMouseUp');
-                this.addListener($handle, 'click', function(ev) {
+                this.addListener($handle, 'click', function() {
                     this.ignoreClick = true;
                 });
 
@@ -443,13 +449,13 @@ Garnish.Select = Garnish.Base.extend(
 
                 // Make sure we actually know about this item
                 var index = $.inArray(item, this.$items);
-                if (index != -1) {
+                if (index !== -1) {
                     this._deinitItem(item);
                     this.$items.splice(index, 1);
                     itemsChanged = true;
 
                     var selectedIndex = $.inArray(item, this.$selectedItems);
-                    if (selectedIndex != -1) {
+                    if (selectedIndex !== -1) {
                         this.$selectedItems.splice(selectedIndex, 1);
                         selectionChanged = true;
                     }
@@ -511,7 +517,7 @@ Garnish.Select = Garnish.Base.extend(
          * We only want to have one focusable item per selection list, so that the user
          * doesn't have to tab through a million items.
          *
-         * @param object $item
+         * @param {object} $item
          */
         setFocusableItem: function($item) {
             if (this.$focusable) {
@@ -560,7 +566,7 @@ Garnish.Select = Garnish.Base.extend(
          */
         onMouseDown: function(ev) {
             // ignore right clicks
-            if (ev.which != Garnish.PRIMARY_CLICK) {
+            if (ev.which !== Garnish.PRIMARY_CLICK) {
                 return;
             }
 
@@ -587,7 +593,7 @@ Garnish.Select = Garnish.Base.extend(
          */
         onMouseUp: function(ev) {
             // ignore right clicks
-            if (ev.which != Garnish.PRIMARY_CLICK) {
+            if (ev.which !== Garnish.PRIMARY_CLICK) {
                 return;
             }
 
@@ -601,7 +607,7 @@ Garnish.Select = Garnish.Base.extend(
             // was this a click?
             if (
                 !this._actAsCheckbox(ev) && !ev.shiftKey &&
-                ev.currentTarget == this.mousedownTarget
+                ev.currentTarget === this.mousedownTarget
             ) {
                 // If this is already selected, wait a moment to see if this is a double click before making any rash decisions
                 if (this.isSelected($item)) {
@@ -623,19 +629,21 @@ Garnish.Select = Garnish.Base.extend(
          */
         onKeyDown: function(ev) {
             // Ignore if the focus isn't on one of our items
-            if (ev.target != ev.currentTarget) {
+            if (ev.target !== ev.currentTarget) {
                 return;
             }
 
             var ctrlKey = Garnish.isCtrlKeyPressed(ev);
 
+            var anchor, $item;
+
             if (!this.settings.checkboxMode || !this.$focusable.length) {
-                var anchor = ev.shiftKey ? this.last : this.first;
+                anchor = ev.shiftKey ? this.last : this.first;
             }
             else {
-                var anchor = $.inArray(this.$focusable[0], this.$items);
+                anchor = $.inArray(this.$focusable[0], this.$items);
 
-                if (anchor == -1) {
+                if (anchor === -1) {
                     anchor = 0;
                 }
             }
@@ -648,18 +656,18 @@ Garnish.Select = Garnish.Base.extend(
                     // Select the last item if none are selected
                     if (this.first === null) {
                         if (Garnish.ltr) {
-                            var $item = this.getLastItem();
+                            $item = this.getLastItem();
                         }
                         else {
-                            var $item = this.getFirstItem();
+                            $item = this.getFirstItem();
                         }
                     }
                     else {
                         if (ctrlKey) {
-                            var $item = this.getFurthestItemToTheLeft(anchor);
+                            $item = this.getFurthestItemToTheLeft(anchor);
                         }
                         else {
-                            var $item = this.getItemToTheLeft(anchor);
+                            $item = this.getItemToTheLeft(anchor);
                         }
                     }
 
@@ -672,18 +680,18 @@ Garnish.Select = Garnish.Base.extend(
                     // Select the first item if none are selected
                     if (this.first === null) {
                         if (Garnish.ltr) {
-                            var $item = this.getFirstItem();
+                            $item = this.getFirstItem();
                         }
                         else {
-                            var $item = this.getLastItem();
+                            $item = this.getLastItem();
                         }
                     }
                     else {
                         if (ctrlKey) {
-                            var $item = this.getFurthestItemToTheRight(anchor);
+                            $item = this.getFurthestItemToTheRight(anchor);
                         }
                         else {
-                            var $item = this.getItemToTheRight(anchor);
+                            $item = this.getItemToTheRight(anchor);
                         }
                     }
 
@@ -696,19 +704,19 @@ Garnish.Select = Garnish.Base.extend(
                     // Select the last item if none are selected
                     if (this.first === null) {
                         if (this.$focusable) {
-                            var $item = this.$focusable.prev();
+                            $item = this.$focusable.prev();
                         }
 
                         if (!this.$focusable || !$item.length) {
-                            var $item = this.getLastItem();
+                            $item = this.getLastItem();
                         }
                     }
                     else {
                         if (ctrlKey) {
-                            var $item = this.getFurthestItemAbove(anchor);
+                            $item = this.getFurthestItemAbove(anchor);
                         }
                         else {
-                            var $item = this.getItemAbove(anchor);
+                            $item = this.getItemAbove(anchor);
                         }
 
                         if (!$item) {
@@ -725,19 +733,19 @@ Garnish.Select = Garnish.Base.extend(
                     // Select the first item if none are selected
                     if (this.first === null) {
                         if (this.$focusable) {
-                            var $item = this.$focusable.next();
+                            $item = this.$focusable.next();
                         }
 
                         if (!this.$focusable || !$item.length) {
-                            var $item = this.getFirstItem();
+                            $item = this.getFirstItem();
                         }
                     }
                     else {
                         if (ctrlKey) {
-                            var $item = this.getFurthestItemBelow(anchor);
+                            $item = this.getFurthestItemBelow(anchor);
                         }
                         else {
-                            var $item = this.getItemBelow(anchor);
+                            $item = this.getItemBelow(anchor);
                         }
 
                         if (!$item) {
