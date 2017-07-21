@@ -48,5 +48,6 @@
     "watchify": "^3.7.0",
     "yargs": "^4.2.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "version": "0.1.19"
 }
