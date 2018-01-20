@@ -170,9 +170,6 @@ Garnish.HUD = Garnish.Base.extend(
                 e.stopPropagation();
             }
 
-            this.pendingUpdateSizeAndPosition = false;
-            this.removeUpdateSizeAndPositionListeners();
-
             var windowWidth,
                 windowHeight,
                 triggerWidth,
@@ -408,10 +405,7 @@ Garnish.HUD = Garnish.Base.extend(
                 }
             }
 
-            Garnish.requestAnimationFrame($.proxy(function() {
-                this.addUpdateSizeAndPositionListeners()
-            }, this));
-
+            this.pendingUpdateSizeAndPosition = false;
             this.trigger('updateSizeAndPosition');
         },
 
@@ -420,8 +414,8 @@ Garnish.HUD = Garnish.Base.extend(
                 return;
             }
 
-            Garnish.requestAnimationFrame($.proxy(this, 'updateSizeAndPosition'));
             this.pendingUpdateSizeAndPosition = true;
+            Garnish.requestAnimationFrame($.proxy(this, 'updateSizeAndPosition'));
         },
 
         addUpdateSizeAndPositionListeners: function() {
