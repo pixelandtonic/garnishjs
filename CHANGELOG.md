@@ -1,6 +1,11 @@
 Garnish Changelog
 =================
 
+## 0.1.20 - 2018-01-20
+
+### Fixed
+- Fixed a bug where HUDs could get themselves into an infinite repositioning loop.
+
 ## 0.1.19 - 2017-07-19
 
 ### General
