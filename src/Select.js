@@ -634,6 +634,7 @@ Garnish.Select = Garnish.Base.extend(
             }
 
             var ctrlKey = Garnish.isCtrlKeyPressed(ev);
+            var shiftKey = ev.shiftKey;
 
             var anchor, $item;
 
@@ -757,7 +758,7 @@ Garnish.Select = Garnish.Base.extend(
                 }
 
                 case Garnish.SPACE_KEY: {
-                    if (!ctrlKey) {
+                    if (!ctrlKey && !shiftKey) {
                         ev.preventDefault();
 
                         if (this.isSelected(this.$focusable)) {
