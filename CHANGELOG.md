@@ -1,6 +1,14 @@
 Garnish Changelog
 =================
 
+## 0.1.21 - 2018-03-29
+
+### Changed
+- `Garnish.Select` will no longer toggle focus on an item when `spacebar` is pressed, if the `shift` key is down.
+- `Garnish.Select` will now trigger a `focusItem` event when an item is focused.
+- `Garnish.Select` will now keep track of the focused item via a `$focusedItem` property.
+- Event handlers registered with `Garnish.addListener()` can now return `false` to cancel the event.
+
 ## 0.1.20 - 2018-01-20
 
 ### Fixed

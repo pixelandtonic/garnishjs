@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.20
+ * @version   0.1.21
  * @license   MIT
  */
 (function($){
@@ -832,7 +832,7 @@ Garnish.Base = Base.extend({
 
         $elem.on(this._formatEvents(events), data, $.proxy(function() {
             if (!this._disabled) {
-                func.apply(this, arguments);
+                return func.apply(this, arguments);
             }
         }, this));
 
@@ -4809,6 +4809,7 @@ Garnish.Select = Garnish.Base.extend(
         $container: null,
         $items: null,
         $selectedItems: null,
+        $focusedItem: null,
 
         mousedownTarget: null,
         mouseUpTimeout: null,
@@ -5299,6 +5300,11 @@ Garnish.Select = Garnish.Base.extend(
                 this.setFocusableItem($(this.$items[0]));
             }
 
+            if (this.$focusedItem) {
+                this.setFocusableItem(this.$focusedItem);
+                this.focusItem(this.$focusedItem);
+            }
+
             if (this.last !== null) {
                 this.last = this.getItemIndex(this.$last);
             }
@@ -5342,6 +5348,9 @@ Garnish.Select = Garnish.Base.extend(
             else {
                 $item.focus();
             }
+
+            this.$focusedItem = $item;
+            this.trigger('focusItem', {item: $item});
         },
 
         /**
@@ -5436,6 +5445,7 @@ Garnish.Select = Garnish.Base.extend(
             }
 
             var ctrlKey = Garnish.isCtrlKeyPressed(ev);
+            var shiftKey = ev.shiftKey;
 
             var anchor, $item;
 
@@ -5559,7 +5569,7 @@ Garnish.Select = Garnish.Base.extend(
                 }
 
                 case Garnish.SPACE_KEY: {
-                    if (!ctrlKey) {
+                    if (!ctrlKey && !shiftKey) {
                         ev.preventDefault();
 
                         if (this.isSelected(this.$focusable)) {
@@ -5598,9 +5608,11 @@ Garnish.Select = Garnish.Base.extend(
                     }
                 }
                 else {
-                    // just set the new item to be focussable
+                    // just set the new item to be focusable
                     this.setFocusableItem($item);
                     $item.focus();
+                    this.$focusedItem = $item;
+                    this.trigger('focusItem', {item: $item});
                 }
             }
         },
