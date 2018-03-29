@@ -7,6 +7,7 @@ Garnish.Select = Garnish.Base.extend(
         $container: null,
         $items: null,
         $selectedItems: null,
+        $focusedItem: null,
 
         mousedownTarget: null,
         mouseUpTimeout: null,
@@ -497,6 +498,11 @@ Garnish.Select = Garnish.Base.extend(
                 this.setFocusableItem($(this.$items[0]));
             }
 
+            if (this.$focusedItem) {
+                this.setFocusableItem(this.$focusedItem);
+                this.focusItem(this.$focusedItem);
+            }
+
             if (this.last !== null) {
                 this.last = this.getItemIndex(this.$last);
             }
@@ -540,6 +546,8 @@ Garnish.Select = Garnish.Base.extend(
             else {
                 $item.focus();
             }
+
+            this.$focusedItem = $item;
         },
 
         /**
@@ -800,6 +808,7 @@ Garnish.Select = Garnish.Base.extend(
                     // just set the new item to be focussable
                     this.setFocusableItem($item);
                     $item.focus();
+                    this.$focusedItem = $item;
                     this.trigger('focusItem', {item: $item});
                 }
             }
