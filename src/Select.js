@@ -806,7 +806,7 @@ Garnish.Select = Garnish.Base.extend(
                     }
                 }
                 else {
-                    // just set the new item to be focussable
+                    // just set the new item to be focusable
                     this.setFocusableItem($item);
                     $item.focus();
                     this.$focusedItem = $item;
