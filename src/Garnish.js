@@ -674,7 +674,7 @@ Garnish.Base = Base.extend({
 
         $elem.on(this._formatEvents(events), data, $.proxy(function() {
             if (!this._disabled) {
-                func.apply(this, arguments);
+                return func.apply(this, arguments);
             }
         }, this));
 
