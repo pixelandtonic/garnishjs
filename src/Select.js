@@ -548,6 +548,7 @@ Garnish.Select = Garnish.Base.extend(
             }
 
             this.$focusedItem = $item;
+            this.trigger('focusItem', {item: $item});
         },
 
         /**
