@@ -1,5 +1,9 @@
-Garnish Changelog
-=================
+# Garnish Changelog
+
+## Unreleased
+
+### Changed
+- `Garnish.HUD` instances are now accessible via `.data('hud')` on their container element. 
 
 ## 0.1.21 - 2018-03-29
 

@@ -37,7 +37,7 @@ Garnish.HUD = Garnish.Base.extend(
             }
 
             this.$shade = $('<div/>', {'class': this.settings.shadeClass});
-            this.$hud = $('<div/>', {'class': this.settings.hudClass});
+            this.$hud = $('<div/>', {'class': this.settings.hudClass}).data('hud', this);
             this.$tip = $('<div/>', {'class': this.settings.tipClass}).appendTo(this.$hud);
             this.$body = $('<form/>', {'class': this.settings.bodyClass}).appendTo(this.$hud);
             this.$mainContainer = $('<div/>', {'class': this.settings.mainContainerClass}).appendTo(this.$body);
