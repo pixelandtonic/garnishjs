@@ -1,6 +1,6 @@
 # Garnish Changelog
 
-## Unreleased
+## 0.1.22 - 2018-04-07
 
 ### Added
 - Added support for class-level events via `Garnish.on()` and `Garnish.off()`.

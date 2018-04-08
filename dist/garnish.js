@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.21
+ * @version   0.1.22
  * @license   MIT
  */
 (function($){
@@ -688,6 +688,63 @@ Garnish = $.extend(Garnish, {
             // so just be safe and make sure altKey == false
             return (ev.ctrlKey && !ev.altKey);
         }
+    },
+
+    _eventHandlers: [],
+
+    _normalizeEvents: function(events) {
+        if (typeof events === 'string') {
+            events = events.split(' ');
+        }
+
+        for (var i = 0; i < events.length; i++) {
+            if (typeof events[i] === 'string') {
+                events[i] = events[i].split('.');
+            }
+        }
+
+        return events;
+    },
+
+    on: function(target, events, data, handler) {
+        if (typeof data === 'function') {
+            handler = data;
+            data = {};
+        }
+
+        events = this._normalizeEvents(events);
+
+        for (var i = 0; i < events.length; i++) {
+            var ev = events[i];
+            this._eventHandlers.push({
+                target: target,
+                type: ev[0],
+                namespace: ev[1],
+                data: data,
+                handler: handler
+            });
+        }
+    },
+
+    off: function(target, events, handler) {
+        events = this._normalizeEvents(events);
+
+        for (var i = 0; i < events.length; i++) {
+            var ev = events[i];
+
+            for (var j = this._eventHandlers.length - 1; j >= 0; j--) {
+                var eventHandler = this._eventHandlers[j];
+
+                if (
+                    event.target === target &&
+                    eventHandler.type === ev[0] &&
+                    (!ev[1] || eventHandler.namespace === ev[1]) &&
+                    eventHandler.handler === handler
+                ) {
+                    this._eventHandlers.splice(j, 1);
+                }
+            }
+        }
     }
 });
 
@@ -724,11 +781,10 @@ Garnish.Base = Base.extend({
             data = {};
         }
 
-        events = this._normalizeEvents(events);
+        events = Garnish._normalizeEvents(events);
 
         for (var i = 0; i < events.length; i++) {
             var ev = events[i];
-
             this._eventHandlers.push({
                 type: ev[0],
                 namespace: ev[1],
@@ -739,7 +795,7 @@ Garnish.Base = Base.extend({
     },
 
     off: function(events, handler) {
-        events = this._normalizeEvents(events);
+        events = Garnish._normalizeEvents(events);
 
         for (var i = 0; i < events.length; i++) {
             var ev = events[i];
@@ -747,7 +803,11 @@ Garnish.Base = Base.extend({
             for (var j = this._eventHandlers.length - 1; j >= 0; j--) {
                 var eventHandler = this._eventHandlers[j];
 
-                if (eventHandler.type === ev[0] && (!ev[1] || eventHandler.namespace === ev[1]) && eventHandler.handler === handler) {
+                if (
+                    eventHandler.type === ev[0] &&
+                    (!ev[1] || eventHandler.namespace === ev[1]) &&
+                    eventHandler.handler === handler
+                ) {
                     this._eventHandlers.splice(j, 1);
                 }
             }
@@ -760,28 +820,26 @@ Garnish.Base = Base.extend({
             target: this
         };
 
-        for (var i = 0; i < this._eventHandlers.length; i++) {
-            var handler = this._eventHandlers[i];
+        // instance level event handlers
+        var i, handler, _ev;
+        for (i = 0; i < this._eventHandlers.length; i++) {
+            handler = this._eventHandlers[i];
 
             if (handler.type === type) {
-                var _ev = $.extend({data: handler.data}, data, ev);
-                handler.handler(_ev)
-            }
-        }
-    },
-
-    _normalizeEvents: function(events) {
-        if (typeof events === 'string') {
-            events = events.split(' ');
-        }
-
-        for (var i = 0; i < events.length; i++) {
-            if (typeof events[i] === 'string') {
-                events[i] = events[i].split('.');
+                _ev = $.extend({data: handler.data}, data, ev);
+                handler.handler(_ev);
             }
         }
 
-        return events;
+        // class level event handlers
+        for (i = 0; i < Garnish._eventHandlers.length; i++) {
+            handler = Garnish._eventHandlers[i];
+
+            if (this instanceof handler.target && handler.type === type) {
+                _ev = $.extend({data: handler.data}, data, ev);
+                handler.handler(_ev);
+            }
+        }
     },
 
     _splitEvents: function(events) {
@@ -2729,7 +2787,7 @@ Garnish.HUD = Garnish.Base.extend(
             }
 
             this.$shade = $('<div/>', {'class': this.settings.shadeClass});
-            this.$hud = $('<div/>', {'class': this.settings.hudClass});
+            this.$hud = $('<div/>', {'class': this.settings.hudClass}).data('hud', this);
             this.$tip = $('<div/>', {'class': this.settings.tipClass}).appendTo(this.$hud);
             this.$body = $('<form/>', {'class': this.settings.bodyClass}).appendTo(this.$hud);
             this.$mainContainer = $('<div/>', {'class': this.settings.mainContainerClass}).appendTo(this.$body);
