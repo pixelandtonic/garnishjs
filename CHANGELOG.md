@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+- Added support for class-level events via `Garnish.on()` and `Garnish.off()`.
+
 ### Changed
 - `Garnish.HUD` instances are now accessible via `.data('hud')` on their container element. 
 
