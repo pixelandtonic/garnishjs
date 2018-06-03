@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## Unreleased
+
+### Fixed
+- Fixed a bug where HUDs weren’t automatically resizing/repositioning themselves.
+
 ## 0.1.22 - 2018-04-07
 
 ### Added
