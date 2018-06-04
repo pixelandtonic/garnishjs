@@ -3,7 +3,8 @@
 ## Unreleased
 
 ### Changed
-- Menus that are too tall to fit in the current viewport are now scrollable. ([craftcms/cms#2942](https://github.com/craftcms/cms/issues/2942)) 
+- Menus that are too tall to fit in the current viewport are now scrollable. ([craftcms/cms#2942](https://github.com/craftcms/cms/issues/2942))
+- Menus now reposition themselves as the window is scrolled. 
 
 ### Fixed
 - Fixed a bug where HUDs weren’t automatically resizing/repositioning themselves.
