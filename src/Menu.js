@@ -102,11 +102,16 @@ Garnish.Menu = Garnish.Base.extend(
             var topClearance = this._anchorOffset.top - this._windowScrollTop,
                 bottomClearance = this._windowHeight + this._windowScrollTop - this._anchorOffsetBottom;
 
-            if (bottomClearance >= this._menuHeight || bottomClearance >= topClearance || topClearance < this._menuHeight) {
-                this.$container.css('top', this._anchorOffsetBottom);
-            }
-            else {
-                this.$container.css('top', this._anchorOffset.top - this._menuHeight);
+            if (bottomClearance >= this._menuHeight || (topClearance < this._menuHeight && bottomClearance >= topClearance)) {
+                this.$container.css({
+                    top: this._anchorOffsetBottom,
+                    maxHeight: bottomClearance - this.settings.windowSpacing
+                });
+            } else {
+                this.$container.css({
+                    top: this._anchorOffset.top - Math.min(this._menuHeight, topClearance - this.settings.windowSpacing),
+                    maxHeight: topClearance - this.settings.windowSpacing
+                });
             }
 
             // Figure out how we're aliging it
@@ -210,6 +215,7 @@ Garnish.Menu = Garnish.Base.extend(
     {
         defaults: {
             anchor: null,
+            windowSpacing: 5,
             onOptionSelect: $.noop
         }
     }
