@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Fixed
+- Fixed a bug where Garnish.Select instances would try to reestablish window focus on the virtually focused item on self-destruct. ([craftcms/cms#2964](https://github.com/craftcms/cms/issues/2964))
+
+## 0.1.23
+
 ### Changed
 - Menus that are too tall to fit in the current viewport are now scrollable. ([craftcms/cms#2942](https://github.com/craftcms/cms/issues/2942))
 - Menus now reposition themselves as the window is scrolled. 

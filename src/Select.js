@@ -872,6 +872,10 @@ Garnish.Select = Garnish.Base.extend(
 
             $.removeData(item, 'select');
             $.removeData(item, 'select-handle');
+
+            if (this.$focusedItem && this.$focusedItem[0] === item) {
+                this.$focusedItem = null;
+            }
         }
     },
     {
