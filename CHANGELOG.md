@@ -1,6 +1,6 @@
 # Garnish Changelog
 
-## Unreleased
+## 0.1.24
 
 ### Fixed
 - Fixed a bug where Garnish.Select instances would try to reestablish window focus on the virtually focused item on self-destruct. ([craftcms/cms#2964](https://github.com/craftcms/cms/issues/2964))
