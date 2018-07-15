@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.24
+ * @version   0.1.25
  * @license   MIT
  */
 (function($){
@@ -736,7 +736,7 @@ Garnish = $.extend(Garnish, {
                 var eventHandler = this._eventHandlers[j];
 
                 if (
-                    event.target === target &&
+                    eventHandler.target === target &&
                     eventHandler.type === ev[0] &&
                     (!ev[1] || eventHandler.namespace === ev[1]) &&
                     eventHandler.handler === handler

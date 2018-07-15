@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.25
+
+### Fixed
+- Fixed a JavaScript error that occurred when removing event listeners via `Garnish.Base::removeListener()` or `removeAllListeners()`.
+
 ## 0.1.24
 
 ### Fixed
