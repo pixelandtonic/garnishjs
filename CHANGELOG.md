@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.26
+
+### Fixed
+- Fixed an infinite loop bug that could occur if a modal had a nested element with a `resize` event listener. 
+
 ## 0.1.25
 
 ### Fixed
