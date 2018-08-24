@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.27
+
+### Fixed
+- Fixed a bug where HUDs could end up at the top of the page if closed and reopened without scrolling or resizing the window. ([craftcms/cms#3220](https://github.com/craftcms/cms/issues/3220))
+
 ## 0.1.26
 
 ### Fixed
