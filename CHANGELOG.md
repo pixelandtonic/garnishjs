@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.28
+
+### Fixed
+- Fixed a bug where elements with `overflow: auto` could not be scrolled while dragging an element over them. ([craftcms/cms#2340](https://github.com/craftcms/cms/issues/2340))
+
 ## 0.1.27
 
 ### Fixed
