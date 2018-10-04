@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.29
+
+### Fixed
+- Fixed a bug where it wasn’t possible to close HUDs on computers with touchscreens. ([craftcms/cms#3343](https://github.com/craftcms/cms/issues/3343))
+
 ## 0.1.28
 
 ### Fixed

@@ -81,7 +81,7 @@ Garnish.HUD = Garnish.Base.extend(
             this.show();
 
             this.addListener(this.$body, 'submit', '_handleSubmit');
-            this.addListener(this.$shade, 'tap', 'hide');
+            this.addListener(this.$shade, 'tap,click', 'hide');
 
             if (this.settings.closeBtn) {
                 this.addListener(this.settings.closeBtn, 'activate', 'hide');
