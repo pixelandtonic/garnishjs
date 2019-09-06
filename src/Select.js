@@ -538,10 +538,10 @@ Garnish.Select = Garnish.Base.extend(
          */
         focusItem: function($item, preventScroll) {
             if (preventScroll) {
-                var scrollLeft = Garnish.$doc.scrollLeft(),
-                    scrollTop = Garnish.$doc.scrollTop();
+                var scrollLeft = Garnish.$scrollContainer.scrollLeft(),
+                    scrollTop = Garnish.$scrollContainer.scrollTop();
                 $item.focus();
-                window.scrollTo(scrollLeft, scrollTop);
+                Garnish.$scrollContainer.scrollLeft(scrollLeft).scrollTop(scrollTop);
             }
             else {
                 $item.focus();

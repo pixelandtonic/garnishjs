@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.30
+
+### Fixed
+- Fixed a bug where the scroll container could be changed when selecting `Garnish.Select` items, if the scroll container was something besides the window. ([craftcms/cms#3762](https://github.com/craftcms/cms/issues/3762)) 
+
 ## 0.1.29
 
 ### Fixed
