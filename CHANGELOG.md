@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.31
+
+### Fixed
+- Fixed a bug where HUDs could be positioned incorrectly when first opened. ([craftcms/cms#5004](https://github.com/craftcms/cms/issues/5004))
+
 ## 0.1.30
 
 ### Fixed
