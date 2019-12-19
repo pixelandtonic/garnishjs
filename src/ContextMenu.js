@@ -58,14 +58,14 @@ Garnish.ContextMenu = Garnish.Base.extend(
                     if (typeof option.onClick === 'function') {
                         // maintain the current $a and options.onClick variables
                         (function($a, onClick) {
-                            setTimeout($.proxy(function() {
-                                $a.mousedown($.proxy(function(ev) {
+                            setTimeout(function() {
+                                $a.mousedown(function(ev) {
                                     this.hideMenu();
                                     // call the onClick callback, with the scope set to the item,
                                     // and pass it the event with currentTarget set to the item as well
                                     onClick.call(this.currentTarget, $.extend(ev, {currentTarget: this.currentTarget}));
-                                }, this));
-                            }, this), 1);
+                                }.bind(this));
+                            }.bind(this), 1);
                         }).call(this, $a, option.onClick);
                     }
                 }
@@ -103,9 +103,9 @@ Garnish.ContextMenu = Garnish.Base.extend(
 
             this.showing = true;
 
-            setTimeout($.proxy(function() {
+            setTimeout(function() {
                 this.addListener(Garnish.$doc, 'mousedown', 'hideMenu');
-            }, this), 0);
+            }.bind(this), 0);
         },
 
         /**

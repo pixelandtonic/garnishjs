@@ -69,13 +69,13 @@ Garnish.Menu = Garnish.Base.extend(
             this.$options = this.$options.add($options);
             $options.data('menu', this);
 
-            $options.each($.proxy(function(optionKey, option) {
+            $options.each(function(optionKey, option) {
                 $(option).attr({
                     'role': 'option',
                     'tabindex': '-1',
                     'id': this.menuId + '-option-' + optionKey
                 });
-            }, this));
+            }.bind(this));
 
             this.addListener($options, 'click', 'selectOption');
         },
@@ -173,9 +173,9 @@ Garnish.Menu = Garnish.Base.extend(
         hide: function() {
             this.$menuList.attr('aria-hidden', 'true');
 
-            this.$container.velocity('fadeOut', {duration: Garnish.FX_DURATION}, $.proxy(function() {
+            this.$container.velocity('fadeOut', {duration: Garnish.FX_DURATION}, function() {
                 this.$container.detach();
-            }, this));
+            }.bind(this));
 
             Garnish.escManager.unregister(this);
             this.removeListener(Garnish.$scrollContainer, 'scroll');

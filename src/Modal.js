@@ -70,8 +70,8 @@ Garnish.Modal = Garnish.Base.extend(
                 var $resizeDragHandle = $('<div class="resizehandle"/>').appendTo(this.$container);
 
                 this.resizeDragger = new Garnish.BaseDrag($resizeDragHandle, {
-                    onDragStart: $.proxy(this, '_handleResizeStart'),
-                    onDrag: $.proxy(this, '_handleResize')
+                    onDragStart: this._handleResizeStart.bind(this),
+                    onDrag: this._handleResize.bind(this)
                 });
             }
 
@@ -101,14 +101,14 @@ Garnish.Modal = Garnish.Base.extend(
 
                 this.$shade.velocity('fadeIn', {
                     duration: 50,
-                    complete: $.proxy(function() {
+                    complete: function() {
                         this.$container.velocity('fadeIn', {
-                            complete: $.proxy(function() {
+                            complete: function() {
                                 this.updateSizeAndPosition();
                                 this.onFadeIn();
-                            }, this)
+                            }.bind(this)
                         });
-                    }, this)
+                    }.bind(this)
                 });
 
                 if (this.settings.hideOnShadeClick) {
@@ -156,7 +156,7 @@ Garnish.Modal = Garnish.Base.extend(
                 this.$container.velocity('fadeOut', {duration: Garnish.FX_DURATION});
                 this.$shade.velocity('fadeOut', {
                     duration: Garnish.FX_DURATION,
-                    complete: $.proxy(this, 'onFadeOut')
+                    complete: this.onFadeOut.bind(this)
                 });
 
                 if (this.settings.hideOnShadeClick) {

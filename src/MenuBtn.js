@@ -55,7 +55,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
                 'aria-expanded': 'false'
             });
 
-            this.menu.on('hide', $.proxy(this, 'onMenuHide'));
+            this.menu.on('hide', this.onMenuHide.bind(this));
             this.addListener(this.$btn, 'mousedown', 'onMouseDown');
             this.addListener(this.$btn, 'keydown', 'onKeyDown');
             this.addListener(this.$btn, 'blur', 'onBlur');
@@ -106,7 +106,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
                     ev.preventDefault();
 
                     if (this.showingMenu) {
-                        $.each(this.menu.$options, $.proxy(function(index, value) {
+                        $.each(this.menu.$options, function(index, value) {
                             if (!$option) {
                                 if ($(value).hasClass('hover')) {
                                     if ((index + 1) < this.menu.$options.length) {
@@ -114,7 +114,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
                                     }
                                 }
                             }
-                        }, this));
+                        }.bind(this));
 
                         if (!$option) {
                             $option = $(this.menu.$options[0]);
@@ -139,7 +139,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
                     ev.preventDefault();
 
                     if (this.showingMenu) {
-                        $.each(this.menu.$options, $.proxy(function(index, value) {
+                        $.each(this.menu.$options, function(index, value) {
                             if (!$option) {
                                 if ($(value).hasClass('hover')) {
                                     if ((index - 1) >= 0) {
@@ -147,7 +147,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
                                     }
                                 }
                             }
-                        }, this));
+                        }.bind(this));
 
                         if (!$option) {
                             $option = $(this.menu.$options[(this.menu.$options.length - 1)]);
@@ -180,7 +180,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
         },
 
         onMouseDown: function(ev) {
-            if (ev.which !== Garnish.PRIMARY_CLICK || Garnish.isCtrlKeyPressed(ev)) {
+            if (ev.which !== Garnish.PRIMARY_CLICK || Garnish.isCtrlKeyPressed(ev) || ev.target.nodeName === 'INPUT') {
                 return;
             }
 
@@ -206,9 +206,9 @@ Garnish.MenuBtn = Garnish.Base.extend(
 
             this.showingMenu = true;
 
-            setTimeout($.proxy(function() {
+            setTimeout(function() {
                 this.addListener(Garnish.$doc, 'mousedown', 'onMouseDown');
-            }, this), 1);
+            }.bind(this), 1);
         },
 
         hideMenu: function() {

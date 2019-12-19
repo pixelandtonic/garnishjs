@@ -179,20 +179,20 @@ Garnish.DragSort = Garnish.Drag.extend(
          * On Insertion Point Change event
          */
         onInsertionPointChange: function() {
-            Garnish.requestAnimationFrame($.proxy(function() {
+            Garnish.requestAnimationFrame(function() {
                 this.trigger('insertionPointChange');
                 this.settings.onInsertionPointChange();
-            }, this));
+            }.bind(this));
         },
 
         /**
          * On Sort Change event
          */
         onSortChange: function() {
-            Garnish.requestAnimationFrame($.proxy(function() {
+            Garnish.requestAnimationFrame(function() {
                 this.trigger('sortChange');
                 this.settings.onSortChange();
-            }, this));
+            }.bind(this));
         },
 
         // Private methods

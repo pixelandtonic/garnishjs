@@ -89,7 +89,7 @@ Garnish.Drag = Garnish.BaseDrag.extend(
 
             // Keep the helpers following the cursor, with a little lag to smooth it out
             if (!this.updateHelperPosProxy) {
-                this.updateHelperPosProxy = $.proxy(this, '_updateHelperPos');
+                this.updateHelperPosProxy = this._updateHelperPos.bind(this);
             }
 
             this.helperLagIncrement = this.helpers.length === 1 ? 0 : this.settings.helperLagIncrementDividend / (this.helpers.length - 1);
@@ -234,7 +234,7 @@ Garnish.Drag = Garnish.BaseDrag.extend(
                 var callback;
 
                 if (i === 0) {
-                    callback = $.proxy(this, '_showDraggee');
+                    callback = this._showDraggee.bind(this);
                 }
                 else {
                     callback = null;
@@ -248,10 +248,10 @@ Garnish.Drag = Garnish.BaseDrag.extend(
         // ---------------------------------------------------------------------
 
         onReturnHelpersToDraggees: function() {
-            Garnish.requestAnimationFrame($.proxy(function() {
+            Garnish.requestAnimationFrame(function() {
                 this.trigger('returnHelpersToDraggees');
                 this.settings.onReturnHelpersToDraggees();
-            }, this));
+            }.bind(this));
         },
 
         // Private methods

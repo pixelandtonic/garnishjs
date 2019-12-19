@@ -126,9 +126,9 @@ Garnish.MixedInput = Garnish.Base.extend(
             });
 
             // Set focus to the new element
-            setTimeout($.proxy(function() {
+            setTimeout(function() {
                 this.setFocus($elem);
-            }, this), 1);
+            }.bind(this), 1);
         },
 
         removeElement: function($elem) {
@@ -173,7 +173,7 @@ Garnish.MixedInput = Garnish.Base.extend(
             this.focussedElement = $elem;
 
             this.addListener($elem, 'blur', function() {
-                this.blurTimeout = setTimeout($.proxy(function() {
+                this.blurTimeout = setTimeout(function() {
                     if (this.focussedElement === $elem) {
                         this.blurFocussedElement();
                         this.focussedElement = null;
@@ -182,7 +182,7 @@ Garnish.MixedInput = Garnish.Base.extend(
                         // Get ready for future focus
                         this.$container.attr('tabindex', '0');
                     }
-                }, this), 1);
+                }.bind(this), 1);
             });
         },
 
@@ -293,7 +293,7 @@ var TextElement = Garnish.Base.extend({
 
         onFocus: function() {
             this.focussed = true;
-            this.interval = setInterval($.proxy(this, 'checkInput'), Garnish.NiceText.interval);
+            this.interval = setInterval(this.checkInput.bind(this), Garnish.NiceText.interval);
             this.checkInput();
         },
 
@@ -304,7 +304,7 @@ var TextElement = Garnish.Base.extend({
         },
 
         onKeyDown: function(ev) {
-            setTimeout($.proxy(this, 'checkInput'), 1);
+            setTimeout(this.checkInput.bind(this), 1);
 
             switch (ev.keyCode) {
                 case Garnish.LEFT_KEY: {

@@ -187,7 +187,7 @@ Garnish.HUD = Garnish.Base.extend(
         updateSizeAndPosition: function(force) {
             if (force === true || (this.updateRecords() && !this.updatingSizeAndPosition)) {
                 this.updatingSizeAndPosition = true;
-                Garnish.requestAnimationFrame($.proxy(this, 'updateSizeAndPositionInternal'));
+                Garnish.requestAnimationFrame(this.updateSizeAndPositionInternal.bind(this));
             }
         },
 

@@ -724,10 +724,10 @@ Garnish.Base = Base.extend({
         }
 
         if (typeof func === 'function') {
-            func = $.proxy(func, this);
+            func = func.bind(this);
         }
         else {
-            func = $.proxy(this, func);
+            func = this[func].bind(this);
         }
 
         $elem.on(this._formatEvents(events), data, $.proxy(function() {

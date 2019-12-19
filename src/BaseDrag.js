@@ -127,7 +127,7 @@ Garnish.BaseDrag = Garnish.Base.extend(
                     // Are we starting to scroll now?
                     if (!this.scrollProperty) {
                         if (!this.scrollProxy) {
-                            this.scrollProxy = $.proxy(this, '_scrollWindow');
+                            this.scrollProxy = this._scrollWindow.bind(this);
                         }
 
                         if (this.scrollFrame) {
@@ -234,30 +234,30 @@ Garnish.BaseDrag = Garnish.Base.extend(
          * On Drag Start
          */
         onDragStart: function() {
-            Garnish.requestAnimationFrame($.proxy(function() {
+            Garnish.requestAnimationFrame(function() {
                 this.trigger('dragStart');
                 this.settings.onDragStart();
-            }, this));
+            }.bind(this));
         },
 
         /**
          * On Drag
          */
         onDrag: function() {
-            Garnish.requestAnimationFrame($.proxy(function() {
+            Garnish.requestAnimationFrame(function() {
                 this.trigger('drag');
                 this.settings.onDrag();
-            }, this));
+            }.bind(this));
         },
 
         /**
          * On Drag Stop
          */
         onDragStop: function() {
-            Garnish.requestAnimationFrame($.proxy(function() {
+            Garnish.requestAnimationFrame(function() {
                 this.trigger('dragStop');
                 this.settings.onDragStop();
-            }, this));
+            }.bind(this));
         },
 
         // Private methods

@@ -622,9 +622,9 @@ Garnish.Select = Garnish.Base.extend(
                 if (this.isSelected($item)) {
                     this.clearMouseUpTimeout();
 
-                    this.mouseUpTimeout = setTimeout($.proxy(function() {
+                    this.mouseUpTimeout = setTimeout(function() {
                         this.deselectOthers($item);
-                    }, this), 300);
+                    }.bind(this), 300);
                 }
                 else {
                     this.deselectAll();
@@ -824,11 +824,11 @@ Garnish.Select = Garnish.Base.extend(
                 this.callbackFrame = null;
             }
 
-            this.callbackFrame = Garnish.requestAnimationFrame($.proxy(function() {
+            this.callbackFrame = Garnish.requestAnimationFrame(function() {
                 this.callbackFrame = null;
                 this.trigger('selectionChange');
                 this.settings.onSelectionChange();
-            }, this));
+            }.bind(this));
         },
 
         // Private methods
