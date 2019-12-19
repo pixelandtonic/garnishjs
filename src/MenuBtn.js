@@ -12,29 +12,40 @@ Garnish.MenuBtn = Garnish.Base.extend(
         /**
          * Constructor
          */
-        init: function(btn, settings) {
+        init: function(btn, menu, settings) {
+            // Param mapping
+            if (typeof settings === 'undefined' && $.isPlainObject(menu)) {
+                // (btn, settings)
+                settings = menu;
+                menu = null;
+            }
+
             this.$btn = $(btn);
+            var $menu;
 
             // Is this already a menu button?
             if (this.$btn.data('menubtn')) {
                 // Grab the old MenuBtn's menu container
-                var $menu = this.$btn.data('menubtn').menu.$container;
+                if (!menu) {
+                    $menu = this.$btn.data('menubtn').menu.$container;
+                }
 
                 Garnish.log('Double-instantiating a menu button on an element');
                 this.$btn.data('menubtn').destroy();
             }
-            else {
-                var $menu = this.$btn.next('.menu').detach();
+            else if (!menu) {
+                $menu = this.$btn.next('.menu').detach();
             }
 
             this.$btn.data('menubtn', this);
 
             this.setSettings(settings, Garnish.MenuBtn.defaults);
 
-            this.menu = new Garnish.Menu($menu, {
-                anchor: (this.settings.menuAnchor || this.$btn),
-                onOptionSelect: $.proxy(this, 'onOptionSelect')
-            });
+            this.menu = menu || new Garnish.Menu($menu);
+            this.menu.$anchor = $(this.settings.menuAnchor || this.$btn);
+            this.menu.on('optionselect', function(ev) {
+                this.onOptionSelect(ev.selectedOption);
+            }.bind(this));
 
             this.$btn.attr({
                 'tabindex': 0,
