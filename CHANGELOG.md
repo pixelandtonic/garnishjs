@@ -1,6 +1,6 @@
 # Garnish Changelog
 
-## Unreleased
+## 0.1.32
 
 ### Changed
 - It’s now possible to pass a `Garnish.Menu` object as a second argument when creating a new `Garnish.MenuBtn` object.
