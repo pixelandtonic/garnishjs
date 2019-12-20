@@ -62,9 +62,13 @@ Garnish.MenuBtn = Garnish.Base.extend(
             this.enable();
         },
 
-        onBlur: function(ev) {
+        onBlur: function() {
             if (this.showingMenu) {
-                this.hideMenu();
+                Garnish.requestAnimationFrame(function() {
+                    if (!$.contains(this.menu.$container.get(0), document.activeElement)) {
+                        this.hideMenu();
+                    }
+                }.bind(this));
             }
         },
 

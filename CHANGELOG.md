@@ -3,7 +3,8 @@
 ## Unreleased
 
 ### Changed
-- It’s now possible to pass a `Garnish.Menu` object as a second argument when creating a new `Garnish.MenuBtn` object.  
+- It’s now possible to pass a `Garnish.Menu` object as a second argument when creating a new `Garnish.MenuBtn` object.
+- Menus no longer close automatically when the trigger element is blurred, if the focus is changed to an input within the menu.  
 
 ## 0.1.31
 

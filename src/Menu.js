@@ -60,8 +60,10 @@ Garnish.Menu = Garnish.Base.extend(
             this.addListener(this.$container, 'mousedown', function(ev) {
                 ev.stopPropagation();
 
-                // Prevent this from causing the menu button to blur
-                ev.preventDefault();
+                if (ev.target.nodeName !== 'INPUT') {
+                    // Prevent this from causing the menu button to blur
+                    ev.preventDefault();
+                }
             });
         },
 
@@ -77,7 +79,9 @@ Garnish.Menu = Garnish.Base.extend(
                 });
             }.bind(this));
 
-            this.addListener($options, 'click', 'selectOption');
+            this.addListener($options, 'click', function(ev) {
+                this.selectOption(ev.currentTarget);
+            });
         },
 
         setPositionRelativeToAnchor: function() {
@@ -183,9 +187,9 @@ Garnish.Menu = Garnish.Base.extend(
             this.trigger('hide');
         },
 
-        selectOption: function(ev) {
-            this.settings.onOptionSelect(ev.currentTarget);
-            this.trigger('optionselect', {selectedOption: ev.currentTarget});
+        selectOption: function(option) {
+            this.settings.onOptionSelect(option);
+            this.trigger('optionselect', {selectedOption: option});
             this.hide();
         },
 
