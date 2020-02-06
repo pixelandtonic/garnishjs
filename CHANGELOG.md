@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.33
+
+### Changed
+- `Garnish.Menu` objects now trigger a `show` event when the menu in shown.
+
 ## 0.1.32
 
 ### Changed

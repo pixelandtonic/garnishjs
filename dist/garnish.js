@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.32
+ * @version   0.1.33
  * @license   MIT
  */
 (function($){
@@ -3429,6 +3429,8 @@ Garnish.Menu = Garnish.Base.extend(
 
             Garnish.escManager.register(this, 'hide');
             this.addListener(Garnish.$scrollContainer, 'scroll', 'setPositionRelativeToAnchor');
+
+            this.trigger('show');
         },
 
         hide: function() {

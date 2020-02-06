@@ -172,6 +172,8 @@ Garnish.Menu = Garnish.Base.extend(
 
             Garnish.escManager.register(this, 'hide');
             this.addListener(Garnish.$scrollContainer, 'scroll', 'setPositionRelativeToAnchor');
+
+            this.trigger('show');
         },
 
         hide: function() {
