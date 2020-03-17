@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.34
+
+### Fixed
+- Fixed a bug where drag helpers weren’t getting set to the correct width and height if the dragged element had `box-sizing: border-box`.
+
 ## 0.1.33
 
 ### Changed
