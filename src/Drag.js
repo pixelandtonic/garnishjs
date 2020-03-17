@@ -271,12 +271,10 @@ Garnish.Drag = Garnish.BaseDrag.extend(
             // Remove any name= attributes so radio buttons don't lose their values
             $draggeeHelper.find('[name]').attr('name', '');
 
-            $draggeeHelper.css({
-                width: $draggee.width() + 1, // Prevent the brower from wrapping text if the width was actually a fraction of a pixel larger
-                height: $draggee.height(),
-                margin: 0,
-                'pointer-events': 'none'
-            });
+            $draggeeHelper
+                .outerWidth(Math.ceil($draggee.outerWidth()))
+                .outerHeight(Math.ceil($draggee.outerHeight()))
+                .css({margin: 0, 'pointer-events': 'none'});
 
             if (this.settings.helper) {
                 if (typeof this.settings.helper === 'function') {
