@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.34
+ * @version   0.1.35
  * @license   MIT
  */
 (function($){
@@ -2692,6 +2692,7 @@ Garnish.DragSort = Garnish.Drag.extend(
 /** global: Garnish */
 /**
  * ESC key manager class
+ * @deprecated Use Garnish.ShortcutManager instead
  */
 Garnish.EscManager = Garnish.Base.extend(
     {
@@ -2826,7 +2827,10 @@ Garnish.HUD = Garnish.Base.extend(
             this.$hud.css('opacity', 1);
 
             this.addListener(this.$body, 'submit', '_handleSubmit');
-            this.addListener(this.$shade, 'tap,click', 'hide');
+
+            if (this.settings.hideOnShadeClick) {
+                this.addListener(this.$shade, 'tap,click', 'hide');
+            }
 
             if (this.settings.closeBtn) {
                 this.addListener(this.settings.closeBtn, 'activate', 'hide');
@@ -2905,7 +2909,12 @@ Garnish.HUD = Garnish.Base.extend(
             this.$shade.show();
             this.showing = true;
             Garnish.HUD.activeHUDs[this._namespace] = this;
-            Garnish.escManager.register(this, 'hide');
+
+            Garnish.shortcutManager.addLayer();
+
+            if (this.settings.hideOnEsc) {
+                Garnish.shortcutManager.registerShortcut(Garnish.ESC_KEY, this.hide.bind(this));
+            }
 
             this.onShow();
             this.enable();
@@ -3180,23 +3189,18 @@ Garnish.HUD = Garnish.Base.extend(
          * Hide
          */
         hide: function() {
+            if (this.settings.canHide && !this.settings.canHide()) {
+                return;
+            }
+
             this.disable();
 
             this.$hud.hide();
             this.$shade.hide();
 
             this.showing = false;
-            //this.windowWidth = null;
-            //this.windowHeight = null;
-            //this.scrollTop = null;
-            //this.scrollLeft = null;
-            //this.mainWidth = null;
-            //this.mainHeight = null;
-
             delete Garnish.HUD.activeHUDs[this._namespace];
-
-            Garnish.escManager.unregister(this);
-
+            Garnish.shortcutManager.removeLayer();
             this.onHide();
         },
 
@@ -3248,7 +3252,9 @@ Garnish.HUD = Garnish.Base.extend(
             onHide: $.noop,
             onSubmit: $.noop,
             closeBtn: null,
-            closeOtherHUDs: true
+            closeOtherHUDs: true,
+            hideOnEsc: true,
+            hideOnShadeClick: true,
         }
     }
 );
@@ -3425,7 +3431,10 @@ Garnish.Menu = Garnish.Base.extend(
 
             this.$menuList.attr('aria-hidden', 'false');
 
-            Garnish.escManager.register(this, 'hide');
+            Garnish.shortcutManager
+                .addLayer()
+                .registerShortcut(Garnish.ESC_KEY, this.hide.bind(this));
+
             this.addListener(Garnish.$scrollContainer, 'scroll', 'setPositionRelativeToAnchor');
 
             this.trigger('show');
@@ -3438,9 +3447,8 @@ Garnish.Menu = Garnish.Base.extend(
                 this.$container.detach();
             }.bind(this));
 
-            Garnish.escManager.unregister(this);
+            Garnish.shortcutManager.removeLayer();
             this.removeListener(Garnish.$scrollContainer, 'scroll');
-
             this.trigger('hide');
         },
 
@@ -4235,9 +4243,10 @@ Garnish.Modal = Garnish.Base.extend(
             }
 
             this.enable();
+            Garnish.shortcutManager.addLayer();
 
             if (this.settings.hideOnEsc) {
-                Garnish.escManager.register(this, 'hide');
+                Garnish.shortcutManager.registerShortcut(Garnish.ESC_KEY, this.hide.bind(this));
             }
 
             if (!this.visible) {
@@ -4284,11 +4293,7 @@ Garnish.Modal = Garnish.Base.extend(
 
             this.visible = false;
             Garnish.Modal.visibleModal = null;
-
-            if (this.settings.hideOnEsc) {
-                Garnish.escManager.unregister(this);
-            }
-
+            Garnish.shortcutManager.removeLayer();
             this.trigger('hide');
             this.settings.onHide();
         },
@@ -5891,5 +5896,95 @@ Garnish.SelectMenu = Garnish.Menu.extend(
         }
     }
 );
+
+/** global: Garnish */
+/**
+ * Keyboard shortcut manager class
+ *
+ * This can be used to map keyboard events to the current UI "layer" (whether that's the base document,
+ * a modal, an HUD, or a menu).
+ */
+Garnish.ShortcutManager = Garnish.Base.extend(
+    {
+        shortcuts: null,
+        layer: 0,
+
+        init: function() {
+            this.shortcuts = [[]];
+            this.addListener(Garnish.$bod, 'keydown', 'triggerShortcut');
+        },
+
+        addLayer: function() {
+            this.layer++;
+            this.shortcuts.push([]);
+            return this;
+        },
+
+        removeLayer: function() {
+            if (this.layer === 0) {
+                throw 'Can’t remove the base layer.';
+            }
+            this.layer--;
+            this.shortcuts.pop();
+            return this;
+        },
+
+        registerShortcut: function(shortcut, callback) {
+            shortcut = this._normalizeShortcut(shortcut);
+            this.shortcuts[this.layer].push({
+                key: JSON.stringify(shortcut),
+                shortcut: shortcut,
+                callback: callback,
+            });
+            return this;
+        },
+
+        unregisterShortcut: function(shortcut) {
+            shortcut = this._normalizeShortcut(shortcut);
+            var key = JSON.stringify(shortcut);
+            for (var i = 0; i < this.shortcuts[this.layer].length; i++) {
+                if (this.shortcuts[this.layer][i].key === key) {
+                    this.shortcuts[this.layer].splice(i, 1);
+                    break;
+                }
+            }
+            return this;
+        },
+
+        _normalizeShortcut: function(shortcut) {
+            if (typeof shortcut === 'number') {
+                shortcut = {keyCode: shortcut};
+            }
+
+            if (typeof shortcut.keyCode !== 'number') {
+                throw 'Invalid shortcut';
+            }
+
+            return {
+                keyCode: shortcut.keyCode,
+                ctrl: !!shortcut.ctrl,
+                shift: !!shortcut.shift,
+            };
+        },
+
+        triggerShortcut: function(ev) {
+            var shortcut;
+            for (var i = 0; i < this.shortcuts[this.layer].length; i++) {
+                shortcut = this.shortcuts[this.layer][i].shortcut;
+                if (
+                    shortcut.keyCode === ev.keyCode &&
+                    shortcut.ctrl === Garnish.isCtrlKeyPressed(ev) &&
+                    shortcut.shift === ev.shiftKey
+                ) {
+                    ev.preventDefault();
+                    this.shortcuts[this.layer][i].callback(ev);
+                    break;
+                }
+            }
+        },
+    }
+);
+
+Garnish.shortcutManager = new Garnish.ShortcutManager();
 
 })(jQuery);
