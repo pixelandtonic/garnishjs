@@ -119,9 +119,10 @@ Garnish.Modal = Garnish.Base.extend(
             }
 
             this.enable();
+            Garnish.shortcutManager.addLayer();
 
             if (this.settings.hideOnEsc) {
-                Garnish.escManager.register(this, 'hide');
+                Garnish.shortcutManager.registerShortcut(Garnish.ESC_KEY, this.hide.bind(this));
             }
 
             if (!this.visible) {
@@ -168,11 +169,7 @@ Garnish.Modal = Garnish.Base.extend(
 
             this.visible = false;
             Garnish.Modal.visibleModal = null;
-
-            if (this.settings.hideOnEsc) {
-                Garnish.escManager.unregister(this);
-            }
-
+            Garnish.shortcutManager.removeLayer();
             this.trigger('hide');
             this.settings.onHide();
         },

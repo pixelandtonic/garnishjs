@@ -1,6 +1,7 @@
 /** global: Garnish */
 /**
  * ESC key manager class
+ * @deprecated Use Garnish.ShortcutManager instead
  */
 Garnish.EscManager = Garnish.Base.extend(
     {

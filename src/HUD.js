@@ -77,7 +77,10 @@ Garnish.HUD = Garnish.Base.extend(
             this.$hud.css('opacity', 1);
 
             this.addListener(this.$body, 'submit', '_handleSubmit');
-            this.addListener(this.$shade, 'tap,click', 'hide');
+
+            if (this.settings.hideOnShadeClick) {
+                this.addListener(this.$shade, 'tap,click', 'hide');
+            }
 
             if (this.settings.closeBtn) {
                 this.addListener(this.settings.closeBtn, 'activate', 'hide');
@@ -156,7 +159,12 @@ Garnish.HUD = Garnish.Base.extend(
             this.$shade.show();
             this.showing = true;
             Garnish.HUD.activeHUDs[this._namespace] = this;
-            Garnish.escManager.register(this, 'hide');
+
+            Garnish.shortcutManager.addLayer();
+
+            if (this.settings.hideOnEsc) {
+                Garnish.shortcutManager.registerShortcut(Garnish.ESC_KEY, this.hide.bind(this));
+            }
 
             this.onShow();
             this.enable();
@@ -431,23 +439,18 @@ Garnish.HUD = Garnish.Base.extend(
          * Hide
          */
         hide: function() {
+            if (this.settings.canHide && !this.settings.canHide()) {
+                return;
+            }
+
             this.disable();
 
             this.$hud.hide();
             this.$shade.hide();
 
             this.showing = false;
-            //this.windowWidth = null;
-            //this.windowHeight = null;
-            //this.scrollTop = null;
-            //this.scrollLeft = null;
-            //this.mainWidth = null;
-            //this.mainHeight = null;
-
             delete Garnish.HUD.activeHUDs[this._namespace];
-
-            Garnish.escManager.unregister(this);
-
+            Garnish.shortcutManager.removeLayer();
             this.onHide();
         },
 
@@ -499,7 +502,9 @@ Garnish.HUD = Garnish.Base.extend(
             onHide: $.noop,
             onSubmit: $.noop,
             closeBtn: null,
-            closeOtherHUDs: true
+            closeOtherHUDs: true,
+            hideOnEsc: true,
+            hideOnShadeClick: true,
         }
     }
 );

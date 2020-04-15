@@ -1,5 +1,14 @@
 # Garnish Changelog
 
+## Unreleased
+
+### Added
+- Added `Garnish.ShortcutManager`.
+- Added the `hideOnEsc` and `hideOnShadeClick` settings to `Garnish.HUD`.
+
+### Deprecated
+- Deprecated `Garnish.EscManager`. Use `Garnish.ShortcutManager` instead.
+
 ## 0.1.34
 
 ### Fixed

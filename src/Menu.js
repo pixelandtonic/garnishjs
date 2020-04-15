@@ -170,7 +170,10 @@ Garnish.Menu = Garnish.Base.extend(
 
             this.$menuList.attr('aria-hidden', 'false');
 
-            Garnish.escManager.register(this, 'hide');
+            Garnish.shortcutManager
+                .addLayer()
+                .registerShortcut(Garnish.ESC_KEY, this.hide.bind(this));
+
             this.addListener(Garnish.$scrollContainer, 'scroll', 'setPositionRelativeToAnchor');
 
             this.trigger('show');
@@ -183,9 +186,8 @@ Garnish.Menu = Garnish.Base.extend(
                 this.$container.detach();
             }.bind(this));
 
-            Garnish.escManager.unregister(this);
+            Garnish.shortcutManager.removeLayer();
             this.removeListener(Garnish.$scrollContainer, 'scroll');
-
             this.trigger('hide');
         },
 
