@@ -1,6 +1,6 @@
 # Garnish Changelog
 
-## Unreleased
+## 0.1.35
 
 ### Added
 - Added `Garnish.ShortcutManager`.
