@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.35
+ * @version   0.1.36
  * @license   MIT
  */
 (function($){
@@ -3189,7 +3189,7 @@ Garnish.HUD = Garnish.Base.extend(
          * Hide
          */
         hide: function() {
-            if (this.settings.canHide && !this.settings.canHide()) {
+            if (!this.showing) {
                 return;
             }
 
@@ -3266,6 +3266,7 @@ Garnish.HUD = Garnish.Base.extend(
 Garnish.Menu = Garnish.Base.extend(
     {
         settings: null,
+        visible: false,
 
         $container: null,
         $options: null,
@@ -3416,6 +3417,10 @@ Garnish.Menu = Garnish.Base.extend(
         },
 
         show: function() {
+            if (this.visible) {
+                return;
+            }
+
             // Move the menu to the end of the DOM
             this.$container.appendTo(Garnish.$bod);
 
@@ -3437,10 +3442,15 @@ Garnish.Menu = Garnish.Base.extend(
 
             this.addListener(Garnish.$scrollContainer, 'scroll', 'setPositionRelativeToAnchor');
 
+            this.visible = true;
             this.trigger('show');
         },
 
         hide: function() {
+            if (!this.visible) {
+                return;
+            }
+
             this.$menuList.attr('aria-hidden', 'true');
 
             this.$container.velocity('fadeOut', {duration: Garnish.FX_DURATION}, function() {
@@ -3449,6 +3459,7 @@ Garnish.Menu = Garnish.Base.extend(
 
             Garnish.shortcutManager.removeLayer();
             this.removeListener(Garnish.$scrollContainer, 'scroll');
+            this.visible = false;
             this.trigger('hide');
         },
 
@@ -4243,15 +4254,16 @@ Garnish.Modal = Garnish.Base.extend(
             }
 
             this.enable();
-            Garnish.shortcutManager.addLayer();
-
-            if (this.settings.hideOnEsc) {
-                Garnish.shortcutManager.registerShortcut(Garnish.ESC_KEY, this.hide.bind(this));
-            }
 
             if (!this.visible) {
                 this.visible = true;
                 Garnish.Modal.visibleModal = this;
+
+                Garnish.shortcutManager.addLayer();
+
+                if (this.settings.hideOnEsc) {
+                    Garnish.shortcutManager.registerShortcut(Garnish.ESC_KEY, this.hide.bind(this));
+                }
 
                 this.trigger('show');
                 this.settings.onShow();
@@ -4271,6 +4283,10 @@ Garnish.Modal = Garnish.Base.extend(
         },
 
         hide: function(ev) {
+            if (!this.visible) {
+                return;
+            }
+
             this.disable();
 
             if (ev) {

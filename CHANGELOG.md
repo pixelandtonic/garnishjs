@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.36
+
+### Fixed
+- Fixed a “Can’t remove the base layer.” error that could be thrown if a modal, HUD, or menu was hidden before it was shown.
+
 ## 0.1.35
 
 ### Added
