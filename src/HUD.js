@@ -439,6 +439,10 @@ Garnish.HUD = Garnish.Base.extend(
          * Hide
          */
         hide: function() {
+            if (!this.showing) {
+                return;
+            }
+
             this.disable();
 
             this.$hud.hide();

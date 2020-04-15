@@ -5,6 +5,7 @@
 Garnish.Menu = Garnish.Base.extend(
     {
         settings: null,
+        visible: false,
 
         $container: null,
         $options: null,
@@ -155,6 +156,10 @@ Garnish.Menu = Garnish.Base.extend(
         },
 
         show: function() {
+            if (this.visible) {
+                return;
+            }
+
             // Move the menu to the end of the DOM
             this.$container.appendTo(Garnish.$bod);
 
@@ -176,10 +181,15 @@ Garnish.Menu = Garnish.Base.extend(
 
             this.addListener(Garnish.$scrollContainer, 'scroll', 'setPositionRelativeToAnchor');
 
+            this.visible = true;
             this.trigger('show');
         },
 
         hide: function() {
+            if (!this.visible) {
+                return;
+            }
+
             this.$menuList.attr('aria-hidden', 'true');
 
             this.$container.velocity('fadeOut', {duration: Garnish.FX_DURATION}, function() {
@@ -188,6 +198,7 @@ Garnish.Menu = Garnish.Base.extend(
 
             Garnish.shortcutManager.removeLayer();
             this.removeListener(Garnish.$scrollContainer, 'scroll');
+            this.visible = false;
             this.trigger('hide');
         },
 
