@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.36
+ * @version   0.1.37
  * @license   MIT
  */
 (function($){
@@ -3554,9 +3554,8 @@ Garnish.MenuBtn = Garnish.Base.extend(
 
             this.$btn.attr({
                 'tabindex': 0,
-                'role': 'combobox',
-                'aria-owns': this.menu.menuId,
-                'aria-haspopup': 'true',
+                'aria-controls': this.menu.menuId,
+                'aria-haspopup': 'listbox',
                 'aria-expanded': 'false'
             });
 

@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.37
+
+### Fixed
+- Fixed an issue where `Garnish.MenuBtn` didn’t have the proper ARIA attributes.
+
 ## 0.1.36
 
 ### Fixed
