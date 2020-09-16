@@ -49,9 +49,8 @@ Garnish.MenuBtn = Garnish.Base.extend(
 
             this.$btn.attr({
                 'tabindex': 0,
-                'role': 'combobox',
-                'aria-owns': this.menu.menuId,
-                'aria-haspopup': 'true',
+                'aria-controls': this.menu.menuId,
+                'aria-haspopup': 'listbox',
                 'aria-expanded': 'false'
             });
 
