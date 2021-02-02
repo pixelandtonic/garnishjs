@@ -3,11 +3,7 @@
   "description": "Garnish UI toolkit",
   "main": "gulpfile.js",
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
     "test": "gulp test"
-  },
-  "resolutions": {
-    "graceful-fs": "^4.2.4"
   },
   "repository": {
     "type": "git",
