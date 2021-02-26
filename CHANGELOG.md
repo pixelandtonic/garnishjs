@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.38
+
+### Changed
+- Improved `Garnish.ShortcutManager`.
+
 ## 0.1.37
 
 ### Fixed
