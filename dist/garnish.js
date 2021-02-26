@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.39
+ * @version   0.1.40
  * @license   MIT
  */
 (function($){
@@ -683,11 +683,7 @@ Garnish = $.extend(Garnish, {
             // metaKey maps to ⌘ on Macs
             return ev.metaKey;
         }
-        else {
-            // Both altKey and ctrlKey == true on some Windows keyboards when the right-hand ALT key is pressed
-            // so just be safe and make sure altKey == false
-            return (ev.ctrlKey && !ev.altKey);
-        }
+        return ev.ctrlKey;
     },
 
     _eventHandlers: [],
