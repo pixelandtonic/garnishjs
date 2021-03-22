@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.41
+
+### Removed
+- Removed `Garnish.Pill`. ([craftcms/cms#7705](https://github.com/craftcms/cms/issues/7705))
+
 ## 0.1.40
 
 ### Fixed
