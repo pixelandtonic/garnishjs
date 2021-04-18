@@ -101,7 +101,7 @@ Garnish.NiceText = Garnish.Base.extend(
             }
 
             if (this.showCharsLeft) {
-                this.$charsLeft = $('<div class="' + this.settings.charsLeftClass + '"/>').insertAfter(this.$input);
+                this.$charsLeft = $('<div aria-live="polite" aria-atomic="true" class="' + this.settings.charsLeftClass + '"/>').insertAfter(this.$input);
                 this.updateCharsLeft();
             }
 
