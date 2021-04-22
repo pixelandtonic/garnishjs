@@ -1,6 +1,6 @@
 # Garnish Changelog
 
-## Unreleased
+## 0.1.42
 
 ### Changed
 - `Garnish.Menu` options are now selectable via the Space key.
