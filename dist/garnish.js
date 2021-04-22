@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.37
+ * @version   0.1
  * @license   MIT
  */
 (function($){
@@ -4485,7 +4485,8 @@ Garnish.NiceText = Garnish.Base.extend(
         $charsLeft: null,
         autoHeight: null,
         maxLength: null,
-        showCharsLeft: false,
+        showCharsLeft: null,
+        charsLeftPrefix: null,
         showingHint: false,
         val: null,
         inputBoxSizing: 'content-box',
@@ -4526,6 +4527,7 @@ Garnish.NiceText = Garnish.Base.extend(
 
             if (this.maxLength && (this.settings.showCharsLeft || Garnish.hasAttr(this.$input, 'data-show-chars-left'))) {
                 this.showCharsLeft = true;
+                this.charsLeftPrefix = this.$input.attr('data-chars-left-prefix') || '';
 
                 // Remove the maxlength attribute
                 this.$input.removeAttr('maxlength');
@@ -4576,7 +4578,7 @@ Garnish.NiceText = Garnish.Base.extend(
             }
 
             if (this.showCharsLeft) {
-                this.$charsLeft = $('<div class="' + this.settings.charsLeftClass + '"/>').insertAfter(this.$input);
+                this.$charsLeft = $('<div aria-live="polite" class="' + this.settings.charsLeftClass + '"/>').insertAfter(this.$input);
                 this.updateCharsLeft();
             }
 
@@ -4743,7 +4745,7 @@ Garnish.NiceText = Garnish.Base.extend(
 
         updateCharsLeft: function() {
             this.updateCharsLeft._charsLeft = this.maxLength - this.val.length;
-            this.$charsLeft.text(this.updateCharsLeft._charsLeft);
+            this.$charsLeft.html('<span class="visually-hidden">' + this.charsLeftPrefix + '</span>' + this.updateCharsLeft._charsLeft);
 
             if (this.updateCharsLeft._charsLeft >= 0) {
                 this.$charsLeft.removeClass(this.settings.negativeCharsLeftClass);
