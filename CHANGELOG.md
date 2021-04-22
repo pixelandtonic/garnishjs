@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## Unreleased
+
+### Changed
+- `Garnish.Menu` options are now selectable via the Space key.
+
 ## 0.1.41
 
 ### Removed
