@@ -30,9 +30,12 @@ Garnish.ShortcutManager = Garnish.Base.extend(
             return this;
         },
 
-        registerShortcut: function(shortcut, callback) {
+        registerShortcut: function(shortcut, callback, layer) {
             shortcut = this._normalizeShortcut(shortcut);
-            this.shortcuts[this.layer].push({
+            if (typeof layer === 'undefined') {
+                layer = this.layer;
+            }
+            this.shortcuts[layer].push({
                 key: JSON.stringify(shortcut),
                 shortcut: shortcut,
                 callback: callback,
@@ -40,12 +43,15 @@ Garnish.ShortcutManager = Garnish.Base.extend(
             return this;
         },
 
-        unregisterShortcut: function(shortcut) {
+        unregisterShortcut: function(shortcut, layer) {
             shortcut = this._normalizeShortcut(shortcut);
             var key = JSON.stringify(shortcut);
-            for (var i = 0; i < this.shortcuts[this.layer].length; i++) {
-                if (this.shortcuts[this.layer][i].key === key) {
-                    this.shortcuts[this.layer].splice(i, 1);
+            if (typeof layer === 'undefined') {
+                layer = this.layer;
+            }
+            for (var i = 0; i < this.shortcuts[layer].length; i++) {
+                if (this.shortcuts[layer][i].key === key) {
+                    this.shortcuts[layer].splice(i, 1);
                     break;
                 }
             }
@@ -65,6 +71,7 @@ Garnish.ShortcutManager = Garnish.Base.extend(
                 keyCode: shortcut.keyCode,
                 ctrl: !!shortcut.ctrl,
                 shift: !!shortcut.shift,
+                alt: !!shortcut.alt,
             };
         },
 
@@ -75,7 +82,8 @@ Garnish.ShortcutManager = Garnish.Base.extend(
                 if (
                     shortcut.keyCode === ev.keyCode &&
                     shortcut.ctrl === Garnish.isCtrlKeyPressed(ev) &&
-                    shortcut.shift === ev.shiftKey
+                    shortcut.shift === ev.shiftKey &&
+                    shortcut.alt === ev.altKey
                 ) {
                     ev.preventDefault();
                     this.shortcuts[this.layer][i].callback(ev);

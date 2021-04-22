@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1
+ * @version   0.1.41
  * @license   MIT
  */
 (function($){
@@ -683,11 +683,7 @@ Garnish = $.extend(Garnish, {
             // metaKey maps to ⌘ on Macs
             return ev.metaKey;
         }
-        else {
-            // Both altKey and ctrlKey == true on some Windows keyboards when the right-hand ALT key is pressed
-            // so just be safe and make sure altKey == false
-            return (ev.ctrlKey && !ev.altKey);
-        }
+        return ev.ctrlKey;
     },
 
     _eventHandlers: [],
@@ -3341,7 +3337,8 @@ Garnish.Menu = Garnish.Base.extend(
                 });
             }.bind(this));
 
-            this.addListener($options, 'click', function(ev) {
+            this.removeAllListeners($options);
+            this.addListener($options, 'click', ev => {
                 this.selectOption(ev.currentTarget);
             });
         },
@@ -3583,8 +3580,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
                 case Garnish.RETURN_KEY: {
                     ev.preventDefault();
 
-                    var $currentOption = this.menu.$options.filter('.hover');
-
+                    const $currentOption = this.menu.$options.filter('.hover');
                     if ($currentOption.length > 0) {
                         $currentOption.get(0).click();
                     }
@@ -3595,7 +3591,12 @@ Garnish.MenuBtn = Garnish.Base.extend(
                 case Garnish.SPACE_KEY: {
                     ev.preventDefault();
 
-                    if (!this.showingMenu) {
+                    if (this.showingMenu) {
+                        const $currentOption = this.menu.$options.filter('.hover');
+                        if ($currentOption.length > 0) {
+                            $currentOption.get(0).click();
+                        }
+                    } else {
                         this.showMenu();
 
                         $option = this.menu.$options.filter('.sel:first');
@@ -4787,124 +4788,6 @@ Garnish.NiceText = Garnish.Base.extend(
 
 /** global: Garnish */
 /**
- * Pill
- */
-Garnish.Pill = Garnish.Base.extend(
-    {
-        $outerContainer: null,
-        $innerContainer: null,
-        $btns: null,
-        $selectedBtn: null,
-        $input: null,
-
-        init: function(outerContainer) {
-            this.$outerContainer = $(outerContainer);
-
-            // Is this already a pill?
-            if (this.$outerContainer.data('pill')) {
-                Garnish.log('Double-instantiating a pill on an element');
-                this.$outerContainer.data('pill').destroy();
-            }
-
-            this.$outerContainer.data('pill', this);
-
-            this.$innerContainer = this.$outerContainer.find('.btngroup:first');
-            this.$btns = this.$innerContainer.find('.btn');
-            this.$selectedBtn = this.$btns.filter('.active:first');
-            this.$input = this.$outerContainer.find('input:first');
-
-            Garnish.preventOutlineOnMouseFocus(this.$innerContainer);
-            this.addListener(this.$btns, 'mousedown', 'onMouseDown');
-            this.addListener(this.$innerContainer, 'keydown', 'onKeyDown');
-        },
-
-        select: function(btn) {
-            this.$selectedBtn.removeClass('active');
-            var $btn = $(btn);
-            $btn.addClass('active');
-            this.$input.val($btn.attr('data-value'));
-            this.$selectedBtn = $btn;
-        },
-
-        selectNext: function() {
-            if (!this.$selectedBtn.length) {
-                this.select(this.$btns[this.$btns.length - 1]);
-            }
-            else {
-                var nextIndex = this._getSelectedBtnIndex() + 1;
-
-                if (typeof this.$btns[nextIndex] !== 'undefined') {
-                    this.select(this.$btns[nextIndex]);
-                }
-            }
-        },
-
-        selectPrev: function() {
-            if (!this.$selectedBtn.length) {
-                this.select(this.$btns[0]);
-            }
-            else {
-                var prevIndex = this._getSelectedBtnIndex() - 1;
-
-                if (typeof this.$btns[prevIndex] !== 'undefined') {
-                    this.select(this.$btns[prevIndex]);
-                }
-            }
-        },
-
-        onMouseDown: function(ev) {
-            this.select(ev.currentTarget);
-        },
-
-        _getSelectedBtnIndex: function() {
-            if (typeof this.$selectedBtn[0] !== 'undefined') {
-                return $.inArray(this.$selectedBtn[0], this.$btns);
-            }
-            else {
-                return -1;
-            }
-        },
-
-        onKeyDown: function(ev) {
-            switch (ev.keyCode) {
-                case Garnish.RIGHT_KEY: {
-                    if (Garnish.ltr) {
-                        this.selectNext();
-                    }
-                    else {
-                        this.selectPrev();
-                    }
-
-                    ev.preventDefault();
-                    break;
-                }
-
-                case Garnish.LEFT_KEY: {
-                    if (Garnish.ltr) {
-                        this.selectPrev();
-                    }
-                    else {
-                        this.selectNext();
-                    }
-
-                    ev.preventDefault();
-                    break;
-                }
-            }
-        },
-
-        /**
-         * Destroy
-         */
-        destroy: function() {
-            this.$outerContainer.removeData('pill');
-            this.base();
-        }
-    }
-);
-
-/** global: Garnish */
-/**
  * Select
  */
 Garnish.Select = Garnish.Base.extend(
@@ -5946,9 +5829,12 @@ Garnish.ShortcutManager = Garnish.Base.extend(
             return this;
         },
 
-        registerShortcut: function(shortcut, callback) {
+        registerShortcut: function(shortcut, callback, layer) {
             shortcut = this._normalizeShortcut(shortcut);
-            this.shortcuts[this.layer].push({
+            if (typeof layer === 'undefined') {
+                layer = this.layer;
+            }
+            this.shortcuts[layer].push({
                 key: JSON.stringify(shortcut),
                 shortcut: shortcut,
                 callback: callback,
@@ -5956,12 +5842,15 @@ Garnish.ShortcutManager = Garnish.Base.extend(
             return this;
         },
 
-        unregisterShortcut: function(shortcut) {
+        unregisterShortcut: function(shortcut, layer) {
             shortcut = this._normalizeShortcut(shortcut);
             var key = JSON.stringify(shortcut);
-            for (var i = 0; i < this.shortcuts[this.layer].length; i++) {
-                if (this.shortcuts[this.layer][i].key === key) {
-                    this.shortcuts[this.layer].splice(i, 1);
+            if (typeof layer === 'undefined') {
+                layer = this.layer;
+            }
+            for (var i = 0; i < this.shortcuts[layer].length; i++) {
+                if (this.shortcuts[layer][i].key === key) {
+                    this.shortcuts[layer].splice(i, 1);
                     break;
                 }
             }
@@ -5981,6 +5870,7 @@ Garnish.ShortcutManager = Garnish.Base.extend(
                 keyCode: shortcut.keyCode,
                 ctrl: !!shortcut.ctrl,
                 shift: !!shortcut.shift,
+                alt: !!shortcut.alt,
             };
         },
 
@@ -5991,7 +5881,8 @@ Garnish.ShortcutManager = Garnish.Base.extend(
                 if (
                     shortcut.keyCode === ev.keyCode &&
                     shortcut.ctrl === Garnish.isCtrlKeyPressed(ev) &&
-                    shortcut.shift === ev.shiftKey
+                    shortcut.shift === ev.shiftKey &&
+                    shortcut.alt === ev.altKey
                 ) {
                     ev.preventDefault();
                     this.shortcuts[this.layer][i].callback(ev);

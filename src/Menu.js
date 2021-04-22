@@ -80,7 +80,8 @@ Garnish.Menu = Garnish.Base.extend(
                 });
             }.bind(this));
 
-            this.addListener($options, 'click', function(ev) {
+            this.removeAllListeners($options);
+            this.addListener($options, 'click', ev => {
                 this.selectOption(ev.currentTarget);
             });
         },

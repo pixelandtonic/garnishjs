@@ -1,5 +1,25 @@
 # Garnish Changelog
 
+## Unreleased
+
+### Changed
+- `Garnish.Menu` options are now selectable via the Space key.
+
+## 0.1.41
+
+### Removed
+- Removed `Garnish.Pill`. ([craftcms/cms#7705](https://github.com/craftcms/cms/issues/7705))
+
+## 0.1.40
+
+### Fixed
+- Fixed a bug where `Garnish.isCtrlKeyPressed()` would return `false` on Windows browsers if both `ev.ctrlKey` and `ev.altKey` were both `true`. 
+
+## 0.1.38
+
+### Changed
+- Improved `Garnish.ShortcutManager`.
+
 ## 0.1.37
 
 ### Fixed

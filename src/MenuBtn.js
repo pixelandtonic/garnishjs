@@ -78,8 +78,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
                 case Garnish.RETURN_KEY: {
                     ev.preventDefault();
 
-                    var $currentOption = this.menu.$options.filter('.hover');
-
+                    const $currentOption = this.menu.$options.filter('.hover');
                     if ($currentOption.length > 0) {
                         $currentOption.get(0).click();
                     }
@@ -90,7 +89,12 @@ Garnish.MenuBtn = Garnish.Base.extend(
                 case Garnish.SPACE_KEY: {
                     ev.preventDefault();
 
-                    if (!this.showingMenu) {
+                    if (this.showingMenu) {
+                        const $currentOption = this.menu.$options.filter('.hover');
+                        if ($currentOption.length > 0) {
+                            $currentOption.get(0).click();
+                        }
+                    } else {
                         this.showMenu();
 
                         $option = this.menu.$options.filter('.sel:first');
