@@ -4577,7 +4577,7 @@ Garnish.NiceText = Garnish.Base.extend(
             }
 
             if (this.showCharsLeft) {
-                this.$charsLeft = $('<div class="' + this.settings.charsLeftClass + '"/>').insertAfter(this.$input);
+                this.$charsLeft = $('<div aria-live="polite" class="' + this.settings.charsLeftClass + '"/>').insertAfter(this.$input);
                 this.updateCharsLeft();
             }
 
@@ -4744,7 +4744,7 @@ Garnish.NiceText = Garnish.Base.extend(
 
         updateCharsLeft: function() {
             this.updateCharsLeft._charsLeft = this.maxLength - this.val.length;
-            this.$charsLeft.text(this.updateCharsLeft._charsLeft);
+            this.$charsLeft.html(Garnish.NiceText.charsLeftHtml(this.updateCharsLeft._charsLeft));
 
             if (this.updateCharsLeft._charsLeft >= 0) {
                 this.$charsLeft.removeClass(this.settings.negativeCharsLeftClass);
@@ -4774,6 +4774,9 @@ Garnish.NiceText = Garnish.Base.extend(
     {
         interval: 100,
         hintFadeDuration: 50,
+        charsLeftHtml: function(charsLeft) {
+            return charsLeft;
+        },
         defaults: {
             autoHeight: true,
             showCharsLeft: false,
