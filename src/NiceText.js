@@ -10,8 +10,7 @@ Garnish.NiceText = Garnish.Base.extend(
         $charsLeft: null,
         autoHeight: null,
         maxLength: null,
-        showCharsLeft: null,
-        charsLeftPrefix: null,
+        showCharsLeft: false,
         showingHint: false,
         val: null,
         inputBoxSizing: 'content-box',
@@ -52,7 +51,6 @@ Garnish.NiceText = Garnish.Base.extend(
 
             if (this.maxLength && (this.settings.showCharsLeft || Garnish.hasAttr(this.$input, 'data-show-chars-left'))) {
                 this.showCharsLeft = true;
-                this.charsLeftPrefix = this.$input.attr('data-chars-left-prefix') || '';
 
                 // Remove the maxlength attribute
                 this.$input.removeAttr('maxlength');
@@ -270,7 +268,7 @@ Garnish.NiceText = Garnish.Base.extend(
 
         updateCharsLeft: function() {
             this.updateCharsLeft._charsLeft = this.maxLength - this.val.length;
-            this.$charsLeft.html('<span class="visually-hidden">' + this.charsLeftPrefix + '</span>' + this.updateCharsLeft._charsLeft);
+            this.$charsLeft.html(Garnish.NiceText.charsLeftHtml(this.updateCharsLeft._charsLeft));
 
             if (this.updateCharsLeft._charsLeft >= 0) {
                 this.$charsLeft.removeClass(this.settings.negativeCharsLeftClass);
@@ -300,6 +298,9 @@ Garnish.NiceText = Garnish.Base.extend(
     {
         interval: 100,
         hintFadeDuration: 50,
+        charsLeftHtml: function(charsLeft) {
+            return charsLeft;
+        },
         defaults: {
             autoHeight: true,
             showCharsLeft: false,
