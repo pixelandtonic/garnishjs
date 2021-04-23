@@ -81,7 +81,7 @@ Garnish.Menu = Garnish.Base.extend(
             }.bind(this));
 
             this.removeAllListeners($options);
-            this.addListener($options, 'click', ev => {
+            this.addListener($options, 'click', function(ev) {
                 this.selectOption(ev.currentTarget);
             });
         },
