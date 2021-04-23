@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.43
+
+### Added
+- Added `Garnish.NiceText.charsLeftHtml()`, which can be overridden to customize the HTML used to display the remaining allowed characters. ([#8](https://github.com/pixelandtonic/garnishjs/pull/8))
+
 ## 0.1.42
 
 ### Changed
