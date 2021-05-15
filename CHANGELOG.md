@@ -1,6 +1,6 @@
 # Garnish Changelog
 
-## Unreleased
+## 0.1.44
 
 ### Changed
 - `Garnish.Select` now prevents the browser from scrolling to newly-focused items unless the focus was given via a keyboard event. ([craftcms/cms#7940](https://github.com/craftcms/cms/issues/7940))
