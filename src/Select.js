@@ -127,7 +127,7 @@ Garnish.Select = Garnish.Base.extend(
          */
         selectRange: function($item, preventScroll) {
             if (!this.settings.multi) {
-                return this.selectItem($item, true);
+                return this.selectItem($item, true, true);
             }
 
             this.deselectAll();
@@ -184,7 +184,7 @@ Garnish.Select = Garnish.Base.extend(
          */
         deselectOthers: function($item) {
             this.deselectAll();
-            this.selectItem($item, true);
+            this.selectItem($item, true, true);
         },
 
         /**
@@ -500,7 +500,7 @@ Garnish.Select = Garnish.Base.extend(
 
             if (this.$focusedItem) {
                 this.setFocusableItem(this.$focusedItem);
-                this.focusItem(this.$focusedItem);
+                this.focusItem(this.$focusedItem, true);
             }
 
             if (this.last !== null) {
@@ -767,7 +767,7 @@ Garnish.Select = Garnish.Base.extend(
                             }
                         }
                         else {
-                            this.selectItem(this.$focusable, true);
+                            this.selectItem(this.$focusable, true, false);
                         }
                     }
 
@@ -789,11 +789,11 @@ Garnish.Select = Garnish.Base.extend(
                 if (!this.settings.checkboxMode) {
                     // select it
                     if (this.first !== null && ev.shiftKey) {
-                        this.selectRange($item);
+                        this.selectRange($item, false);
                     }
                     else {
                         this.deselectAll();
-                        this.selectItem($item, true);
+                        this.selectItem($item, true, false);
                     }
                 }
                 else {
