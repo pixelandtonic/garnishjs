@@ -537,16 +537,7 @@ Garnish.Select = Garnish.Base.extend(
          * Sets the focus on an item.
          */
         focusItem: function($item, preventScroll) {
-            if (preventScroll) {
-                var scrollLeft = Garnish.$scrollContainer.scrollLeft(),
-                    scrollTop = Garnish.$scrollContainer.scrollTop();
-                $item.focus();
-                Garnish.$scrollContainer.scrollLeft(scrollLeft).scrollTop(scrollTop);
-            }
-            else {
-                $item.focus();
-            }
-
+            $item.focus({preventScroll: !!preventScroll});
             this.$focusedItem = $item;
             this.trigger('focusItem', {item: $item});
         },
