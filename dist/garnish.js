@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.44
+ * @version   0.1.45
  * @license   MIT
  */
 (function($){
@@ -5326,7 +5326,7 @@ Garnish.Select = Garnish.Base.extend(
          * Sets the focus on an item.
          */
         focusItem: function($item, preventScroll) {
-            $item.focus({preventScroll: !!preventScroll});
+            $item[0].focus({preventScroll: !!preventScroll});
             this.$focusedItem = $item;
             this.trigger('focusItem', {item: $item});
         },

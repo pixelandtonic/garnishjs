@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.45
+
+### Fixed
+- Fixed a JavaScript error that could occur with `Garnish.Select`.
+
 ## 0.1.44
 
 ### Changed
