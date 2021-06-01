@@ -106,6 +106,7 @@ Garnish.NiceText = Garnish.Base.extend(
             }
 
             this.addListener(this.$input, 'textchange', 'onTextChange');
+            this.addListener(this.$input, 'keydown', 'onKeyDown');
         },
 
         initializeIfVisible: function() {
@@ -153,6 +154,14 @@ Garnish.NiceText = Garnish.Base.extend(
 
             if (this.showCharsLeft) {
                 this.updateCharsLeft();
+            }
+        },
+
+        onKeyDown: function(ev) {
+            // If Ctrl/Command + Return is pressed, submit the closest form
+            if (ev.keyCode === Garnish.RETURN_KEY && Garnish.isCtrlKeyPressed(ev)) {
+                ev.preventDefault();
+                this.$input.closest('form').submit();
             }
         },
 

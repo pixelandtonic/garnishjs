@@ -1,5 +1,10 @@
 # Garnish Changelog
 
+## 0.1.46
+
+### Changed
+- `Garnish.NiceText` will now submit the closest form when <kbd>Ctrl</kbd>/<kbd>Command</kbd> + <kbd>Return</kbd> is pressed. ([craftcms/cms#7999](https://github.com/craftcms/cms/issues/7999))
+
 ## 0.1.45
 
 ### Fixed
