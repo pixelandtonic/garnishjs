@@ -45,6 +45,13 @@ To test, run `gulp test`.
 
 To watch and test, run `gulp watch --test`
 
+## UI Elements
+### Disclosure
+This element should be used in instances where a trigger button shows or hides content. 
+
+Some possible applications include accordion menus, navigation dropdown menus, etc.
+
+
 ## License
 
 Garnish is available under the [MIT license](LICENSE).

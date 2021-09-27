@@ -62,7 +62,6 @@ Garnish.Disclosure = Garnish.Base.extend(
     },
 
     handleKeypress: function(event) {
-      console.log(event.key);
       if (event.key === 'Escape') {
         this.hide();
       }
@@ -181,13 +180,42 @@ Garnish.Disclosure = Garnish.Base.extend(
     },
 
     show: function () {
-      console.log('show');
+      if (this.expanded) {
+        return;
+      }
+
+      this.$container.velocity('stop');
+      this.$container.css({
+        opacity: 1,
+        display: 'block',
+      });
+      
+      // Set instance property and ARIA attribute for expanded
       this.expanded = true;
+      this.$trigger.attr('aria-expanded', 'true');
+
+      // Focus first focusable element
+      var firstFocusableEl = this.$container.find(':focusable')[0];
+      if (firstFocusableEl) {
+        firstFocusableEl.focus();
+      } else {
+        this.$container.attr('tabindex', '-1');
+        this.$container.focus();
+      }
     },
 
     hide: function () {
-      console.log('hide');
+      if (!this.expanded) {
+        return;
+      }
+
+      this.$container.velocity(
+        'fadeOut',
+        { duration: Garnish.FX_DURATION }
+      );
+
       this.expanded = false;
+      this.$trigger.attr('aria-expanded', 'false');
       this.$trigger.focus();
     },
 
