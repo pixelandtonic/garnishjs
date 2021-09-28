@@ -5,13 +5,10 @@
 Garnish.Disclosure = Garnish.Base.extend(
   {
     settings: null,
-    expanded: false,
 
     $trigger: null,
     $container: null,
     $anchor: null,
-
-    menuId: null,
 
     _windowWidth: null,
     _windowHeight: null,
@@ -41,9 +38,6 @@ Garnish.Disclosure = Garnish.Base.extend(
 
       // Get and store expanded state from trigger
       var expanded = this.$trigger.attr('aria-expanded');
-      if (!expanded || expanded === 'false') {
-        this.expanded = false;
-      }
 
       // If no expanded state exists on trigger, add for a11y
       if (!expanded) {
@@ -59,40 +53,39 @@ Garnish.Disclosure = Garnish.Base.extend(
       this.addListener(this.$container, 'keyup', function(event) {
         this.handleKeypress(event);
       });
+
+      this.addListener(this.$container, 'focusout', function(event) {
+        var newTarget = event.relatedTarget;
+
+        // If click target matches trigger element, do nothing
+        // Prevents immediate reopen on click to toggle closed
+        if (newTarget === this.$trigger.get(0)) {
+          return;
+        }
+
+        this.hide();
+      });
     },
 
     handleKeypress: function(event) {
       if (event.key === 'Escape') {
         this.hide();
+        this.$trigger.focus();
       }
     },
 
+    isExpanded: function () {
+      var isExpanded = this.$trigger.attr('aria-expanded');
+
+      return isExpanded === 'true';
+    },
+
     handleTriggerClick: function() {
-      if (!this.expanded) {
+      if (!this.isExpanded()) {
         this.show();
       } else {
         this.hide();
       }
-    },
-
-    addOptions: function ($options) {
-      this.$options = this.$options.add($options);
-      $options.data('menu', this);
-
-      $options.each(
-        function (optionKey, option) {
-          $(option).attr({
-            role: 'option',
-            tabindex: '-1',
-            id: this.menuId + '-option-' + optionKey,
-          });
-        }.bind(this)
-      );
-
-      this.removeAllListeners($options);
-      this.addListener($options, 'click', function (ev) {
-        this.selectOption(ev.currentTarget);
-      });
     },
 
     setPositionRelativeToAnchor: function () {
@@ -180,7 +173,7 @@ Garnish.Disclosure = Garnish.Base.extend(
     },
 
     show: function () {
-      if (this.expanded) {
+      if (this.isExpanded()) {
         return;
       }
 
@@ -190,9 +183,14 @@ Garnish.Disclosure = Garnish.Base.extend(
         display: 'block',
       });
       
-      // Set instance property and ARIA attribute for expanded
-      this.expanded = true;
+      // Set ARIA attribute for expanded
       this.$trigger.attr('aria-expanded', 'true');
+
+      this.addListener(
+        Garnish.$scrollContainer,
+        'scroll',
+        'setPositionRelativeToAnchor'
+      );
 
       // Focus first focusable element
       var firstFocusableEl = this.$container.find(':focusable')[0];
@@ -205,7 +203,7 @@ Garnish.Disclosure = Garnish.Base.extend(
     },
 
     hide: function () {
-      if (!this.expanded) {
+      if (!this.isExpanded()) {
         return;
       }
 
@@ -214,15 +212,7 @@ Garnish.Disclosure = Garnish.Base.extend(
         { duration: Garnish.FX_DURATION }
       );
 
-      this.expanded = false;
       this.$trigger.attr('aria-expanded', 'false');
-      this.$trigger.focus();
-    },
-
-    selectOption: function (option) {
-      this.settings.onOptionSelect(option);
-      this.trigger('optionselect', { selectedOption: option });
-      this.hide();
     },
 
     _alignLeft: function () {
