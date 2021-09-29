@@ -53,12 +53,13 @@ Some possible applications include accordion menus, navigation dropdown menus, e
 
 To create a disclosure element, use a button with the following properties:
  - An `aria-controls` attribute referencing the ID of the element to be toggled
+ - An `aria-haspopup` attribute set to `"true"`.
+ - An `aria-expanded` attribute set to either `"true"` or `"false"`.
  - A `data-disclosure-trigger` attribute is used to find and instantiate the UI element
 
-The `aria-expanded` attribute is optional, and is set to `false` by default.
 
 ```html
-<button aria-controls="disclosure" data-disclosure-trigger>Open Menu</button>
+<button aria-controls="disclosure" aria-expanded="false" aria-haspopup="true" data-disclosure-trigger>Open Menu</button>
 
 <div id="disclosure">
 	This is the content you want to reveal.
