@@ -32,6 +32,8 @@ Garnish.Disclosure = Garnish.Base.extend(
 
       this.$trigger = $(trigger);
 
+      this.captureToggleSettings();
+
       // Get disclosure container from aria-controls attribute
       var triggerId = this.$trigger.attr('aria-controls');
       this.$container = $("#" + triggerId);
@@ -44,11 +46,26 @@ Garnish.Disclosure = Garnish.Base.extend(
         this.$trigger.attr('aria-expanded', 'false');
       }
 
-      
-      // Add event listeners
+      this.addDisclosureEventListeners();
+    },
+    
+    /**
+     * Capture whether focus out and ESC will toggle closed
+     */
+    captureToggleSettings: function() {
+      var toggleAttribute = this.$trigger.attr('data-click-toggle-only');
+
+      if (!toggleAttribute) return;
+
+      this.settings.clickToggleOnly = true;
+    },
+
+    addDisclosureEventListeners: function() {
       this.addListener(this.$trigger, 'click', function() {
         this.handleTriggerClick();
       });
+
+      if (this.settings.clickToggleOnly === true) return;
 
       this.addListener(this.$container, 'keyup', function(event) {
         this.handleKeypress(event);
@@ -57,9 +74,9 @@ Garnish.Disclosure = Garnish.Base.extend(
       this.addListener(this.$container, 'focusout', function(event) {
         var newTarget = event.relatedTarget;
 
-        // If click target matches trigger element, do nothing
-        // Prevents immediate reopen on click to toggle closed
-        if (newTarget === this.$trigger.get(0)) {
+        // If click target matches trigger element or disclosure child, do nothing
+        var newTargetIsInsideDisclosure = this.$container.has(newTarget).length > 0;
+      if (newTarget === this.$trigger.get(0) || newTargetIsInsideDisclosure) {
           return;
         }
 
@@ -246,7 +263,7 @@ Garnish.Disclosure = Garnish.Base.extend(
     defaults: {
       anchor: null,
       windowSpacing: 5,
-      onOptionSelect: $.noop,
+      clickToggleOnly: false,
     },
   }
 );

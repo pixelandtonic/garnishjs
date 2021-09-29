@@ -51,6 +51,23 @@ This element should be used in instances where a trigger button shows or hides c
 
 Some possible applications include accordion menus, navigation dropdown menus, etc.
 
+To create a disclosure element, use a button with the following properties:
+ - An `aria-controls` attribute referencing the ID of the element to be toggled
+ - A `data-disclosure-trigger` attribute is used to find and instantiate the UI element
+
+The `aria-expanded` attribute is optional, and is set to `false` by default.
+
+```html
+<button aria-controls="disclosure" data-disclosure-trigger>Open Menu</button>
+
+<div id="disclosure">
+	This is the content you want to reveal.
+</div>
+```
+#### Optional: Remove focusout and keydown to close
+This option can be helpful for accordion-type sections, where you want the content to persist.
+
+To do this, add the `data-click-only-toggle` attribute to the trigger element.
 
 ## License
 
