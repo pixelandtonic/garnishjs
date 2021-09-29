@@ -73,9 +73,9 @@ Garnish.Disclosure = Garnish.Base.extend(
 
       this.addListener(this.$container, 'focusout', function(event) {
         var newTarget = event.relatedTarget;
+        var newTargetIsInsideDisclosure = this.$container.has(newTarget).length > 0;
 
         // If click target matches trigger element or disclosure child, do nothing
-        var newTargetIsInsideDisclosure = this.$container.has(newTarget).length > 0;
       if (newTarget === this.$trigger.get(0) || newTargetIsInsideDisclosure) {
           return;
         }
