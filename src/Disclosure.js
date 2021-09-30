@@ -31,6 +31,7 @@ Garnish.Disclosure = Garnish.Base.extend(
       this.setSettings(settings, Garnish.Disclosure.defaults);
 
       this.$trigger = $(trigger);
+      this.$anchor = this.$trigger;
 
       this.captureToggleSettings();
 
@@ -194,11 +195,22 @@ Garnish.Disclosure = Garnish.Base.extend(
         return;
       }
 
+      // Move the menu to the end of the DOM
+      this.$container.appendTo(Garnish.$bod);
+      this.setPositionRelativeToAnchor();
+
       this.$container.velocity('stop');
       this.$container.css({
         opacity: 1,
         display: 'block',
       });
+
+      // Set position
+      this.addListener(
+        Garnish.$scrollContainer,
+        'scroll',
+        'setPositionRelativeToAnchor'
+      );
       
       // Set ARIA attribute for expanded
       this.$trigger.attr('aria-expanded', 'true');
