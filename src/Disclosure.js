@@ -8,18 +8,17 @@ Garnish.Disclosure = Garnish.Base.extend(
 
     $trigger: null,
     $container: null,
-    $anchor: null,
 
     _windowWidth: null,
     _windowHeight: null,
     _windowScrollLeft: null,
     _windowScrollTop: null,
 
-    _anchorOffset: null,
-    _anchorWidth: null,
-    _anchorHeight: null,
-    _anchorOffsetRight: null,
-    _anchorOffsetBottom: null,
+    _triggerOffset: null,
+    _triggerWidth: null,
+    _triggerHeight: null,
+    _triggerOffsetRight: null,
+    _triggerOffsetBottom: null,
 
     _menuWidth: null,
     _menuHeight: null,
@@ -31,7 +30,6 @@ Garnish.Disclosure = Garnish.Base.extend(
       this.setSettings(settings, Garnish.Disclosure.defaults);
 
       this.$trigger = $(trigger);
-      this.$anchor = this.$trigger;
       var triggerId = this.$trigger.attr('aria-controls');
       this.$container = $("#" + triggerId);
 
@@ -170,41 +168,37 @@ Garnish.Disclosure = Garnish.Base.extend(
       this._windowScrollLeft = Garnish.$win.scrollLeft();
       this._windowScrollTop = Garnish.$win.scrollTop();
 
-      this._anchorOffset = this.$anchor[0].getBoundingClientRect();
-      this._anchorWidth = this.$anchor.outerWidth();
-      this._anchorHeight = this.$anchor.outerHeight();
-      this._anchorOffsetRight = this._anchorOffset.left + this._anchorHeight;
-      this._anchorOffsetBottom = this._anchorOffset.bottom;
+      this._triggerOffset = this.$trigger[0].getBoundingClientRect();
+      this._triggerWidth = this.$trigger.outerWidth();
+      this._triggerHeight = this.$trigger.outerHeight();
+      this._triggerOffsetRight = this._triggerOffset.left + this._triggerHeight;
+      this._triggerOffsetBottom = this._triggerOffset.bottom;
 
       this.$container.css('minWidth', 0);
       this.$container.css(
         'minWidth',
-        this._anchorWidth -
+        this._triggerWidth -
           (this.$container.outerWidth() - this.$container.width())
       );
 
       this._menuWidth = this.$container.outerWidth();
       this._menuHeight = this.$container.outerHeight();
 
-      // Is there room for the menu below the anchor?
-      var topClearance = this._anchorOffset.top,
-        bottomClearance = this._anchorOffsetBottom;
+      // Is there room for the menu below the trigger?
+      var topClearance = this._triggerOffset.top,
+        bottomClearance = this._triggerOffsetBottom;
 
       if (
-        bottomClearance >= this._menuHeight ||
-        (topClearance < this._menuHeight && bottomClearance >= topClearance)
+        // bottomClearance >= this._menuHeight ||
+        // (topClearance < this._menuHeight && bottomClearance >= topClearance)
+        true === false
       ) {
         this.$container.css({
           maxHeight: bottomClearance - this.settings.windowSpacing,
         });
       } else {
         this.$container.css({
-          marginTop:
-            (this._anchorHeight +
-            Math.min(
-              this._menuHeight,
-              topClearance - this.settings.windowSpacing
-            )) * -1,
+          top: '100%',
           maxHeight: topClearance - this.settings.windowSpacing,
         });
       }
@@ -223,8 +217,8 @@ Garnish.Disclosure = Garnish.Base.extend(
         var rightClearance =
             this._windowWidth +
             this._windowScrollLeft -
-            (this._anchorOffset.left + this._menuWidth),
-          leftClearance = this._anchorOffsetRight - this._menuWidth;
+            (this._triggerOffset.left + this._menuWidth),
+          leftClearance = this._triggerOffsetRight - this._menuWidth;
 
         if ((align === 'right' && leftClearance >= 0) || rightClearance < 0) {
           this._alignRight();
@@ -237,44 +231,35 @@ Garnish.Disclosure = Garnish.Base.extend(
       delete this._windowHeight;
       delete this._windowScrollLeft;
       delete this._windowScrollTop;
-      delete this._anchorOffset;
-      delete this._anchorWidth;
-      delete this._anchorHeight;
-      delete this._anchorOffsetRight;
-      delete this._anchorOffsetBottom;
+      delete this._triggerOffset;
+      delete this._triggerWidth;
+      delete this._triggerHeight;
+      delete this._triggerOffsetRight;
+      delete this._triggerOffsetBottom;
       delete this._menuWidth;
       delete this._menuHeight;
     },
 
     _alignLeft: function () {
       this.$container.css({
-        left: this._anchorOffset.left,
-        right: 'auto',
+        left: 0,
       });
     },
 
     _alignRight: function () {
       this.$container.css({
-        marginLeft:
-          Math.abs(this._anchorWidth - this.$container.width()) * -1,
+        right: 0,
       });
     },
 
     _alignCenter: function () {
-      var left = Math.round(
-        this._anchorOffset.left + this._anchorWidth / 2 - this._menuWidth / 2
-      );
-
-      if (left < 0) {
-        left = 0;
-      }
+      var left = Math.round(this._triggerWidth / 2 - this._menuWidth / 2);
 
       this.$container.css('left', left);
     },
   },
   {
     defaults: {
-      anchor: null,
       windowSpacing: 5,
       clickToggleOnly: false,
       positionRelativeToTrigger: false,
