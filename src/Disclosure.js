@@ -32,12 +32,13 @@ Garnish.Disclosure = Garnish.Base.extend(
 
       this.$trigger = $(trigger);
       this.$anchor = this.$trigger;
-
-      this.captureToggleSettings();
-
-      // Get disclosure container from aria-controls attribute
       var triggerId = this.$trigger.attr('aria-controls');
       this.$container = $("#" + triggerId);
+
+      if (!this.$container) return; /* Exit if no disclosure container is found */
+
+      this.captureToggleSettings();
+      this.capturePositionSettings();
 
       // Get and store expanded state from trigger
       var expanded = this.$trigger.attr('aria-expanded');
@@ -59,6 +60,14 @@ Garnish.Disclosure = Garnish.Base.extend(
       if (toggleAttribute === undefined) return;
 
       this.settings.clickToggleOnly = true;
+    },
+
+    capturePositionSettings: function() {
+      var positionAttribute = this.$container.data('positionRelativeToTrigger');
+
+      if (positionAttribute === undefined) return;
+
+      this.settings.positionRelativeToTrigger = true;
     },
 
     addDisclosureEventListeners: function() {
@@ -106,7 +115,56 @@ Garnish.Disclosure = Garnish.Base.extend(
       }
     },
 
-    setPositionRelativeToAnchor: function () {
+    show: function () {
+      var setDisclosurePosition = this.settings.positionRelativeToTrigger;
+
+      if (this.isExpanded()) {
+        return;
+      }
+
+      if (setDisclosurePosition) {
+        this.setPositionRelativeToTrigger();
+        this.addListener(
+          Garnish.$scrollContainer,
+          'scroll',
+          'setPositionRelativeToTrigger'
+        );
+      }
+      
+      this.$container.velocity('stop');
+      this.$container.css({
+        opacity: 1,
+        display: 'block',
+      });
+
+      
+      // Set ARIA attribute for expanded
+      this.$trigger.attr('aria-expanded', 'true');
+
+      // Focus first focusable element
+      var firstFocusableEl = this.$container.find(':focusable')[0];
+      if (firstFocusableEl) {
+        firstFocusableEl.focus();
+      } else {
+        this.$container.attr('tabindex', '-1');
+        this.$container.focus();
+      }
+    },
+
+    hide: function () {
+      if (!this.isExpanded()) {
+        return;
+      }
+
+      this.$container.velocity(
+        'fadeOut',
+        { duration: Garnish.FX_DURATION }
+      );
+
+      this.$trigger.attr('aria-expanded', 'false');
+    },
+
+    setPositionRelativeToTrigger: function () {
       this._windowWidth = Garnish.$win.width();
       this._windowHeight = Garnish.$win.height();
       this._windowScrollLeft = Garnish.$win.scrollLeft();
@@ -188,58 +246,6 @@ Garnish.Disclosure = Garnish.Base.extend(
       delete this._menuHeight;
     },
 
-    show: function () {
-      if (this.isExpanded()) {
-        return;
-      }
-
-      this.setPositionRelativeToAnchor();
-
-      this.$container.velocity('stop');
-      this.$container.css({
-        opacity: 1,
-        display: 'block',
-      });
-
-      // Set position
-      this.addListener(
-        Garnish.$scrollContainer,
-        'scroll',
-        'setPositionRelativeToAnchor'
-      );
-      
-      // Set ARIA attribute for expanded
-      this.$trigger.attr('aria-expanded', 'true');
-
-      this.addListener(
-        Garnish.$scrollContainer,
-        'scroll',
-        'setPositionRelativeToAnchor'
-      );
-
-      // Focus first focusable element
-      var firstFocusableEl = this.$container.find(':focusable')[0];
-      if (firstFocusableEl) {
-        firstFocusableEl.focus();
-      } else {
-        this.$container.attr('tabindex', '-1');
-        this.$container.focus();
-      }
-    },
-
-    hide: function () {
-      if (!this.isExpanded()) {
-        return;
-      }
-
-      this.$container.velocity(
-        'fadeOut',
-        { duration: Garnish.FX_DURATION }
-      );
-
-      this.$trigger.attr('aria-expanded', 'false');
-    },
-
     _alignLeft: function () {
       this.$container.css({
         left: this._anchorOffset.left,
@@ -271,7 +277,7 @@ Garnish.Disclosure = Garnish.Base.extend(
       anchor: null,
       windowSpacing: 5,
       clickToggleOnly: false,
-      positionRelativeToAnchor: false,
+      positionRelativeToTrigger: false,
     },
   }
 );
