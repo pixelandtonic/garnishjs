@@ -65,7 +65,13 @@ To create a disclosure element, use a button with the following properties:
 	This is the content you want to reveal.
 </div>
 ```
-#### Optional: Remove focusout and keydown to close
+#### Positioning
+In certain cases, you may want the disclosure content to be positioned relative to the trigger element. For cases like this, ensure that:
+1. The trigger and disclosure elements are wrapped in a relatively positioned container
+2. The disclosure element has a `data-position-relative-to-trigger` attribute
+
+**Note that this is different from the `CustomSelect` element, where dropdowns are positioned relative to the document.**
+#### Remove focusout and keydown to close
 This option can be helpful for accordion-type sections, where you want the content to persist.
 
 To do this, add the `data-click-only-toggle` attribute to the trigger element.

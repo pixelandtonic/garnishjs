@@ -171,7 +171,7 @@ Garnish.Disclosure = Garnish.Base.extend(
       this._triggerOffset = this.$trigger[0].getBoundingClientRect();
       this._triggerWidth = this.$trigger.outerWidth();
       this._triggerHeight = this.$trigger.outerHeight();
-      this._triggerOffsetRight = this._triggerOffset.left + this._triggerHeight;
+      this._triggerOffsetRight = this._triggerOffset.right;
       this._triggerOffsetBottom = this._triggerOffset.bottom;
 
       this.$container.css('minWidth', 0);
@@ -186,19 +186,21 @@ Garnish.Disclosure = Garnish.Base.extend(
 
       // Is there room for the menu below the trigger?
       var topClearance = this._triggerOffset.top,
-        bottomClearance = this._triggerOffsetBottom;
+        bottomClearance = this._windowHeight - this._triggerOffsetBottom;
 
       if (
-        // bottomClearance >= this._menuHeight ||
-        // (topClearance < this._menuHeight && bottomClearance >= topClearance)
-        true === false
+        bottomClearance >= this._menuHeight ||
+        (topClearance < this._menuHeight && bottomClearance >= topClearance)
       ) {
         this.$container.css({
+          top: '100%',
+          bottom: 'unset',
           maxHeight: bottomClearance - this.settings.windowSpacing,
         });
       } else {
         this.$container.css({
-          top: '100%',
+          bottom: '100%',
+          top: 'unset',
           maxHeight: topClearance - this.settings.windowSpacing,
         });
       }
