@@ -54,9 +54,9 @@ Garnish.Disclosure = Garnish.Base.extend(
      * Capture whether focus out and ESC will toggle closed
      */
     captureToggleSettings: function() {
-      var toggleAttribute = this.$trigger.attr('data-click-toggle-only');
+      var toggleAttribute = this.$trigger.data('clickToggleOnly');
 
-      if (!toggleAttribute) return;
+      if (toggleAttribute === undefined) return;
 
       this.settings.clickToggleOnly = true;
     },
@@ -112,11 +112,11 @@ Garnish.Disclosure = Garnish.Base.extend(
       this._windowScrollLeft = Garnish.$win.scrollLeft();
       this._windowScrollTop = Garnish.$win.scrollTop();
 
-      this._anchorOffset = this.$anchor.offset();
+      this._anchorOffset = this.$anchor[0].getBoundingClientRect();
       this._anchorWidth = this.$anchor.outerWidth();
       this._anchorHeight = this.$anchor.outerHeight();
       this._anchorOffsetRight = this._anchorOffset.left + this._anchorHeight;
-      this._anchorOffsetBottom = this._anchorOffset.top + this._anchorHeight;
+      this._anchorOffsetBottom = this._anchorOffset.bottom;
 
       this.$container.css('minWidth', 0);
       this.$container.css(
@@ -129,26 +129,24 @@ Garnish.Disclosure = Garnish.Base.extend(
       this._menuHeight = this.$container.outerHeight();
 
       // Is there room for the menu below the anchor?
-      var topClearance = this._anchorOffset.top - this._windowScrollTop,
-        bottomClearance =
-          this._windowHeight + this._windowScrollTop - this._anchorOffsetBottom;
+      var topClearance = this._anchorOffset.top,
+        bottomClearance = this._anchorOffsetBottom;
 
       if (
         bottomClearance >= this._menuHeight ||
         (topClearance < this._menuHeight && bottomClearance >= topClearance)
       ) {
         this.$container.css({
-          top: this._anchorOffsetBottom,
           maxHeight: bottomClearance - this.settings.windowSpacing,
         });
       } else {
         this.$container.css({
-          top:
-            this._anchorOffset.top -
+          marginTop:
+            (this._anchorHeight +
             Math.min(
               this._menuHeight,
               topClearance - this.settings.windowSpacing
-            ),
+            )) * -1,
           maxHeight: topClearance - this.settings.windowSpacing,
         });
       }
@@ -195,8 +193,6 @@ Garnish.Disclosure = Garnish.Base.extend(
         return;
       }
 
-      // Move the menu to the end of the DOM
-      this.$container.appendTo(Garnish.$bod);
       this.setPositionRelativeToAnchor();
 
       this.$container.velocity('stop');
@@ -253,9 +249,8 @@ Garnish.Disclosure = Garnish.Base.extend(
 
     _alignRight: function () {
       this.$container.css({
-        right:
-          this._windowWidth - (this._anchorOffset.left + this._anchorWidth),
-        left: 'auto',
+        marginLeft:
+          Math.abs(this._anchorWidth - this.$container.width()) * -1,
       });
     },
 
@@ -276,6 +271,7 @@ Garnish.Disclosure = Garnish.Base.extend(
       anchor: null,
       windowSpacing: 5,
       clickToggleOnly: false,
+      positionRelativeToAnchor: false,
     },
   }
 );
