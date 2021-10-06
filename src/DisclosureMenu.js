@@ -69,17 +69,7 @@ Garnish.DisclosureMenu = Garnish.Base.extend(
         this.handleKeypress(event);
       });
 
-      this.addListener(this.$container, 'focusout', function(event) {
-        var newTarget = event.relatedTarget;
-        var newTargetIsInsideDisclosure = this.$container.has(newTarget).length > 0;
-
-        // If click target matches trigger element or disclosure child, do nothing
-      if (newTarget === this.$trigger.get(0) || newTargetIsInsideDisclosure) {
-          return;
-        }
-
-        this.hide();
-      });
+      this.addListener(Garnish.$doc, 'mousedown', this.handleMousedown)
     },
 
     focusElement: function(direction) {
@@ -100,6 +90,18 @@ Garnish.DisclosureMenu = Garnish.Base.extend(
         var elementToFocus = focusable[newIndex];
         elementToFocus.focus();
       }
+    },
+
+    handleMousedown: function (event) {
+      var newTarget = event.target;
+      var newTargetIsInsideDisclosure = this.$container.has(newTarget).length > 0;
+
+      // If click target matches trigger element or disclosure child, do nothing
+      if (newTarget === this.$trigger.get(0) || newTargetIsInsideDisclosure) {
+        return;
+      }
+
+      this.hide();
     },
 
     handleKeypress: function(event) {
