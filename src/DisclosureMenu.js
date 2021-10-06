@@ -82,10 +82,44 @@ Garnish.DisclosureMenu = Garnish.Base.extend(
       });
     },
 
+    focusElement: function(direction) {
+      var currentFocus = $(':focus');
+
+      var focusable = this.$container.find(':focusable');
+
+      var currentIndex = focusable.index(currentFocus);
+      var newIndex;
+
+      if (direction === 'prev') {
+        newIndex = currentIndex - 1;
+      } else {
+        newIndex = currentIndex + 1;
+      }
+
+      if (newIndex >= 0 && newIndex < focusable.length) {
+        var elementToFocus = focusable[newIndex];
+        elementToFocus.focus();
+      }
+    },
+
     handleKeypress: function(event) {
-      if (event.key === 'Escape') {
-        this.hide();
-        this.$trigger.focus();
+      var keyCode = event.keyCode;
+      
+      switch (keyCode) {
+        case Garnish.ESC_KEY:
+          this.hide();
+          this.$trigger.focus();
+          break;
+        case Garnish.RIGHT_KEY:
+        case Garnish.DOWN_KEY:
+          this.focusElement('next');
+          break;
+        case Garnish.LEFT_KEY:
+        case Garnish.UP_KEY:
+          this.focusElement('prev');
+          break;
+        default:
+          break;
       }
     },
 
