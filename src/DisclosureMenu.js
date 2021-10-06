@@ -2,23 +2,24 @@
 /**
  * Disclosure Widget
  */
-Garnish.Disclosure = Garnish.Base.extend(
+Garnish.DisclosureMenu = Garnish.Base.extend(
   {
     settings: null,
 
     $trigger: null,
     $container: null,
+    $alignmentElement: null,
+    $wrapper: null,
 
     _windowWidth: null,
     _windowHeight: null,
     _windowScrollLeft: null,
     _windowScrollTop: null,
 
-    _triggerOffset: null,
+    _wrapperElementOffset: null,
+    _alignmentElementOffset: null,
     _triggerWidth: null,
     _triggerHeight: null,
-    _triggerOffsetRight: null,
-    _triggerOffsetBottom: null,
 
     _menuWidth: null,
     _menuHeight: null,
@@ -27,16 +28,13 @@ Garnish.Disclosure = Garnish.Base.extend(
      * Constructor
      */
     init: function (trigger, settings) {
-      this.setSettings(settings, Garnish.Disclosure.defaults);
+      this.setSettings(settings, Garnish.DisclosureMenu.defaults);
 
       this.$trigger = $(trigger);
       var triggerId = this.$trigger.attr('aria-controls');
       this.$container = $("#" + triggerId);
 
       if (!this.$container) return; /* Exit if no disclosure container is found */
-
-      this.captureToggleSettings();
-      this.capturePositionSettings();
 
       // Get and store expanded state from trigger
       var expanded = this.$trigger.attr('aria-expanded');
@@ -46,34 +44,26 @@ Garnish.Disclosure = Garnish.Base.extend(
         this.$trigger.attr('aria-expanded', 'false');
       }
 
-      this.addDisclosureEventListeners();
-    },
-    
-    /**
-     * Capture whether focus out and ESC will toggle closed
-     */
-    captureToggleSettings: function() {
-      var toggleAttribute = this.$trigger.data('clickToggleOnly');
+      // Capture additional alignment element
+      var alignmentSelector = this.$container.data('align-to');
+      if (alignmentSelector) {
+        this.$alignmentElement = $(alignmentSelector);
+      } else {
+        this.$alignmentElement = this.$trigger;
+      }
 
-      if (toggleAttribute === undefined) return;
+      var wrapper = this.$container.closest('[data-wrapper]');
+      if (wrapper) {
+        this.$wrapper = wrapper;
+      }
 
-      this.settings.clickToggleOnly = true;
-    },
-
-    capturePositionSettings: function() {
-      var positionAttribute = this.$container.data('positionRelativeToTrigger');
-
-      if (positionAttribute === undefined) return;
-
-      this.settings.positionRelativeToTrigger = true;
+      this.addDisclosureMenuEventListeners();
     },
 
-    addDisclosureEventListeners: function() {
+    addDisclosureMenuEventListeners: function() {
       this.addListener(this.$trigger, 'click', function() {
         this.handleTriggerClick();
       });
-
-      if (this.settings.clickToggleOnly === true) return;
 
       this.addListener(this.$container, 'keyup', function(event) {
         this.handleKeypress(event);
@@ -114,20 +104,16 @@ Garnish.Disclosure = Garnish.Base.extend(
     },
 
     show: function () {
-      var setDisclosurePosition = this.settings.positionRelativeToTrigger;
-
       if (this.isExpanded()) {
         return;
       }
 
-      if (setDisclosurePosition) {
-        this.setPositionRelativeToTrigger();
-        this.addListener(
-          Garnish.$scrollContainer,
-          'scroll',
-          'setPositionRelativeToTrigger'
-        );
-      }
+      this.setContainerPosition();
+      this.addListener(
+        Garnish.$scrollContainer,
+        'scroll',
+        'setContainerPosition'
+      );
       
       this.$container.velocity('stop');
       this.$container.css({
@@ -162,17 +148,17 @@ Garnish.Disclosure = Garnish.Base.extend(
       this.$trigger.attr('aria-expanded', 'false');
     },
 
-    setPositionRelativeToTrigger: function () {
+    setContainerPosition: function () {
       this._windowWidth = Garnish.$win.width();
       this._windowHeight = Garnish.$win.height();
       this._windowScrollLeft = Garnish.$win.scrollLeft();
       this._windowScrollTop = Garnish.$win.scrollTop();
 
-      this._triggerOffset = this.$trigger[0].getBoundingClientRect();
+      this._alignmentElementOffset = this.$alignmentElement[0].getBoundingClientRect();
+
+      this._wrapperElementOffset = this.$wrapper[0].getBoundingClientRect();
+
       this._triggerWidth = this.$trigger.outerWidth();
-      this._triggerHeight = this.$trigger.outerHeight();
-      this._triggerOffsetRight = this._triggerOffset.right;
-      this._triggerOffsetBottom = this._triggerOffset.bottom;
 
       this.$container.css('minWidth', 0);
       this.$container.css(
@@ -185,21 +171,26 @@ Garnish.Disclosure = Garnish.Base.extend(
       this._menuHeight = this.$container.outerHeight();
 
       // Is there room for the menu below the trigger?
-      var topClearance = this._triggerOffset.top,
-        bottomClearance = this._windowHeight - this._triggerOffsetBottom;
+      var topClearance = this._alignmentElementOffset.top,
+        bottomClearance = this._windowHeight - this._alignmentElementOffset.bottom;
 
-      if (
+      // Find top/bottom offset relative to wrapper element
+      var topAdjustment = this._alignmentElementOffset.top - this._wrapperElementOffset.top;
+      var bottomAdjustment = this._alignmentElementOffset.bottom - this._wrapperElementOffset.bottom;
+
+      var bottomClearanceExists = 
         bottomClearance >= this._menuHeight ||
-        (topClearance < this._menuHeight && bottomClearance >= topClearance)
-      ) {
+        (topClearance < this._menuHeight && bottomClearance >= topClearance);
+      
+      if (bottomClearanceExists) {
         this.$container.css({
-          top: '100%',
+          top: 'calc(100% + ' + bottomAdjustment + 'px)',
           bottom: 'unset',
           maxHeight: bottomClearance - this.settings.windowSpacing,
         });
       } else {
         this.$container.css({
-          bottom: '100%',
+          bottom: 'calc(100% - ' + topAdjustment + 'px)',
           top: 'unset',
           maxHeight: topClearance - this.settings.windowSpacing,
         });
@@ -219,8 +210,8 @@ Garnish.Disclosure = Garnish.Base.extend(
         var rightClearance =
             this._windowWidth +
             this._windowScrollLeft -
-            (this._triggerOffset.left + this._menuWidth),
-          leftClearance = this._triggerOffsetRight - this._menuWidth;
+            (this._alignmentElementOffset.left + this._menuWidth),
+          leftClearance = this._alignmentElementOffset.right - this._menuWidth;
 
         if ((align === 'right' && leftClearance >= 0) || rightClearance < 0) {
           this._alignRight();
@@ -233,38 +224,42 @@ Garnish.Disclosure = Garnish.Base.extend(
       delete this._windowHeight;
       delete this._windowScrollLeft;
       delete this._windowScrollTop;
-      delete this._triggerOffset;
+      delete this._wrapperElementOffset;
+      delete this._alignmentElementOffset;
       delete this._triggerWidth;
       delete this._triggerHeight;
-      delete this._triggerOffsetRight;
-      delete this._triggerOffsetBottom;
       delete this._menuWidth;
       delete this._menuHeight;
     },
 
     _alignLeft: function () {
+      var leftAdjustment = this._alignmentElementOffset.left - this._wrapperElementOffset.left;
+
       this.$container.css({
-        left: 0,
+        right: 'unset',
+        left: leftAdjustment + 'px',
       });
     },
 
     _alignRight: function () {
+      var rightAdjustment = this._alignmentElementOffset.right - this._wrapperElementOffset.right;
+      
       this.$container.css({
-        right: 0,
+        left: 'unset',
+        right: - rightAdjustment + 'px',
       });
     },
 
     _alignCenter: function () {
       var left = Math.round(this._triggerWidth / 2 - this._menuWidth / 2);
+      var leftAdjustment = this._alignmentElementOffset.left - this._wrapperElementOffset.left;
 
-      this.$container.css('left', left);
+      this.$container.css('left', left - leftAdjustment);
     },
   },
   {
     defaults: {
       windowSpacing: 5,
-      clickToggleOnly: false,
-      positionRelativeToTrigger: false,
     },
   }
 );
