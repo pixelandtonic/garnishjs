@@ -65,7 +65,7 @@ Garnish.DisclosureMenu = Garnish.Base.extend(
         this.handleTriggerClick();
       });
 
-      this.addListener(this.$container, 'keyup', function(event) {
+      this.addListener(this.$container, 'keydown', function(event) {
         this.handleKeypress(event);
       });
 
@@ -94,10 +94,11 @@ Garnish.DisclosureMenu = Garnish.Base.extend(
 
     handleMousedown: function (event) {
       var newTarget = event.target;
+      var triggerButton = $(newTarget).closest('[data-disclosure-trigger]');
       var newTargetIsInsideDisclosure = this.$container.has(newTarget).length > 0;
 
       // If click target matches trigger element or disclosure child, do nothing
-      if (newTarget === this.$trigger.get(0) || newTargetIsInsideDisclosure) {
+      if ($(triggerButton).is(this.$trigger) || newTargetIsInsideDisclosure) {
         return;
       }
 
@@ -114,10 +115,12 @@ Garnish.DisclosureMenu = Garnish.Base.extend(
           break;
         case Garnish.RIGHT_KEY:
         case Garnish.DOWN_KEY:
+          event.preventDefault();
           this.focusElement('next');
           break;
         case Garnish.LEFT_KEY:
         case Garnish.UP_KEY:
+          event.preventDefault();
           this.focusElement('prev');
           break;
         default:

@@ -66,16 +66,17 @@ To create a disclosure element, use a button with the following properties:
 </div>
 ```
 #### Positioning
-In certain cases, you may want the disclosure content to be positioned relative to the trigger element. For cases like this, ensure that:
-1. The trigger and disclosure elements are wrapped in a relatively positioned container
-2. The disclosure element has a `data-position-relative-to-trigger` attribute
+The disclosure container is positioned absolutely with respect to the trigger element. Because of this, both the disclosure container and the trigger need to be contained inside of a relatively positioned wrapper element.
+This element needs to have the attribute `data-wrapper`.
 
 **Note that this is different from the `CustomSelect` element, where dropdowns are positioned relative to the document.**
-#### Remove focusout and keydown to close
-This option can be helpful for accordion-type sections, where you want the content to persist.
 
-To do this, add the `data-click-only-toggle` attribute to the trigger element.
+You can change the horizontal alignment of the disclosure by adding a `data-align` attribute with one of the following values: `left`, `center`, or `right`.
 
+##### Adjusting positioning
+You may need to align the disclosure menu positioning to a different element **inside** of the trigger.
+
+In cases like this add a `data-align-to` attribute to the disclosure menu with the selector of the element you want to align it with.
 ## License
 
 Garnish is available under the [MIT license](LICENSE).
