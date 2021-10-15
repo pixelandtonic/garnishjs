@@ -2,7 +2,7 @@
 /**
  * Select Menu
  */
-Garnish.SelectMenu = Garnish.Menu.extend(
+Garnish.SelectMenu = Garnish.CustomSelect.extend(
     {
         /**
          * Constructor

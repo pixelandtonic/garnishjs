@@ -41,7 +41,7 @@ Garnish.MenuBtn = Garnish.Base.extend(
 
             this.setSettings(settings, Garnish.MenuBtn.defaults);
 
-            this.menu = menu || new Garnish.Menu($menu);
+            this.menu = menu || new Garnish.CustomSelect($menu);
             this.menu.$anchor = $(this.settings.menuAnchor || this.$btn);
             this.menu.on('optionselect', function(ev) {
                 this.onOptionSelect(ev.selectedOption);
