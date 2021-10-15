@@ -1,5 +1,13 @@
 # Garnish Changelog
 
+## 0.1.47
+
+### Added
+- Added `Garnish.DisclosureMenu`, for cases where a menu is used to show/hide _content_, as opposed to acting like a form `<select>`.
+
+### Changed
+- Renamed `Garnish.Menu` to `Garnish.CustomSelect`. (`Garnish.Menu` still exists as a deprecated alias.)
+
 ## 0.1.46
 
 ### Changed
