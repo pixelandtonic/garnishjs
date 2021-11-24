@@ -1,5 +1,13 @@
 # Garnish Changelog
 
+## 0.1.48
+
+### Changed
+- Modals now remove their shades from the DOM when destroyed.
+- HUDs now remove their containers and shades from the DOM when destroyed.
+- Improved <kbd>ESC</kbd> key handling for menus.
+- Context menus and disclosure menus now trigger `show` and `hide` events.
+
 ## 0.1.47
 
 ### Added

@@ -3,7 +3,7 @@
  *
  * @copyright 2013 Pixel & Tonic, Inc.. All rights reserved.
  * @author    Brandon Kelly <brandon@pixelandtonic.com>
- * @version   0.1.47
+ * @version   0.1.48
  * @license   MIT
  */
 (function($){
@@ -1649,6 +1649,9 @@ Garnish.ContextMenu = Garnish.Base.extend(
             this.$menu.css({left: ev.pageX + 1, top: ev.pageY - 4});
 
             this.showing = true;
+            this.trigger('show');
+            Garnish.shortcutManager.addLayer();
+            Garnish.shortcutManager.registerShortcut(Garnish.ESC_KEY, this.hideMenu.bind(this));
 
             setTimeout(function() {
                 this.addListener(Garnish.$doc, 'mousedown', 'hideMenu');
@@ -1662,6 +1665,8 @@ Garnish.ContextMenu = Garnish.Base.extend(
             this.removeListener(Garnish.$doc, 'mousedown');
             this.$menu.hide();
             this.showing = false;
+            this.trigger('hide');
+            Garnish.shortcutManager.removeLayer();
         },
 
         /**
@@ -2083,10 +2088,6 @@ Garnish.DisclosureMenu = Garnish.Base.extend(
       var keyCode = event.keyCode;
       
       switch (keyCode) {
-        case Garnish.ESC_KEY:
-          this.hide();
-          this.$trigger.focus();
-          break;
         case Garnish.RIGHT_KEY:
         case Garnish.DOWN_KEY:
           event.preventDefault();
@@ -2146,6 +2147,13 @@ Garnish.DisclosureMenu = Garnish.Base.extend(
         this.$container.attr('tabindex', '-1');
         this.$container.focus();
       }
+
+      this.trigger('show');
+      Garnish.shortcutManager.addLayer();
+      Garnish.shortcutManager.registerShortcut(Garnish.ESC_KEY, function() {
+        this.hide();
+        this.$trigger.focus();
+      }.bind(this));
     },
 
     hide: function () {
@@ -2159,6 +2167,9 @@ Garnish.DisclosureMenu = Garnish.Base.extend(
       );
 
       this.$trigger.attr('aria-expanded', 'false');
+
+      this.trigger('hide');
+      Garnish.shortcutManager.removeLayer();
     },
 
     setContainerPosition: function () {
@@ -3807,6 +3818,21 @@ Garnish.HUD = Garnish.Base.extend(
         _handleSubmit: function(ev) {
             ev.preventDefault();
             this.submit();
+        },
+
+        /**
+         * Destroy
+         */
+        destroy: function() {
+            if (this.$hud) {
+                this.$hud.remove();
+            }
+
+            if (this.$shade) {
+                this.$shade.remove();
+            }
+
+            this.base();
         }
     },
     {
@@ -4060,11 +4086,11 @@ Garnish.MenuBtn = Garnish.Base.extend(
 
         hideMenu: function() {
             this.menu.hide();
-            this.$btn.attr('aria-expanded', 'false');
         },
 
         onMenuHide: function() {
             this.$btn.removeClass('active');
+            this.$btn.attr('aria-expanded', 'false');
             this.showingMenu = false;
 
             this.removeListener(Garnish.$doc, 'mousedown');
@@ -4777,6 +4803,10 @@ Garnish.Modal = Garnish.Base.extend(
         destroy: function() {
             if (this.$container) {
                 this.$container.removeData('modal').remove();
+            }
+
+            if (this.$shade) {
+                this.$shade.remove();
             }
 
             if (this.dragger) {
