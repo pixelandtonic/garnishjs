@@ -478,6 +478,21 @@ Garnish.HUD = Garnish.Base.extend(
         _handleSubmit: function(ev) {
             ev.preventDefault();
             this.submit();
+        },
+
+        /**
+         * Destroy
+         */
+        destroy: function() {
+            if (this.$hud) {
+                this.$hud.remove();
+            }
+
+            if (this.$shade) {
+                this.$shade.remove();
+            }
+
+            this.base();
         }
     },
     {
