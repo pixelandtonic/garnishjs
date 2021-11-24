@@ -102,6 +102,9 @@ Garnish.ContextMenu = Garnish.Base.extend(
             this.$menu.css({left: ev.pageX + 1, top: ev.pageY - 4});
 
             this.showing = true;
+            this.trigger('show');
+            Garnish.shortcutManager.addLayer();
+            Garnish.shortcutManager.registerShortcut(Garnish.ESC_KEY, this.hideMenu.bind(this));
 
             setTimeout(function() {
                 this.addListener(Garnish.$doc, 'mousedown', 'hideMenu');
@@ -115,6 +118,8 @@ Garnish.ContextMenu = Garnish.Base.extend(
             this.removeListener(Garnish.$doc, 'mousedown');
             this.$menu.hide();
             this.showing = false;
+            this.trigger('hide');
+            Garnish.shortcutManager.removeLayer();
         },
 
         /**

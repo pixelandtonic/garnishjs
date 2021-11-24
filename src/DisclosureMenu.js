@@ -109,10 +109,6 @@ Garnish.DisclosureMenu = Garnish.Base.extend(
       var keyCode = event.keyCode;
       
       switch (keyCode) {
-        case Garnish.ESC_KEY:
-          this.hide();
-          this.$trigger.focus();
-          break;
         case Garnish.RIGHT_KEY:
         case Garnish.DOWN_KEY:
           event.preventDefault();
@@ -172,6 +168,13 @@ Garnish.DisclosureMenu = Garnish.Base.extend(
         this.$container.attr('tabindex', '-1');
         this.$container.focus();
       }
+
+      this.trigger('show');
+      Garnish.shortcutManager.addLayer();
+      Garnish.shortcutManager.registerShortcut(Garnish.ESC_KEY, function() {
+        this.hide();
+        this.$trigger.focus();
+      }.bind(this));
     },
 
     hide: function () {
@@ -185,6 +188,9 @@ Garnish.DisclosureMenu = Garnish.Base.extend(
       );
 
       this.$trigger.attr('aria-expanded', 'false');
+
+      this.trigger('hide');
+      Garnish.shortcutManager.removeLayer();
     },
 
     setContainerPosition: function () {

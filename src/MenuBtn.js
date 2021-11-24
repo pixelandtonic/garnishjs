@@ -220,11 +220,11 @@ Garnish.MenuBtn = Garnish.Base.extend(
 
         hideMenu: function() {
             this.menu.hide();
-            this.$btn.attr('aria-expanded', 'false');
         },
 
         onMenuHide: function() {
             this.$btn.removeClass('active');
+            this.$btn.attr('aria-expanded', 'false');
             this.showingMenu = false;
 
             this.removeListener(Garnish.$doc, 'mousedown');
