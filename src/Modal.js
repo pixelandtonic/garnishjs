@@ -49,6 +49,16 @@ Garnish.Modal = Garnish.Base.extend(
             Garnish.Modal.instances.push(this);
         },
 
+        addAriaAttributes: function() {
+
+            if (!this.$container) return;
+            console.log(this.$container);
+            this.$container.attr({
+                'aria-modal': 'true',
+                'role': 'dialog',
+            });
+        },
+
         setContainer: function(container) {
             this.$container = $(container);
 
