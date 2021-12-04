@@ -96,30 +96,55 @@ Garnish.Modal = Garnish.Base.extend(
         hideOutsideContent: function() {
             // Hide body content from screen reader users
             var modal = this;
+
             Garnish.$bod.children().each(function() {
                 if (modal.contentShouldBeHidden(this)) {
-                    modal.setAriaClass(this);
+                    modal.ariaHide(this);
                 }
             });
         },
 
-        setAriaClass: function(element) {
+        resetOutsideContentVisibility: function() {
+            var ariaSelector = '.' + this.settings.jsAriaClass + ', .' + this.settings.jsAriaFalseClass + ', .' + this.settings.jsAriaTrueClass;
+
+            var ariaHiddenElements = $(ariaSelector);
+            var modal = this;
+
+            // Go through each and restore to initial value
+            $(ariaHiddenElements).each(function() {
+                if ($(this).hasClass(modal.settings.jsAriaClass)) {
+                    $(this).removeClass(modal.settings.jsAriaClass);
+                    $(this).removeAttr('aria-hidden');
+                } else if ($(this).hasClass(modal.settings.jsAriaFalseClass)) {
+                    $(this).removeClass(modal.settings.jsAriaFalseClass);
+                    $(this).attr('aria-hidden', false);
+                } else if ($(this).hasClass(modal.settings.jsAriaTrueClass)) {
+                    $(this).removeClass(modal.settings.jsAriaTrueClass);
+                    $(this).attr('aria-hidden', true);
+                }
+            });
+        },
+
+        ariaHide: function(element) {
             var ariaHiddenAttribute = $(element).attr('aria-hidden');
 
-            if (ariaHiddenAttribute === 'true') {
-                $(element).addClass(this.settings.jsAriaTrueClass);
+            // Capture initial aria-hidden values in an applied class
+            if (!ariaHiddenAttribute) {
+                $(element).addClass(this.settings.jsAriaClass);
             } else if (ariaHiddenAttribute === 'false') {
                 $(element).addClass(this.settings.jsAriaFalseClass);
-            } else {
-                $(element.addClass(this.settings.jsAriaClass));
+            } else if (ariaHiddenAttribute === 'true') {
+                $(element.addClass(this.settings.jsAriaTrueClass));
             }
+
+            $(element).attr('aria-hidden', 'true');
         },
 
         contentShouldBeHidden: function(element) {
             var hide = true;
             var tagName = $(element).prop('tagName');
 
-            if (tagName === 'SCRIPT' || tagName === 'STYLE' || element === this.$container.get(0)) {
+            if (tagName === 'SCRIPT' || tagName === 'STYLE' || element === Garnish.Modal.visibleModal.$container.get(0)) {
                 hide = false;
             }
 
@@ -152,8 +177,6 @@ Garnish.Modal = Garnish.Base.extend(
                     }.bind(this)
                 });
 
-                this.hideOutsideContent();
-
                 if (this.settings.hideOnShadeClick) {
                     this.addListener(this.$shade, 'click', 'hide');
                 }
@@ -176,6 +199,8 @@ Garnish.Modal = Garnish.Base.extend(
                 this.trigger('show');
                 this.settings.onShow();
             }
+
+            this.hideOutsideContent();
         },
 
         quickShow: function() {
@@ -219,6 +244,7 @@ Garnish.Modal = Garnish.Base.extend(
             Garnish.Modal.visibleModal = null;
             Garnish.shortcutManager.removeLayer();
             this.trigger('hide');
+            this.resetOutsideContentVisibility();
             this.settings.onHide();
         },
 
