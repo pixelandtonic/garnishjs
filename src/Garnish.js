@@ -441,6 +441,16 @@ Garnish = $.extend(Garnish, {
     },
 
     /**
+     * Returns the focusable elements within a container
+     *
+     * @param {object} container The container element. Can be either an actual element or a jQuery collection.
+     * @return {object}
+     */
+    findFocusable: function(container) {
+        return $(container).find(':focusable');
+    },
+
+    /**
      * Returns the post data within a container.
      *
      * @param {object} container
