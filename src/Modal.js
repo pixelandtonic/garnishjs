@@ -181,6 +181,9 @@ Garnish.Modal = Garnish.Base.extend(
                     this.addListener(this.$shade, 'click', 'hide');
                 }
 
+                // Add focus trap listeners
+                this.addListener(this.$container, 'keydown', 'handleKeydown');
+
                 this.addListener(Garnish.$win, 'resize', '_handleWindowResize');
             }
 
@@ -201,6 +204,29 @@ Garnish.Modal = Garnish.Base.extend(
             }
 
             this.hideOutsideContent();
+        },
+
+        getFocusableElements: function() {
+            return this.$container.find(':focusable');
+        },
+
+        handleKeydown: function(event) {
+            if (event.keyCode !== Garnish.TAB_KEY) return;
+
+            var focusable = this.getFocusableElements();
+            var target = $(event.target);
+
+            if (event.shiftKey) { // Handle reverse TAB by looping to beginning of container
+                if (target.is(focusable.first())) {
+                    focusable.last().focus();
+                    event.preventDefault();
+                }
+            } else {
+                if (target.is(focusable.last())) {
+                    focusable.first().focus();
+                    event.preventDefault();
+                }
+            }
         },
 
         quickShow: function() {

@@ -26,6 +26,7 @@ Garnish = $.extend(Garnish, {
     // Key code constants
     DELETE_KEY: 8,
     SHIFT_KEY: 16,
+    TAB_KEY: 9,
     CTRL_KEY: 17,
     ALT_KEY: 18,
     RETURN_KEY: 13,
