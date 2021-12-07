@@ -6,6 +6,7 @@ Garnish.Modal = Garnish.Base.extend(
     {
         $container: null,
         $shade: null,
+        $trigger: null,
 
         visible: false,
 
@@ -29,6 +30,12 @@ Garnish.Modal = Garnish.Base.extend(
 
             // Create the shade
             this.$shade = $('<div class="' + this.settings.shadeClass + '"/>');
+
+            // Store trigger
+            var trigger = Garnish.findCurrentFocus();
+            if (trigger) {
+                this.$trigger = trigger;
+            }
 
             // If the container is already set, drop the shade below it.
             if (container) {
@@ -264,6 +271,10 @@ Garnish.Modal = Garnish.Base.extend(
                 this.removeListener(this.$container, 'keydown', 'handleKeydown');
 
                 this.removeListener(Garnish.$win, 'resize');
+            }
+
+            if (this.$trigger) {
+                this.$trigger.focus();
             }
 
             this.visible = false;

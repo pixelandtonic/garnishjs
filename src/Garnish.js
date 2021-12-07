@@ -451,6 +451,15 @@ Garnish = $.extend(Garnish, {
     },
 
     /**
+     * Returns the currently focused element
+     *
+     * @return {object}
+     */
+    findCurrentFocus: function() {
+        return $(':focus');
+    },
+
+    /**
      * Returns the post data within a container.
      *
      * @param {object} container
