@@ -6,7 +6,6 @@ Garnish.Modal = Garnish.Base.extend(
     {
         $container: null,
         $shade: null,
-        $triggerElement: null,
 
         visible: false,
 
@@ -30,11 +29,6 @@ Garnish.Modal = Garnish.Base.extend(
 
             // Create the shade
             this.$shade = $('<div class="' + this.settings.shadeClass + '"/>');
-
-            // Store triggering element
-            if (Garnish.findCurrentFocus()) {
-                this.$triggerElement = Garnish.findCurrentFocus();
-            }
 
             // If the container is already set, drop the shade below it.
             if (container) {
@@ -164,10 +158,6 @@ Garnish.Modal = Garnish.Base.extend(
                 Garnish.Modal.visibleModal.hide();
             }
 
-            if (Garnish.findCurrentFocus() !== this.$triggerElement) {
-                this.$triggerElement = Garnish.findCurrentFocus();
-            }
-
             if (this.$container) {
                 // Move it to the end of <body> so it gets the highest sub-z-index
                 this.$shade.appendTo(Garnish.$bod);
@@ -276,8 +266,8 @@ Garnish.Modal = Garnish.Base.extend(
                 this.removeListener(Garnish.$win, 'resize');
             }
 
-            if (this.$triggerElement) {
-                this.$triggerElement.focus();
+            if (this.settings.triggerElement) {
+                this.settings.triggerElement.focus();
             }
 
             this.visible = false;
@@ -445,6 +435,7 @@ Garnish.Modal = Garnish.Base.extend(
             closeOtherModals: false,
             hideOnEsc: true,
             hideOnShadeClick: true,
+            triggerElement: null,
             shadeClass: 'modal-shade',
             jsAriaClass: 'garnish-js-aria',
             jsAriaTrueClass: 'garnish-js-aria-true',
