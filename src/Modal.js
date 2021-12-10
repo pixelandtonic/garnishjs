@@ -144,7 +144,6 @@ Garnish.Modal = Garnish.Base.extend(
             var hide = true;
             var tagName = $(element).prop('tagName');
 
-            // TODO clean up this conditional
             if (tagName === 'SCRIPT' || tagName === 'STYLE' || element === Garnish.Modal.visibleModal.$container.get(0)) {
                 hide = false;
             }
@@ -172,6 +171,7 @@ Garnish.Modal = Garnish.Base.extend(
                         this.$container.velocity('fadeIn', {
                             complete: function() {
                                 this.updateSizeAndPosition();
+                                this.moveFocusInto();
                                 this.onFadeIn();
                             }.bind(this)
                         });
@@ -205,6 +205,14 @@ Garnish.Modal = Garnish.Base.extend(
             }
 
             this.hideOutsideContent();
+        },
+
+        moveFocusInto: function() {
+            var focusable = Garnish.findFocusable(this.$container);
+
+            if (!focusable.length) return;
+
+            focusable.first().focus();
         },
 
         handleKeydown: function(event) {
