@@ -98,6 +98,9 @@ Garnish.Modal = Garnish.Base.extend(
             var modal = this;
 
             Garnish.$bod.children().each(function() {
+                // If element already has jsAria class, do nothing
+                if (modal.hasJsAriaClass(this)) return;
+
                 if (modal.contentShouldBeHidden(this)) {
                     modal.ariaHide(this);
                 }
@@ -125,6 +128,10 @@ Garnish.Modal = Garnish.Base.extend(
             });
         },
 
+        hasJsAriaClass: function(element) {
+            return $(element).hasClass(this.settings.jsAriaClass) || $(element).hasClass(this.settings.jsAriaFalseClass) || $(element).hasClass(this.settings.jsAriaTrueClass);
+        },
+
         ariaHide: function(element) {
             var ariaHiddenAttribute = $(element).attr('aria-hidden');
 
@@ -144,6 +151,7 @@ Garnish.Modal = Garnish.Base.extend(
             var hide = true;
             var tagName = $(element).prop('tagName');
 
+            // Do not hide script or style tags, or the visible modal container
             if (tagName === 'SCRIPT' || tagName === 'STYLE' || element === Garnish.Modal.visibleModal.$container.get(0)) {
                 hide = false;
             }
