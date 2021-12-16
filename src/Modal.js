@@ -39,7 +39,7 @@ Garnish.Modal = Garnish.Base.extend(
             }
 
             if (container) {
-                this.addAriaAttributes(container);
+                Garnish.addModalAttributes(container);
                 this.setContainer(container);
 
                 if (this.settings.autoShow) {
@@ -48,13 +48,6 @@ Garnish.Modal = Garnish.Base.extend(
             }
 
             Garnish.Modal.instances.push(this);
-        },
-
-        addAriaAttributes: function(container) {
-            $(container).attr({
-                'aria-modal': 'true',
-                'role': 'dialog',
-            });
         },
 
         setContainer: function(container) {
@@ -93,72 +86,6 @@ Garnish.Modal = Garnish.Base.extend(
             }
         },
 
-        hideOutsideContent: function() {
-            // Hide body content from screen reader users
-            var modal = this;
-
-            Garnish.$bod.children().each(function() {
-                // If element already has jsAria class, do nothing
-                if (modal.hasJsAriaClass(this)) return;
-
-                if (modal.contentShouldBeHidden(this)) {
-                    modal.ariaHide(this);
-                }
-            });
-        },
-
-        resetOutsideContentVisibility: function() {
-            var ariaSelector = '.' + this.settings.jsAriaClass + ', .' + this.settings.jsAriaFalseClass + ', .' + this.settings.jsAriaTrueClass;
-
-            var ariaHiddenElements = $(ariaSelector);
-            var modal = this;
-
-            // Go through each and restore to initial value
-            $(ariaHiddenElements).each(function() {
-                if ($(this).hasClass(modal.settings.jsAriaClass)) {
-                    $(this).removeClass(modal.settings.jsAriaClass);
-                    $(this).removeAttr('aria-hidden');
-                } else if ($(this).hasClass(modal.settings.jsAriaFalseClass)) {
-                    $(this).removeClass(modal.settings.jsAriaFalseClass);
-                    $(this).attr('aria-hidden', false);
-                } else if ($(this).hasClass(modal.settings.jsAriaTrueClass)) {
-                    $(this).removeClass(modal.settings.jsAriaTrueClass);
-                    $(this).attr('aria-hidden', true);
-                }
-            });
-        },
-
-        hasJsAriaClass: function(element) {
-            return $(element).hasClass(this.settings.jsAriaClass) || $(element).hasClass(this.settings.jsAriaFalseClass) || $(element).hasClass(this.settings.jsAriaTrueClass);
-        },
-
-        ariaHide: function(element) {
-            var ariaHiddenAttribute = $(element).attr('aria-hidden');
-
-            // Capture initial aria-hidden values in an applied class
-            if (!ariaHiddenAttribute) {
-                $(element).addClass(this.settings.jsAriaClass);
-            } else if (ariaHiddenAttribute === 'false') {
-                $(element).addClass(this.settings.jsAriaFalseClass);
-            } else if (ariaHiddenAttribute === 'true') {
-                $(element.addClass(this.settings.jsAriaTrueClass));
-            }
-
-            $(element).attr('aria-hidden', 'true');
-        },
-
-        contentShouldBeHidden: function(element) {
-            var hide = true;
-            var tagName = $(element).prop('tagName');
-
-            // Do not hide script or style tags, or the visible modal container
-            if (tagName === 'SCRIPT' || tagName === 'STYLE' || element === Garnish.Modal.visibleModal.$container.get(0)) {
-                hide = false;
-            }
-
-            return hide;
-        },
-
         show: function() {
             // Close other modals as needed
             if (this.settings.closeOtherModals && Garnish.Modal.visibleModal && Garnish.Modal.visibleModal !== this) {
@@ -179,7 +106,7 @@ Garnish.Modal = Garnish.Base.extend(
                         this.$container.velocity('fadeIn', {
                             complete: function() {
                                 this.updateSizeAndPosition();
-                                this.moveFocusInto();
+                                Garnish.setFocusWithin(this.$container);
                                 this.onFadeIn();
                             }.bind(this)
                         });
@@ -190,8 +117,8 @@ Garnish.Modal = Garnish.Base.extend(
                     this.addListener(this.$shade, 'click', 'hide');
                 }
 
-                // Add keydown listener for focus trap
-                this.addListener(this.$container, 'keydown', 'handleKeydown');
+                // Add focus trap
+                Garnish.trapFocusWithin(this.$container);
 
                 this.addListener(Garnish.$win, 'resize', '_handleWindowResize');
             }
@@ -212,34 +139,7 @@ Garnish.Modal = Garnish.Base.extend(
                 this.settings.onShow();
             }
 
-            this.hideOutsideContent();
-        },
-
-        moveFocusInto: function() {
-            var focusable = Garnish.findFocusable(this.$container);
-
-            if (!focusable.length) return;
-
-            focusable.first().focus();
-        },
-
-        handleKeydown: function(event) {
-            if (event.keyCode !== Garnish.TAB_KEY) return;
-
-            var focusable = Garnish.findFocusable(this.$container);
-            var target = $(event.target);
-
-            if (event.shiftKey) { // Handle reverse TAB by looping to beginning of container
-                if (target.is(focusable.first())) {
-                    focusable.last().focus();
-                    event.preventDefault();
-                }
-            } else {
-                if (target.is(focusable.last())) {
-                    focusable.first().focus();
-                    event.preventDefault();
-                }
-            }
+            Garnish.hideModalBackgroundContent(this.$container);
         },
 
         quickShow: function() {
@@ -276,9 +176,6 @@ Garnish.Modal = Garnish.Base.extend(
                     this.removeListener(this.$shade, 'click');
                 }
 
-                // Remove keydown listener for focus trap
-                this.removeListener(this.$container, 'keydown', 'handleKeydown');
-
                 this.removeListener(Garnish.$win, 'resize');
             }
 
@@ -290,7 +187,7 @@ Garnish.Modal = Garnish.Base.extend(
             Garnish.Modal.visibleModal = null;
             Garnish.shortcutManager.removeLayer();
             this.trigger('hide');
-            this.resetOutsideContentVisibility();
+            Garnish.resetBackgroundContentVisibility();
             this.settings.onHide();
         },
 
@@ -453,9 +350,6 @@ Garnish.Modal = Garnish.Base.extend(
             hideOnShadeClick: true,
             triggerElement: null,
             shadeClass: 'modal-shade',
-            jsAriaClass: 'garnish-js-aria',
-            jsAriaTrueClass: 'garnish-js-aria-true',
-            jsAriaFalseClass: 'garnish-js-aria-false',
         },
         instances: [],
         visibleModal: null

@@ -40,6 +40,11 @@ Garnish = $.extend(Garnish, {
     S_KEY: 83,
     CMD_KEY: 91,
 
+    // ARIA hidden classes
+    JS_ARIA_CLASS: 'garnish-js-aria',
+    JS_ARIA_TRUE_CLASS: 'garnish-js-aria-true',
+    JS_ARIA_FALSE_CLASS: 'garnish-js-aria-false',
+
     // Mouse button constants
     PRIMARY_CLICK: 1,
     SECONDARY_CLICK: 3,
@@ -216,6 +221,157 @@ Garnish = $.extend(Garnish, {
             wordSpacing: $source.css('wordSpacing'),
             wordWrap: $source.css('wordWrap')
         });
+    },
+
+    /**
+     * Adds modal ARIA and role attributes to a container
+     *
+     * @param {object} container The container element. Can be either an actual element or a jQuery collection.
+     */
+    addModalAttributes: function(container) {
+        var $container = $(container);
+
+        $(container).attr({
+            'aria-modal': 'true',
+            'role': 'dialog',
+        });
+    },
+
+    /**
+     * Hide immediate descendants of the body element from screen readers
+     *
+     * @param {object} modal The modal container. Can be either an actual element or a jQuery collection.
+     */
+    hideModalBackgroundContent: function(modal) {
+        var $modal = $(modal);
+
+        Garnish.$bod.children().each(function() {
+            // If element is modal or already has jsAria class, do nothing
+            if (Garnish.hasJsAriaClass(this) || this === $modal.get(0)) return;
+
+            if (Garnish.contentShouldBeHidden(this)) {
+                Garnish.ariaHide(this);
+            }
+        });
+    },
+
+    /**
+     * Un-hide elements underneath modal being closed
+     *
+     */
+    resetBackgroundContentVisibility: function() {
+        var $nextVisibleModal = Garnish.getNextVisibleModal();
+
+        // If there is another modal, make it accessible to AT
+        if ($nextVisibleModal) {
+            $nextVisibleModal.removeClass([Garnish.JS_ARIA_CLASS, Garnish.JS_ARIA_TRUE_CLASS, Garnish.JS_ARIA_FALSE_CLASS]);
+            $nextVisibleModal.removeAttr('aria-hidden');
+            return;
+        };
+
+        // If no more modals in DOM, loop through hidden elements and un-hide them
+        var ariaSelector = '.' + Garnish.JS_ARIA_CLASS + ', .' + Garnish.JS_ARIA_FALSE_CLASS + ', .' + Garnish.JS_ARIA_TRUE_CLASS;
+        var ariaHiddenElements = $(ariaSelector);
+
+        $(ariaHiddenElements).each(function() {
+            if ($(this).hasClass(Garnish.JS_ARIA_CLASS)) {
+                $(this).removeClass(Garnish.JS_ARIA_CLASS);
+                $(this).removeAttr('aria-hidden');
+            } else if ($(this).hasClass(Garnish.JS_ARIA_FALSE_CLASS)) {
+                $(this).removeClass(Garnish.JS_ARIA_FALSE_CLASS);
+                $(this).attr('aria-hidden', false);
+            } else if ($(this).hasClass(Garnish.JS_ARIA_TRUE_CLASS)) {
+                $(this).removeClass(Garnish.JS_ARIA_TRUE_CLASS);
+                $(this).attr('aria-hidden', true);
+            }
+        });
+    },
+
+    contentShouldBeHidden: function(element) {
+        var hide = true;
+        var tagName = $(element).prop('tagName');
+
+        // Do not hide script or style tags, or the visible modal container
+        if (tagName === 'SCRIPT' || tagName === 'STYLE') {
+            hide = false;
+        }
+
+        return hide;
+    },
+
+    /**
+     * Apply aria-hidden="true" to element and store previous value as class
+     *
+     * @param {object} element The element. Can be either an actual element or a jQuery collection.
+     */
+    ariaHide: function(element) {
+        var ariaHiddenAttribute = $(element).attr('aria-hidden');
+
+        // Capture initial aria-hidden values in an applied class
+        if (!ariaHiddenAttribute) {
+            $(element).addClass(Garnish.JS_ARIA_CLASS);
+        } else if (ariaHiddenAttribute === 'false') {
+            $(element).addClass(Garnish.JS_ARIA_FALSE_CLASS);
+        } else if (ariaHiddenAttribute === 'true') {
+            $(element.addClass(Garnish.JS_ARIA_TRUE_CLASS));
+        }
+
+        $(element).attr('aria-hidden', 'true');
+    },
+
+    getNextVisibleModal: function() {
+        var modals = $('[aria-modal="true"]').filter(function() {
+            return $(this).css('display') == 'block';
+        });
+
+        if (modals.length > 1) {
+            return modals[length - 1];
+        } else {
+            return null;
+        }
+    },
+
+    /**
+     * Has been hidden from screen reader users as a result of modal open
+     *
+     * @param {object} element The element. Can be either an actual element or a jQuery collection.
+     */
+    hasJsAriaClass: function(element) {
+        return $(element).hasClass(Garnish.JS_ARIA_CLASS) || $(element).hasClass(Garnish.JS_ARIA_FALSE_CLASS) || $(element).hasClass(Garnish.JS_ARIA_TRUE_CLASS);
+    },
+
+    /**
+     * Traps focus within a container, so when focus is tabbed out of it, it’s cycled back into it.
+     * @param {Object} container
+     */
+    trapFocusWithin: function(container) {
+        var $container = $(container);
+        $container.on('keydown.focus-trap', function (ev) {
+            // Tab key?
+            if (ev.keyCode === Garnish.TAB_KEY) {
+                var $focusableElements = $container.find(':focusable');
+                var index = $focusableElements.index(document.activeElement);
+                if (index !== -1) {
+                    if (index === 0 && ev.shiftKey) {
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        $focusableElements.last().focus();
+                    } else if (index === $focusableElements.length - 1 && !ev.shiftKey) {
+                        ev.psreventDefault();
+                        ev.stopPropagation();
+                        $focusableElements.first().focus();
+                    }
+                }
+            }
+        });
+    },
+
+    /**
+     * Sets focus to the first focusable element within a container.
+     * @param {Object} container
+     */
+    setFocusWithin: function(container) {
+        $(container).find(':focusable:first').focus();
     },
 
     /**
