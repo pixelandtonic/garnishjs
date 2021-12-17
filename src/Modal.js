@@ -135,11 +135,11 @@ Garnish.Modal = Garnish.Base.extend(
                     Garnish.shortcutManager.registerShortcut(Garnish.ESC_KEY, this.hide.bind(this));
                 }
 
+                Garnish.hideModalBackgroundContent(this.$container);
+
                 this.trigger('show');
                 this.settings.onShow();
             }
-
-            Garnish.hideModalBackgroundContent(this.$container);
         },
 
         quickShow: function() {
@@ -187,7 +187,7 @@ Garnish.Modal = Garnish.Base.extend(
             Garnish.Modal.visibleModal = null;
             Garnish.shortcutManager.removeLayer();
             this.trigger('hide');
-            Garnish.resetBackgroundContentVisibility();
+            Garnish.resetBackgroundContentVisibility(this.$container);
             this.settings.onHide();
         },
 

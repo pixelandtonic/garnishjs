@@ -259,13 +259,13 @@ Garnish = $.extend(Garnish, {
      * Un-hide elements underneath modal being closed
      *
      */
-    resetBackgroundContentVisibility: function() {
-        var $nextVisibleModal = Garnish.getNextVisibleModal();
+    resetBackgroundContentVisibility: function(container) {
+        var nextVisibleModal = Garnish.getNextVisibleModal(container);
 
         // If there is another modal, make it accessible to AT
-        if ($nextVisibleModal) {
-            $nextVisibleModal.removeClass([Garnish.JS_ARIA_CLASS, Garnish.JS_ARIA_TRUE_CLASS, Garnish.JS_ARIA_FALSE_CLASS]);
-            $nextVisibleModal.removeAttr('aria-hidden');
+        if (nextVisibleModal) {
+            $(nextVisibleModal).removeClass([Garnish.JS_ARIA_CLASS, Garnish.JS_ARIA_TRUE_CLASS, Garnish.JS_ARIA_FALSE_CLASS]);
+            $(nextVisibleModal).removeAttr('aria-hidden');
             return;
         };
 
@@ -319,13 +319,16 @@ Garnish = $.extend(Garnish, {
         $(element).attr('aria-hidden', 'true');
     },
 
-    getNextVisibleModal: function() {
+    getNextVisibleModal: function(container) {
         var modals = $('[aria-modal="true"]').filter(function() {
             return $(this).css('display') == 'block';
         });
 
-        if (modals.length > 1) {
-            return modals[length - 1];
+        var prevContainerIndex = $(modals).index(container);
+        var newModals = $(modals).slice(0, prevContainerIndex);
+
+        if (newModals.length) {
+            return $(newModals).last();
         } else {
             return null;
         }
@@ -347,20 +350,20 @@ Garnish = $.extend(Garnish, {
     trapFocusWithin: function(container) {
         var $container = $(container);
         $container.on('keydown.focus-trap', function (ev) {
-            // Tab key?
             if (ev.keyCode === Garnish.TAB_KEY) {
                 var $focusableElements = $container.find(':focusable');
-                var index = $focusableElements.index(document.activeElement);
-                if (index !== -1) {
-                    if (index === 0 && ev.shiftKey) {
-                        ev.preventDefault();
-                        ev.stopPropagation();
-                        $focusableElements.last().focus();
-                    } else if (index === $focusableElements.length - 1 && !ev.shiftKey) {
-                        ev.psreventDefault();
-                        ev.stopPropagation();
-                        $focusableElements.first().focus();
-                    }
+                var index = $focusableElements.index(ev.target);
+
+                if (index === 0 && ev.shiftKey) {
+                    console.log('tab shift');
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    $focusableElements.last().focus();
+                } else if (index === $focusableElements.length - 1 && !ev.shiftKey) {
+                    console.log('tab press');
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    $focusableElements.first().focus();
                 }
             }
         });
