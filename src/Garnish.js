@@ -355,12 +355,10 @@ Garnish = $.extend(Garnish, {
                 var index = $focusableElements.index(ev.target);
 
                 if (index === 0 && ev.shiftKey) {
-                    console.log('tab shift');
                     ev.preventDefault();
                     ev.stopPropagation();
                     $focusableElements.last().focus();
                 } else if (index === $focusableElements.length - 1 && !ev.shiftKey) {
-                    console.log('tab press');
                     ev.preventDefault();
                     ev.stopPropagation();
                     $focusableElements.first().focus();
