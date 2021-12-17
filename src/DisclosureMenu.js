@@ -75,7 +75,7 @@ Garnish.DisclosureMenu = Garnish.Base.extend(
     focusElement: function(direction) {
       var currentFocus = $(':focus');
 
-      var focusable = this.$container.find(':focusable');
+      var focusable = Garnish.findFocusable(this.$container);
 
       var currentIndex = focusable.index(currentFocus);
       var newIndex;

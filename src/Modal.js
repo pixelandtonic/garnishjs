@@ -39,6 +39,7 @@ Garnish.Modal = Garnish.Base.extend(
             }
 
             if (container) {
+                Garnish.addModalAttributes(container);
                 this.setContainer(container);
 
                 if (this.settings.autoShow) {
@@ -105,6 +106,7 @@ Garnish.Modal = Garnish.Base.extend(
                         this.$container.velocity('fadeIn', {
                             complete: function() {
                                 this.updateSizeAndPosition();
+                                Garnish.setFocusWithin(this.$container);
                                 this.onFadeIn();
                             }.bind(this)
                         });
@@ -114,6 +116,9 @@ Garnish.Modal = Garnish.Base.extend(
                 if (this.settings.hideOnShadeClick) {
                     this.addListener(this.$shade, 'click', 'hide');
                 }
+
+                // Add focus trap
+                Garnish.trapFocusWithin(this.$container);
 
                 this.addListener(Garnish.$win, 'resize', '_handleWindowResize');
             }
@@ -129,6 +134,8 @@ Garnish.Modal = Garnish.Base.extend(
                 if (this.settings.hideOnEsc) {
                     Garnish.shortcutManager.registerShortcut(Garnish.ESC_KEY, this.hide.bind(this));
                 }
+
+                Garnish.hideModalBackgroundContent(this.$container);
 
                 this.trigger('show');
                 this.settings.onShow();
@@ -172,10 +179,15 @@ Garnish.Modal = Garnish.Base.extend(
                 this.removeListener(Garnish.$win, 'resize');
             }
 
+            if (this.settings.triggerElement) {
+                this.settings.triggerElement.focus();
+            }
+
             this.visible = false;
             Garnish.Modal.visibleModal = null;
             Garnish.shortcutManager.removeLayer();
             this.trigger('hide');
+            Garnish.resetBackgroundContentVisibility(this.$container);
             this.settings.onHide();
         },
 
@@ -336,7 +348,8 @@ Garnish.Modal = Garnish.Base.extend(
             closeOtherModals: false,
             hideOnEsc: true,
             hideOnShadeClick: true,
-            shadeClass: 'modal-shade'
+            triggerElement: null,
+            shadeClass: 'modal-shade',
         },
         instances: [],
         visibleModal: null
